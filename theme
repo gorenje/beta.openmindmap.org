@@ -1,0 +1,20 @@
+{
+    "page": {
+        "title": "Open Mind Map",
+        "favicon": "favicon.ico",
+        "tabicon": {
+            "icon": "favicon/android-chrome-512x512.png",
+            "colour": "#8f0000"
+        }
+    },
+    "header": {
+        "title": "Open Mind Map",
+        "image": "favicon/open_mind_logo_minus_head.svg"
+    },
+    "asset": {
+        "red": "red/red.min.js",
+        "main": "red/main.min.js",
+        "vendorMonaco": "vendor/monaco/monaco-bootstrap.js"
+    },
+    "themes": []
+}

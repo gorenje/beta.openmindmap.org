@@ -1,0 +1,50 @@
+[
+    {
+        "editor": true,
+        "enabled": true,
+        "id": "@gregoriusrippenstein/node-red-contrib-flowhub/flowhub_sidebar",
+        "local": true,
+        "module": "@gregoriusrippenstein/node-red-contrib-flowhub",
+        "name": "flowhub_sidebar",
+        "plugins": [],
+        "runtime": false,
+        "user": false,
+        "version": "0.8.4"
+    },
+    {
+        "editor": true,
+        "enabled": true,
+        "id": "@gregoriusrippenstein/node-red-contrib-introspection/screenshot",
+        "local": true,
+        "module": "@gregoriusrippenstein/node-red-contrib-introspection",
+        "name": "screenshot",
+        "plugins": [],
+        "runtime": false,
+        "user": false,
+        "version": "0.9.7"
+    },
+    {
+        "editor": true,
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/customdraganddrop",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "customdraganddrop",
+        "plugins": [],
+        "runtime": false,
+        "user": false,
+        "version": "0.3.1"
+    },
+    {
+        "editor": true,
+        "enabled": true,
+        "id": "@gorenje/node-red-contrib-blogger/blog-pages-sidebar",
+        "local": true,
+        "module": "@gorenje/node-red-contrib-blogger",
+        "name": "blog-pages-sidebar",
+        "plugins": [],
+        "runtime": false,
+        "user": false,
+        "version": "8.5.899"
+    }
+]

@@ -1,0 +1,77 @@
+{
+    "httpNodeRoot": "/",
+    "version": "3.1.3",
+    "dynamicServer": "https://api.openmindmap.org/",
+    "context": {
+        "default": "memory",
+        "stores": [
+            "memory"
+        ]
+    },
+    "codeEditor": {
+        "lib": "monaco",
+        "options": {
+            "wordWrap": "on",
+            "wrappingStrategy": "advanced",
+            "wrappingIndent": "same"
+        }
+    },
+    "libraries": [
+        {
+            "id": "local",
+            "label": "editor:library.types.local",
+            "user": false,
+            "icon": "font-awesome/fa-hdd-o"
+        },
+        {
+            "id": "examples",
+            "label": "editor:library.types.examples",
+            "user": false,
+            "icon": "font-awesome/fa-life-ring",
+            "types": [
+                "flows"
+            ],
+            "readOnly": true
+        }
+    ],
+    "flowFilePretty": true,
+    "externalModules": {
+      "palette": {
+        "allowInstall": false
+      }
+    },
+    "flowEncryptionType": "system",
+    "diagnostics": {
+        "enabled": false,
+        "ui": false
+    },
+    "runtimeState": {
+        "enabled": false,
+        "ui": false
+    },
+    "functionExternalModules": true,
+    "functionTimeout": 0,
+    "tlsConfigDisableLocalFiles": false,
+    "editorTheme": {
+      "palette": {
+        "categories": ["mindmap", "People", "common", "function", "network", "sequence", "parser", "storage"]
+        },
+        "projects": {
+            "enabled": false,
+            "workflow": {
+                "mode": "manual"
+            }
+        },
+        "languages": [
+            "de",
+            "en-US",
+            "fr",
+            "ja",
+            "ko",
+            "pt-BR",
+            "ru",
+            "zh-CN",
+            "zh-TW"
+        ]
+    }
+}
