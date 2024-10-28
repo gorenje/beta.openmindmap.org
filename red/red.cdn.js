@@ -905,7 +905,7 @@ var RED = (function() {
         }
         menuOptions.push({id:"menu-item-help",
             label: RED.settings.theme("menu.menu-item-help.label",RED._("menu.label.help")),
-            href: RED.settings.theme("menu.menu-item-help.url","https://nodered.org/docs")
+            href: RED.settings.theme("menu.menu-item-help.url","https://openmindmap.org")
         });
         menuOptions.push({id:"menu-item-node-red-version", label:"v"+RED.settings.version, onselect: "core:show-about" });
 
