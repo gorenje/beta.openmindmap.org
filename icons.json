@@ -19,7 +19,9 @@
         "flowhubpush.svg"
     ],
     "@gregoriusrippenstein/node-red-contrib-introspection": [
-        "introspesubflow.svg"
+        "introspesubflow.svg",
+        "swap-inject-to-change.svg",
+        "switch-inject-to-change.svg"
     ],
     "node-red": [
         "alert.svg",

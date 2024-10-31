@@ -1517,14 +1517,14 @@ var DEADRED = (function() {
                     })
                 } else if ( itm.type.startsWith("image/") ) {
                     waitingOnNode++
-
+                    console.log( "dadsadad")
                     let file = event.originalEvent.dataTransfer.files[idx]
                     let yPos = waitingOnNode * 40
 
                     file2base64Image(file, dataUrl => {
                         nodesToBeImported.push({
                             "id": RED.nodes.id(),
-                            "type": "Sketch",
+                            "type": "Art",
                             "name": file.name,
                             "info": `<img src="${dataUrl}"/>\n`,
                             "sumPass": false,
@@ -1631,8 +1631,10 @@ var DEADRED = (function() {
 
                 // these are pastes into the import dialog or the search field, ignore those
                 // pastes and let others deal with the contents.
-                if (event.target && ( event.target.id == "red-ui-clipboard-dialog-import-text" ||
-                                      event.target.classList.contains("red-ui-searchBox-input" ))) {
+                // Type 'text' are input fields in the edit panel ...
+                if (event.target && ( event.target.id == "red-ui-clipboard-dialog-import-text"   ||
+                                      event.target.classList.contains("red-ui-searchBox-input" ) ||
+                                      event.target.type == "text" )) {
                     return
                 }
 
