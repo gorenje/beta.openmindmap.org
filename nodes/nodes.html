@@ -4538,15 +4538,17 @@ If you want every 20 minutes from now - use the <i>"interval"</i> option.</p>
     
     "05-text":          '#c8ffb5',
     "10-blog-post":     '#CDFEBC',
+    "12-image":         '#CDFEBC',
     "15-comment":       '#D2FDC3',
     "55-code-base":     '#D7FCCB',
     "57-art":           '#DCFBD2',
     "47-learning":      '#e1fbda',
 
     "60-inspiration":   '#dfdfb6',
-    "65-quote":         '#e5e5c0',
-    "70-definition":    '#eaebca',
-    "75-book":          '#f0f0d4',
+    "65-quote":         '#E3E3BE',
+    "70-definition":    '#E7E8C6',
+    "74-bookmark":      '#ECECCE',
+    "75-book":          '#F0F1D6',
     "80-author":        '#f5f6de',
   };
 
@@ -5797,6 +5799,62 @@ If you want every 20 minutes from now - use the <i>"interval"</i> option.</p>
 <script type="text/html" data-help-name="Blog-Post">
   <p>A writermap node.</p>
 </script>
+<!-- --- [red-module:@gorenje/node-red-mindmap/image] --- -->
+<script type="text/javascript">
+  RED.nodes.registerType('Image',{ ...window.mmDefaults, ...{
+    color: window.wmPaletteColours["12-image"],
+    icon: "font-awesome/fa-file-image-o",
+  }});
+</script>
+
+<script type="text/html" data-template-name="Image">
+<div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+</div>
+
+<div class="form-row">
+    <label style="display: inline-block; width: 40%;"
+           for="node-input-sumPass">
+      <i class="fa fa-filter"></i>
+      <span>Summaries subnodes?</span>
+    </label>
+    <input type="checkbox" id="node-input-sumPass"
+           style="display:inline-block; width:35px; vertical-align:baseline;">
+
+    <label style="display: inline-block; width: 10%; padding-left: 100px;"
+           for="node-input-sumPassPrio">
+      <span>Priority: </span>
+    </label>
+    <select id="node-input-sumPassPrio" style="width: 50px;"></select>
+</div>
+
+<div id="sumpass-node-selection" class="hide">
+    <div class="form-row">
+        <select id="node-input-sumPassNodeId" style="width: 100%">
+      </select>
+    </div>
+</div>
+
+<div class="form-row node-text-editor-row">
+    <input type="hidden" id="node-input-info" autofocus="autofocus">
+    <div style="height: 250px; min-height:150px;" class="node-text-editor" id="node-input-info-editor"></div>
+</div>
+
+<div class="form-row">
+    <label for="node-input-typeDropdown">Change Type</label>
+    <select id="node-input-typeDropdown"></select>
+    
+    <label for="node-input-wordCount" style="float: right;">Words:
+        <span id="node-input-wordCount"></span>
+    </label>
+</div>
+</script>
+
+
+<script type="text/html" data-help-name="Image">
+  <p>A writermap Image node.</p>
+</script>
 <!-- --- [red-module:@gorenje/node-red-mindmap/comment] --- -->
 <script type="text/javascript">
   RED.nodes.registerType('Comment',{ ...window.mmDefaults, ...{
@@ -6189,6 +6247,62 @@ If you want every 20 minutes from now - use the <i>"interval"</i> option.</p>
 
 <script type="text/html" data-help-name="Definition">
   <p>A writermap node.</p>
+</script>
+<!-- --- [red-module:@gorenje/node-red-mindmap/bookmark] --- -->
+<script type="text/javascript">
+  RED.nodes.registerType('Bookmark',{ ...window.mmDefaults, ...{
+    color: window.wmPaletteColours["74-bookmark"],
+    icon: "font-awesome/fa-bookmark-o",
+  }});
+</script>
+
+<script type="text/html" data-template-name="Bookmark">
+<div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+</div>
+
+<div class="form-row">
+    <label style="display: inline-block; width: 40%;"
+           for="node-input-sumPass">
+      <i class="fa fa-filter"></i>
+      <span>Summaries subnodes?</span>
+    </label>
+    <input type="checkbox" id="node-input-sumPass"
+           style="display:inline-block; width:35px; vertical-align:baseline;">
+
+    <label style="display: inline-block; width: 10%; padding-left: 100px;"
+           for="node-input-sumPassPrio">
+      <span>Priority: </span>
+    </label>
+    <select id="node-input-sumPassPrio" style="width: 50px;"></select>
+</div>
+
+<div id="sumpass-node-selection" class="hide">
+    <div class="form-row">
+        <select id="node-input-sumPassNodeId" style="width: 100%">
+      </select>
+    </div>
+</div>
+
+<div class="form-row node-text-editor-row">
+    <input type="hidden" id="node-input-info" autofocus="autofocus">
+    <div style="height: 250px; min-height:150px;" class="node-text-editor" id="node-input-info-editor"></div>
+</div>
+
+<div class="form-row">
+    <label for="node-input-typeDropdown">Change Type</label>
+    <select id="node-input-typeDropdown"></select>
+    
+    <label for="node-input-wordCount" style="float: right;">Words:
+        <span id="node-input-wordCount"></span>
+    </label>
+</div>
+</script>
+
+
+<script type="text/html" data-help-name="Bookmark">
+  <p>A writermap Bookmark node.</p>
 </script>
 <!-- --- [red-module:@gorenje/node-red-mindmap/book] --- -->
 <script type="text/javascript">

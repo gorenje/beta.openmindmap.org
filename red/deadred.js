@@ -1490,7 +1490,7 @@ var DEADRED = (function() {
 
                         let data = {
                             "id": RED.nodes.id(),
-                            "type": "Inspiration",
+                            "type": "Bookmark",
                             "name": urlAndTitle[1] || "Web Bookmark",
                             "info": urlAndTitle[0],
                             "sumPass": false,
@@ -1524,7 +1524,7 @@ var DEADRED = (function() {
                     file2base64Image(file, dataUrl => {
                         nodesToBeImported.push({
                             "id": RED.nodes.id(),
-                            "type": "Art",
+                            "type": "Image",
                             "name": file.name,
                             "info": `<img src="${dataUrl}"/>\n`,
                             "sumPass": false,
