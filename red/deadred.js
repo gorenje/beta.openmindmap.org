@@ -1628,23 +1628,29 @@ var DEADRED = (function() {
         // works outside of the workspace area. But this is only a prototype.
         $(window).on('paste', (event) => {
             try {
-                let pasteText = event.originalEvent.clipboardData.getData('text')
-                let data = JSON.parse(pasteText)
+                window.pasteEvent = event
 
-                if (!event.target || ( event.target.id != "red-ui-header" &&
-                                        event.target.id != "red-ui-workspace-chart" ) ) {
+                // there too many edge cases so explicitly on those elements that are
+                // safe are selected here.
+                if (!event.target || !(event.target.id == "red-ui-header" ||
+                                       event.target.id == "red-ui-workspace-chart" )) {
                     return
                 }
 
-                if ( Array.isArray(data) ) {
-                    RED.view.importNodes(data, {
-                        generateIds: true,
-                        addFlow: false,
-                        touchImport: false,
-                        generateDefaultNames: false
-                    })
+                let pasteText = event.originalEvent.clipboardData.getData('text')
+                let data = JSON.parse(pasteText)
+
+                if (Array.isArray(data)) {
+                    try {
+                        RED.view.importNodes(data, {
+                            generateIds: false,
+                            addFlow: false,
+                            touchImport: false,
+                            generateDefaultNames: false
+                        })
+                    } catch (ex) { RED.notify( `Error: ${ex.message}`, { type: "warning"}) }
                 }
-            } catch(ex) { /* keep quiet */ }
+            } catch (ex) { RED.notify(`Error: ${ex.message}`, { type: "warning" }) }
         })
 
         setTimeout( () => {
