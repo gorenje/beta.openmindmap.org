@@ -276,16 +276,18 @@ var DEADRED = (function() {
                 break
 
             case "ClientCode":
+                let ccCode = msg.clientcode || nde.clientcode
+
                 RED.comms.emit([{
                     "topic":"introspect:client-code-perform",
                     "data":{
-                        "msg":"execfunc",
-                        "payload":msg.payload,
-                        "topic":msg.topic,
-                        "func": nde.clientcode,
-                        "nodeid": nde.id,
-                        "_msg": { ...msg },
-                        "format":"string["+nde.clientcode.length+"]"
+                        "msg":     "execfunc",
+                        "payload": msg.payload,
+                        "topic":   msg.topic,
+                        "func":    ccCode,
+                        "nodeid":  nde.id,
+                        "_msg":    { ...msg },
+                        "format":  `string[${ccCode.length}]`
                     }
                 }])
 
