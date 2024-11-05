@@ -9,7 +9,7 @@
         "plugins": [],
         "runtime": false,
         "user": false,
-        "version": "0.8.4"
+        "version": "0.8.4-b1"
     },
     {
         "editor": true,
@@ -21,7 +21,7 @@
         "plugins": [],
         "runtime": false,
         "user": false,
-        "version": "0.9.11"
+        "version": "0.9.15-b2"
     },
     {
         "editor": true,
@@ -33,7 +33,7 @@
         "plugins": [],
         "runtime": false,
         "user": false,
-        "version": "0.3.7"
+        "version": "0.3.9-b1"
     },
     {
         "editor": true,
@@ -45,6 +45,18 @@
         "plugins": [],
         "runtime": false,
         "user": false,
-        "version": "8.5.899"
+        "version": "0.1.13-b1"
+    },
+    {
+        "editor": true,
+        "enabled": true,
+        "id": "@gregoriusrippenstein/node-red-contacts/addressbook_sidebar",
+        "local": true,
+        "module": "@gregoriusrippenstein/node-red-contacts",
+        "name": "addressbook_sidebar",
+        "plugins": [],
+        "runtime": false,
+        "user": false,
+        "version": "0.0.3-b1"
     }
 ]

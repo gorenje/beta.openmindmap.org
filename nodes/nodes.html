@@ -4118,396 +4118,6 @@ If you want every 20 minutes from now - use the <i>"interval"</i> option.</p>
     <pre>My favourite colour is {{env.COLOUR}}.</pre>
 </script>
 
-<!-- --- [red-module:node-red/delay] --- -->
-<!--
-  Copyright JS Foundation and other contributors, http://js.foundation
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-
-<script type="text/html" data-template-name="delay">
-    <div class="form-row">
-        <label for="node-input-delay-action"><i class="fa fa-tasks"></i> <span data-i18n="delay.action"></span></label>
-        <select id="node-input-delay-action" style="width:270px !important">
-            <option value="delay" data-i18n="delay.delaymsg"></option>
-            <option value="rate" data-i18n="delay.limitrate"></option>
-        </select>
-    </div>
-
-    <div id="delay-details">
-        <div class="form-row">
-            <label></label>
-            <select id="node-input-delay-type" style="width:270px !important">
-                <option value="delay" data-i18n="delay.delayfixed"></option>
-                <option value="random" data-i18n="delay.randomdelay"></option>
-                <option value="delayv" data-i18n="delay.delayvarmsg"></option>
-            </select>
-        </div>
-        <div class="form-row" id="delay-details-for">
-            <label for="node-input-timeout"><i class="fa fa-clock-o"></i> <span data-i18n="delay.for"></span></label>
-            <input type="text" id="node-input-timeout" style="text-align:end; width:50px !important">
-            <select id="node-input-timeoutUnits" style="width:200px !important">
-              <option value="milliseconds" data-i18n="delay.milisecs"></option>
-              <option value="seconds" data-i18n="delay.secs"></option>
-              <option value="minutes" data-i18n="delay.mins"></option>
-              <option value="hours" data-i18n="delay.hours"></option>
-              <option value="days" data-i18n="delay.days"></option>
-            </select>
-        </div>
-        <div id="random-details" class="form-row">
-            <label for="node-input-randomFirst"><i class="fa fa-clock-o"></i> <span data-i18n="delay.between"></span></label>
-            <input type="text" id="node-input-randomFirst" placeholder="" style="text-align:end; width:50px !important">
-            &nbsp;<span data-i18n="delay.and"></span>&nbsp;
-            <input type="text" id="node-input-randomLast" placeholder="" style="text-align:end; width:50px !important">
-            <select id="node-input-randomUnits" style="width:140px !important">
-              <option value="milliseconds" data-i18n="delay.milisecs"></option>
-              <option value="seconds" data-i18n="delay.secs"></option>
-              <option value="minutes" data-i18n="delay.mins"></option>
-              <option value="hours" data-i18n="delay.hours"></option>
-              <option value="days" data-i18n="delay.days"></option>
-            </select>
-        </div>
-    </div>
-
-    <div id="rate-details">
-        <div class="form-row">
-            <label></label>
-            <select id="node-input-rate-type" style="width:270px !important">
-                <option value="all" data-i18n="delay.limitall"></option>
-                <option value="topic" data-i18n="delay.limittopic"></option>
-            </select>
-        </div>
-        <div class="form-row">
-            <label for="node-input-rate"><i class="fa fa-clock-o"></i> <span data-i18n="delay.rate"></span></label>
-            <input type="text" id="node-input-rate" placeholder="1" style="text-align:end; width:40px !important">
-            <label for="node-input-rateUnits"><span data-i18n="delay.msgper"></span></label>
-            <input type="text" id="node-input-nbRateUnits" placeholder="1" style="text-align:end; width:40px !important">
-            <select id="node-input-rateUnits" style="width:90px !important">
-              <option value="second" data-i18n="delay.label.units.second.singular"></option>
-              <option value="minute" data-i18n="delay.label.units.minute.singular"></option>
-              <option value="hour" data-i18n="delay.label.units.hour.singular"></option>
-              <option value="day" data-i18n="delay.label.units.day.singular"></option>
-            </select>
-        </div>
-        <div class="form-row" id="rate-override" style="display: flex; align-items: center">
-            <label></label><input style="width:30px; margin:0" type="checkbox" id="node-input-allowrate"><label style="margin:0;width: auto;" for="node-input-allowrate" data-i18n="delay.allowrate"></label>
-        </div>
-        <div class="form-row" id="rate-details-drop">
-            <input type="hidden" id="node-input-outputs" value="1">
-            <label></label>
-            <select id="node-input-drop-select" style="width: 70%">
-                <option id="node-input-drop-select-queue" value="queue" data-i18n="delay.queuemsg"></option>
-                <option value="drop" data-i18n="delay.dropmsg"></option>
-                <option value="emit" data-i18n="delay.sendmsg"></option>
-            </select>
-        </div>
-        <div class="form-row" id="rate-details-per-topic">
-            <label></label>
-            <select id="node-input-rate-topic-type" style="width:270px !important">
-                <option value="queue" data-i18n="delay.fairqueue"></option>
-                <option value="timed" data-i18n="delay.timedqueue"></option>
-            </select>
-        </div>
-    </div>
-    <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
-        <input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
-    </div>
-</script>
-
-<script type="text/javascript">
-    RED.nodes.registerType('delay',{
-        category: 'function',
-        color:"#E6E0F8",
-        defaults: {
-            name: {value:""},
-            pauseType: {value:"delay", required:true},
-            timeout: {
-                value:"5", required:true,
-                label:RED._("node-red:delay.label.delay"),
-                validate:function(v,opt) {
-                    if (RED.validators.number(v) && (v >= 0)) {
-                        return true;
-                    }
-                    return RED._("node-red:delay.errors.invalid-timeout");
-                }},
-            timeoutUnits: {value:"seconds"},
-            rate: {
-                value:"1",
-                required:true,
-                label:RED._("node-red:delay.label.rate"),
-                validate:function(v,opt) {
-                    if (RED.validators.number(v) && (v >= 0)) {
-                        return true;
-                    }
-                    return RED._("node-red:delay.errors.invalid-rate");
-                }
-            },
-            nbRateUnits: {
-                value:"1",
-                required:false,
-                validate:function(v,opt) {
-                    if (v === undefined || (RED.validators.number(v) && (v >= 0))) {
-                        return true;
-                    }
-                    return RED._("node-red:delay.errors.invalid-rate-unit");
-                }
-            },
-            rateUnits: {value: "second"},
-            randomFirst: {
-                value:"1", required:true,
-                validate:function(v,opt) {
-                    if (RED.validators.number(v) && (v >= 0)) {
-                        return true;
-                    }
-                    return RED._("node-red:delay.errors.invalid-random-first");
-                }},
-            randomLast: {
-                value:"5", required:true,
-                validate:function(v,opt) {
-                    if (RED.validators.number(v) && (v >= 0)) {
-                        return true;
-                    }
-                    return RED._("node-red:delay.errors.invalid-random-last");
-                }},
-            randomUnits: {value: "seconds"},
-            drop: {value:false},
-            allowrate: {value:false},
-            outputs: { value: 1},
-        },
-        inputs:1,
-        outputs:1,
-        icon: "timer.svg",
-        label: function() {
-            if (this.name) {
-                return this.name;
-            }
-            if (this.pauseType == "delayv") {
-                return this._("delay.label.variable");
-            } else if (this.pauseType == "delay") {
-                var units = this.timeoutUnits ? this.timeoutUnits.charAt(0) : "s";
-                if (this.timeoutUnits == "milliseconds") { units = "ms"; }
-                return this._("delay.label.delay")+" "+this.timeout+units;
-            } else if (this.pauseType == "random") {
-                return this._("delay.label.random");
-            } else {
-                var rate = this.rate+" msg/"+(this.rateUnits ? (this.nbRateUnits > 1 ? this.nbRateUnits : '') + this.rateUnits.charAt(0) : "s");
-                if (this.pauseType == "rate") {
-                    return this._("delay.label.limit")+" "+rate;
-                } else if (this.pauseType == "timed") {
-                    return this._("delay.label.limitTopic")+" "+rate;
-                } else {
-                    return this._("delay.label.limitTopic")+" "+rate;
-                }
-            }
-        },
-        labelStyle: function() {
-            return this.name?"node_label_italic":"";
-        },
-        oneditprepare: function() {
-            var node = this;
-            $( "#node-input-timeout" ).spinner({min:1});
-            $( "#node-input-rate" ).spinner({min:1});
-            $( "#node-input-nbRateUnits" ).spinner({min:1});
-
-            $( "#node-input-randomFirst" ).spinner({min:0});
-            $( "#node-input-randomLast" ).spinner({min:1});
-
-            $('.ui-spinner-button').on("click", function() {
-                $(this).siblings('input').trigger("change");
-            });
-
-            $( "#node-input-nbRateUnits" ).on('change keyup', function() {
-                var $this = $(this);
-                var val = parseInt($this.val());
-                var type = "singular";
-                if (val > 1) {
-                    type = "plural";
-                }
-                if ($this.attr("data-type") == type) {
-                    return;
-                }
-                $this.attr("data-type", type);
-                $("#node-input-rateUnits option").each(function () {
-                    var $option = $(this);
-                    var key = "delay.label.units." + $option.val() + "." + type;
-                    $option.attr('data-i18n', 'node-red:' + key);
-                    $option.html(node._(key));
-                });
-            });
-
-            if (this.pauseType == "delay") {
-                $("#node-input-delay-action").val('delay');
-                $("#node-input-delay-type").val('delay');
-            } else if (this.pauseType == "delayv") {
-                $("#node-input-delay-action").val('delay');
-                $("#node-input-delay-type").val('delayv');
-            } else if (this.pauseType == "random") {
-                $("#node-input-delay-action").val('delay');
-                $("#node-input-delay-type").val('random');
-            } else if (this.pauseType == "rate") {
-                $("#node-input-delay-action").val('rate');
-                $("#node-input-rate-type").val('all');
-            } else if (this.pauseType == "queue") {
-                $("#node-input-delay-action").val('rate');
-                $("#node-input-rate-type").val('topic');
-                $("#node-input-rate-topic-type").val('queue');
-            } else if (this.pauseType == "timed") {
-                $("#node-input-delay-action").val('rate');
-                $("#node-input-rate-type").val('topic');
-                $("#node-input-rate-topic-type").val('timed');
-            }
-
-            if (!this.timeoutUnits) {
-                $("#node-input-timeoutUnits option").filter(function() {
-                    return $(this).val() == 'seconds';
-                }).attr('selected', true);
-            }
-
-            if (!this.randomUnits) {
-                $("#node-input-randomUnits option").filter(function() {
-                    return $(this).val() == 'seconds';
-                }).attr('selected', true);
-            }
-
-            $("#node-input-delay-action").on("change",function() {
-                if (this.value === "delay") {
-                    $("#delay-details").show();
-                    $("#rate-details").hide();
-                } else if (this.value === "rate") {
-                    $("#delay-details").hide();
-                    $("#rate-details").show();
-                }
-            }).trigger("change");
-
-            $("#node-input-delay-type").on("change", function() {
-                if (this.value === "delay") {
-                    $("#delay-details-for").show();
-                    $("#random-details").hide();
-                } else if (this.value === "delayv") {
-                    $("#delay-details-for").show();
-                    $("#random-details").hide();
-                } else if (this.value === "random") {
-                    $("#delay-details-for").hide();
-                    $("#random-details").show();
-                }
-            }).trigger("change");
-
-            if (this.outputs === 2) {
-                $("#node-input-drop-select").val("emit");
-            } else if (this.drop) {
-                $("#node-input-drop-select").val("drop");
-            } else {
-                $("#node-input-drop-select").val("queue");
-            }
-
-            $("#node-input-rate-type").on("change", function() {
-                if (this.value === "all") {
-                    $("#rate-details-per-topic").hide();
-                    $("#node-input-drop-select-queue").attr('disabled', false);
-                } else if (this.value === "topic") {
-                    if ($("#node-input-drop-select").val() === "queue") {
-                        $("#node-input-drop-select").val("drop");
-                    }
-                    $("#node-input-drop-select-queue").attr('disabled', true);
-                    $("#rate-details-per-topic").show();
-                }
-            }).trigger("change");
-        },
-        oneditsave: function() {
-            var action = $("#node-input-delay-action").val();
-            if (action === "delay") {
-                this.pauseType = $("#node-input-delay-type").val();
-                $("#node-input-outputs").val(1);
-            } else if (action === "rate") {
-                action = $("#node-input-rate-type").val();
-                if (action === "all") {
-                    this.pauseType = "rate";
-                } else {
-                    this.pauseType = $("#node-input-rate-topic-type").val();
-                }
-                var dropType = $("#node-input-drop-select").val();
-                this.drop = dropType !== "queue";
-                $("#node-input-outputs").val(dropType === "emit"?2:1);
-            }
-        }
-    });
-</script>
-<!--
-  Copyright JS Foundation and other contributors, http://js.foundation
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
-
-<script type="text/html" data-help-name="delay">
-    <p>Delays each message passing through the node or limits the rate at which they can pass.</p>
-    <h3>Inputs</h3>
-    <dl class="message-properties">
-        <dt class="optional">delay <span class="property-type">number</span></dt>
-        <dd>Sets the delay, in milliseconds, to be applied to the message. This
-            option only applies if the node is configured to allow the message to
-            override the configured default delay interval.</dd>
-        <dt class="optional">rate <span class="property-type">number</span></dt>
-        <dd>Sets the rate value in milliseconds between messages.
-            This node overwrites the existing rate value defined in the node configuration
-            when it receives the message which contains <code>msg.rate</code> value in milliSeconds.
-            This option only applies if the node is configured to allow the message to
-            override the configured default rate interval.</dd>
-        <dt class="optional">reset</dt>
-        <dd>If the received message has this property set to any value, all
-            outstanding messages held by the node are cleared without being sent.</dd>
-        <dt class="optional">flush</dt>
-        <dd>If the received message has this property set to a numeric value then that many messages
-            will be released immediately. If set to any other type (e.g. boolean), then all
-            outstanding messages held by the node are sent immediately.</dd>
-        <dt class="optional">toFront</dt>
-        <dd>When in rate limit mode, if the received message has this property set to boolean <code>true</code>,
-            then the message is pushed to the front of the queue and will be released next.
-            This can be used in combination with <code>msg.flush=1</code> to resend immediately.
-        </dd>
-    </dl>
-    <h3>Details</h3>
-    <p>When configured to delay messages, the delay interval can be a fixed value,
-        a random value within a range or dynamically set for each message.
-        Each message is delayed independently of any other message, based on
-        the time of its arrival.
-    </p>
-    <p>When configured to rate limit messages, their delivery is spread across
-        the configured time period. The status shows the number of messages currently in the queue.
-        It can optionally discard intermediate messages as they arrive.</p>
-    </p>
-    <p>If set to allow override of the rate, the new rate will be applied immediately,
-        and will remain in effect until changed again, the node is reset, or the flow is restarted.</p>
-    <p>The rate limiting can be applied to all messages, or group them according to
-        their <code>msg.topic</code> value. When grouping, intermediate messages are
-        automatically dropped. At each time interval, the node can either release
-        the most recent message for all topics, or release the most recent message
-        for the next topic.
-    </p>
-    <p><b>Note</b>: In rate limit mode the maximum queue depth can be set by a property in your
-        <i>settings.js</i> file. For example <code>nodeMessageBufferMaxLength: 1000,</code></p>
-</script>
-
 <!-- --- [red-module:@gorenje/node-red-mindmap/base] --- -->
 <script type="text/javascript">
   /*
@@ -7001,7 +6611,7 @@ This page is intentional left blank.
 
 <!-- --- [red-module:@gregoriusrippenstein/node-red-contrib-introspection/seeker] --- -->
 <script type="text/javascript">
-RED.nodes.registerType("Seeker",{color:"#e5e4ef",icon:"font-awesome/fa-ship",category:"introspection",paletteLabel:"Seeker",defaults:{name:{value:""}},inputs:0,outputs:1,label:function(){return this.name||this._def.paletteLabel},labelStyle:function(){return this.name?"node_label_italic":""},oneditprepare:function(){var n=this,o=(window._introSpectionSeekerStack=[],$("#node-input-seeker-target-filter").searchBox({style:"compact",delay:300,change:function(){let t=$(this).val().trim().toLowerCase();var e,n=$("#node-input-seeker-target-container-div").treeList("data");""===t?($("#node-input-seeker-target-container-div").treeList("filter",null),o.searchBox("count","")):(e=$("#node-input-seeker-target-container-div").treeList("filter",function(e){return-1<e._label.toLowerCase().indexOf(t)||-1<e.node.type.toLowerCase().indexOf(t)||e.sublabel.toLowerCase().indexOf(t)}),o.searchBox("count",e+" / "+n.length))}}));$("#node-input-seeker-target-container-div").css({width:"100%",height:"95%"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistconfirm",function(e,t){t.node&&!t.children&&(RED.view.reveal(t.node.id),RED.view.select(t.node.id),setTimeout(()=>{RED.editor.edit(t.node)},100))}).on("treelistselect",function(e,t){var n;t.node&&(t.children?(n=t.children.filter(e=>e.node.z==RED.workspaces.active()).map(e=>e.node.id),RED.tray.hide(),RED.view.selectNodes({selected:n,onselect:()=>{RED.tray.show()},oncancel:()=>{RED.tray.show()}})):(RED.workspaces.show(t.node.z,!1,!1,!0),RED.view.reveal(t.node.id,!0),RED.view.redraw()))});let i=e=>{var t=RED.nodes.node(e[e.length-1]);let n=[];return e.forEach(function(e){var t,e=RED.nodes.node(e)||RED.nodes.junction(e);void 0!==e&&(t=RED.nodes.workspace(e.z)||RED.nodes.subflow(e.z),n.push({label:"",_label:RED.utils.getNodeLabel(e),node:e,sublabel:t&&RED.utils.getNodeLabel(t)||e.z,icon:RED.utils.createNodeIcon(e,!0),class:"intro-remove-top-left"}))}),{node:t,label:RED.utils.getNodeLabel(t),_label:RED.utils.getNodeLabel(t),_pathlen:e.length,sublabel:"Length: "+e.length,selected:!1,checkbox:!1,children:n}};var r=function(t,n){if(n.indexOf(t.id)<0)switch(t.type){case"link call":RED.nodes.getNodeLinks(t).forEach(e=>{r(e.target,[...n,t.id])}),t.links.forEach(e=>{e=RED.nodes.node(e);e&&r(e,[...n,t.id])});break;case"link out":t.links.forEach(e=>{e=RED.nodes.node(e);e&&r(e,[...n,t.id])});break;case"Sink":n.push(t.id),window._introSpectionSeekerStack=[n,...window._introSpectionSeekerStack];break;default:RED.nodes.getNodeLinks(t).forEach(e=>{r(e.target,[...n,t.id])})}};$("#node-input-seeker-start-but").on("click",e=>{e&&e.preventDefault(),$("#node-input-seeker-start-but").prop("disabled",!0),$("#node-input-seeker-totalPaths").html(""),$("#node-input-seeker-spinner").show(),window._introSpectionSeekerStack=[],setTimeout(()=>{RED.nodes.getNodeLinks(n).forEach(e=>{r(e.target,[n.id])});var t,e=window._introSpectionSeekerStack.length;$("#node-input-seeker-start-but").prop("disabled",!1),$("#node-input-seeker-totalPaths").html(e),$("#node-input-seeker-spinner").hide(),50<e?($("#node-input-seeker-show-percent").show(),(t=$("#node-input-seeker-show-percent")).html(""),["-",5,10,20,30,40,50,75,100].forEach(function(e){t.append($("<option></option>").val(e).html(100==e?"All":"-"==e?"Select..":e+"%"))}),t.val("-"),$("#node-input-seeker-show-percent").on("change",e=>{e&&e.preventDefault();e=window._introSpectionSeekerStack.length;let t=25;"-"!=$("#node-input-seeker-show-percent").val()&&(t=parseInt(e*(parseInt($("#node-input-seeker-show-percent").val())/100))),$("#node-input-seeker-totalPaths").html(t+" / "+e),setTimeout(()=>{$("#node-input-seeker-target-container-div").treeList("data",window._introSpectionSeekerStack.sort((e,t)=>e.length<t.length?-1:1).slice(0,t).map(e=>i(e)))},300)}),$("#node-input-seeker-show-percent").trigger("change")):setTimeout(()=>{$("#node-input-seeker-target-container-div").treeList("data",window._introSpectionSeekerStack.sort((e,t)=>e.length<t.length?-1:1).map(e=>i(e)))},300)},300)})},oneditsave:function(){delete window._introSpectionSeekerStack},oneditcancel:function(){delete window._introSpectionSeekerStack},oneditresize:function(e){for(var t=$("#dialog-form>div:not(.node-input-target-list-row)"),n=$("#dialog-form").height(),o=0;o<t.length;o++)n-=$(t[o]).outerHeight(!0);$("#dialog-form>div.node-input-target-list-row").css("height",n+"px")}});
+RED.nodes.registerType("Seeker",{color:"#e5e4ef",icon:"font-awesome/fa-ship",category:"introspection",paletteLabel:"Seeker",defaults:{name:{value:""}},inputs:0,outputs:1,label:function(){return this.name||this._def.paletteLabel},labelStyle:function(){return this.name?"node_label_italic":""},oneditprepare:function(){var n=this;window._introSpectionSeekerStack=[],window._introWorker=void 0;let i=e=>{var t=RED.nodes.node(e[e.length-1]);let n=[];return e.forEach(function(e){var t,e=RED.nodes.node(e)||RED.nodes.junction(e);void 0!==e&&(t=RED.nodes.workspace(e.z)||RED.nodes.subflow(e.z),n.push({label:"",_label:RED.utils.getNodeLabel(e),node:e,sublabel:t&&RED.utils.getNodeLabel(t)||e.z,icon:RED.utils.createNodeIcon(e,!0),class:"intro-remove-top-left"}))}),{node:t,label:RED.utils.getNodeLabel(t),_label:RED.utils.getNodeLabel(t),_pathlen:e.length,sublabel:"Length: "+e.length,selected:!1,checkbox:!1,children:n}};var o=$("#node-input-seeker-target-filter").searchBox({style:"compact",delay:300,change:function(){let t=$(this).val().trim().toLowerCase();var e,n=$("#node-input-seeker-target-container-div").treeList("data");""===t?($("#node-input-seeker-target-container-div").treeList("filter",null),o.searchBox("count","")):(e=$("#node-input-seeker-target-container-div").treeList("filter",function(e){return-1<e._label.toLowerCase().indexOf(t)||-1<e.node.type.toLowerCase().indexOf(t)||e.sublabel.toLowerCase().indexOf(t)}),o.searchBox("count",e+" / "+n.length))}}),r=((e=>{let n=`#node-input-${e}-target-container-div`,o=`#node-input-${e}-extract-pathway-but`,i=`#node-input-${e}-show-pathway-but`;$(n).css({width:"100%",height:"95%"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistconfirm",function(e,t){t.node&&!t.children&&(RED.view.reveal(t.node.id),RED.view.select(t.node.id),setTimeout(()=>{RED.editor.edit(t.node)},100))}).on("treelistselect",function(e,t){t.node&&!t.children&&(RED.workspaces.show(t.node.z,!1,!1,!0),RED.view.reveal(t.node.id,!0),RED.view.redraw()),1==$(n).treeList("data").filter(e=>e.expanded).length?($(o).prop("disabled",!1),$(i).prop("disabled",!1)):($(o).prop("disabled",!0),$(i).prop("disabled",!0))})})("seeker"),function(t,n){if(n.indexOf(t.id)<0&&!t.d)switch(t.type){case"link call":RED.nodes.getNodeLinks(t).forEach(e=>{r(e.target,[...n,t.id])}),t.links.forEach(e=>{e=RED.nodes.node(e);e&&r(e,[...n,t.id])});break;case"link out":t.links.forEach(e=>{e=RED.nodes.node(e);e&&r(e,[...n,t.id])});break;case"Sink":n.push(t.id),window._introSpectionSeekerStack=[n,...window._introSpectionSeekerStack];break;default:RED.nodes.getNodeLinks(t).forEach(e=>{r(e.target,[...n,t.id])})}});let a=e=>{e&&e.preventDefault();let t=window._introSpectionSeekerStack.length,n=25,o=("-"!=$("#node-input-seeker-show-percent").val()&&(n=parseInt(t*(parseInt($("#node-input-seeker-show-percent").val())/100))),e=$("#node-input-seeker-show-ordering").val(),{1:(e,t)=>e.length<t.length?-1:1,2:(e,t)=>e.length>t.length?-1:1,3:(e,t)=>RED.utils.getNodeLabel(RED.nodes.node(e[e.length-1]))<RED.utils.getNodeLabel(RED.nodes.node(t[t.length-1]))?-1:1,4:(e,t)=>{e=RED.utils.getNodeLabel(RED.nodes.node(e[e.length-1]));return RED.utils.getNodeLabel(RED.nodes.node(t[t.length-1]))<e?-1:1},5:(e,t)=>.5<Math.random()?-1:1}[parseInt(e)]||((e,t)=>e.length<t.length?-1:1));setTimeout(()=>{setTimeout(()=>{$("#node-input-seeker-totalPaths").html(n>t?""+t:n+" / "+t)},10),setTimeout(()=>{$("#node-input-seeker-target-container-div").treeList("data",window._introSpectionSeekerStack.sort(o).slice(0,n).map(e=>i(e)))},20)},100)},d=()=>{let e=window._introSpectionSeekerStack.length;setTimeout(()=>{$("#node-input-seeker-start-but").prop("disabled",!1),$("#node-input-seeker-totalPaths").html(e),$("#node-input-seeker-spinner").hide()},10);var t="seeker",n=e;$(`#node-input-${t}-show-percent`).show(),$(`#node-input-${t}-show-ordering`).show();var o,i=$(`#node-input-${t}-show-percent`),r=(i.html(""),i.append($("<option></option>").val("-").html("Show..")),[5,10,20,30,40,50,75].forEach(e=>{var t=parseInt(e*n/100);0!=t&&i.append($("<option></option>").val(e).html(t+" paths"))}),i.append($("<option></option>").val(100).html("All")),i.val("-"),(i=$(`#node-input-${t}-show-ordering`)).html(""),{"Count Asc":1,"Count Desc":2,"Name Asc":3,"Name Desc":4,Random:5});for(o in r)i.append($("<option></option>").val(r[o]).html(o));i.val(1),$("#node-input-seeker-show-ordering").on("change",a),$("#node-input-seeker-show-percent").on("change",a),$("#node-input-seeker-show-percent").trigger("change")};$("#node-input-seeker-show-pathway-but").on("click",e=>{e&&e.preventDefault();var e=$("#node-input-seeker-target-container-div").treeList("data").filter(e=>e.expanded);1==(e=e).length?(e=e[0].children.filter(e=>e.node.z==RED.workspaces.active()).map(e=>e.node.id),RED.tray.hide(),RED.view.selectNodes({selected:e,onselect:()=>{RED.tray.show()},oncancel:()=>{RED.tray.show()}})):RED.notify("Only one expanded pathway can be shown.",{type:"warning"})}),$("#node-input-seeker-extract-pathway-but").on("click",e=>{e&&e.preventDefault(),(e=>{if(1==e.length){e=e[0].children.map(e=>e.node).filter(e=>"link in"!=e.type&&"link out"!=e.type&&"Seeker"!=e.type&&"Sink"!=e.type&&"junction"!=e.type);let n=RED.nodes.createExportableNodeSet(e);n=n.map((e,t)=>(delete e.z,e.y=50*t,e.x=0,t!=n.length-1?e.wires=[[n[t+1].id]]:e.wires=[[]],e)),RED.clipboard.copyText(JSON.stringify(n))&&RED.notify("Pathway copied to clipboard",{type:"success"})}else RED.notify("Only one expanded pathway can be extracted.",{type:"warning"})})($("#node-input-seeker-target-container-div").treeList("data").filter(e=>e.expanded))}),$("#node-input-seeker-start-but").on("click",e=>{if(e&&e.preventDefault(),setTimeout(()=>{$("#node-input-seeker-start-but").prop("disabled",!0),$("#node-input-seeker-totalPaths").html(""),$("#node-input-seeker-spinner").show(),$("#node-input-seeker-show-percent").hide(),$("#node-input-seeker-show-ordering").hide()},10),window._introSpectionSeekerStack=[],"undefined"!=typeof Worker){let t=new Worker("data:text/javascript;base64,bGV0IGludHJvU3BlY3Rpb25TdGFjaz1bXSxncmFwaD1bXSxncmFwaEluZGV4PXt9LFJFRD17bm9kZXM6e25vZGU6ZT0+Z3JhcGhbZ3JhcGhJbmRleFtlXV0sZ2V0Tm9kZUxpbmtzOmE9PmEuZmxhdHdpcmVzLm1hcChlPT4oe3RhcmdldDpSRUQubm9kZXMubm9kZShlKSxzb3VyY2U6YX0pKX19LHRyYXZlcnNlPWZ1bmN0aW9uKGEscyl7aWYocy5pbmRleE9mKGEuaWQpPDAmJiFhLmQpc3dpdGNoKGEudHlwZSl7Y2FzZSJsaW5rIGNhbGwiOlJFRC5ub2Rlcy5nZXROb2RlTGlua3MoYSkuZm9yRWFjaChlPT57dHJhdmVyc2UoZS50YXJnZXQsWy4uLnMsYS5pZF0pfSksYS5saW5rcy5mb3JFYWNoKGU9PntlPVJFRC5ub2Rlcy5ub2RlKGUpO2UmJnRyYXZlcnNlKGUsWy4uLnMsYS5pZF0pfSk7YnJlYWs7Y2FzZSJsaW5rIG91dCI6YS5saW5rcy5mb3JFYWNoKGU9PntlPVJFRC5ub2Rlcy5ub2RlKGUpO2UmJnRyYXZlcnNlKGUsWy4uLnMsYS5pZF0pfSk7YnJlYWs7Y2FzZSJTaW5rIjpzLnB1c2goYS5pZCkscG9zdE1lc3NhZ2Uocyk7YnJlYWs7ZGVmYXVsdDpSRUQubm9kZXMuZ2V0Tm9kZUxpbmtzKGEpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUudGFyZ2V0LFsuLi5zLGEuaWRdKX0pfX07b25tZXNzYWdlPWZ1bmN0aW9uKGUpe2xldCBhPWUuZGF0YS5zZWVrZXJJZDsoZ3JhcGg9ZS5kYXRhLm5vZGVzLm1hcChlPT4oe3dpcmVzOmUud2lyZXMsbGlua3M6ZS5saW5rcyxkOmUuZGlzYWJsZWR8fGUuZCxpZDplLmlkLHR5cGU6ZS50eXBlfSkpLmZpbHRlcihlPT4hIWUud2lyZXMpLm1hcChlPT4oZS5mbGF0d2lyZXM9ZS53aXJlcy5mbGF0KCksZSkpKS5mb3JFYWNoKChlLGEpPT5ncmFwaEluZGV4W2UuaWRdPWEpLFJFRC5ub2Rlcy5nZXROb2RlTGlua3MoUkVELm5vZGVzLm5vZGUoYSkpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUudGFyZ2V0LFthXSl9KSxwb3N0TWVzc2FnZSgiZG9uZSIpfTs=");(window._introWorker=t).onmessage=function(e){"done"==e.data?(t.terminate(),delete window._introWorker,d()):(window._introSpectionSeekerStack.push(e.data),$("#node-input-seeker-totalPaths").html(window._introSpectionSeekerStack.length),26==window._introSpectionSeekerStack.length&&$("#node-input-seeker-target-container-div").treeList("data",window._introSpectionSeekerStack.sort((e,t)=>e.length<t.length?-1:1).slice(0,25).map(e=>i(e))))},setTimeout(()=>{t.postMessage({seekerId:n.id,nodes:RED.nodes.createCompleteNodeSet({credentials:!1})})},10)}else setTimeout(()=>{RED.nodes.getNodeLinks(n).forEach(e=>{r(e.target,[n.id])}),d()},300)})},oneditsave:function(){window._introWorker&&(window._introWorker.terminate(),delete window._introWorker),delete window._introSpectionSeekerStack},oneditcancel:function(){window._introWorker&&(window._introWorker.terminate(),delete window._introWorker),delete window._introSpectionSeekerStack},oneditresize:function(e){for(var t=$("#dialog-form>div:not(.node-input-target-list-row)"),n=$("#dialog-form").height(),o=0;o<t.length;o++)n-=$(t[o]).outerHeight(!0);$("#dialog-form>div.node-input-target-list-row").css("height",n+"px")}});
 </script>
 
 <script type="text/html" data-template-name="Seeker">
@@ -7013,7 +6623,9 @@ RED.nodes.registerType("Seeker",{color:"#e5e4ef",icon:"font-awesome/fa-ship",cat
 
   <div class="form-row node-input-target-row">
     <button id="node-input-seeker-start-but" class="red-ui-button"><span><i class="fa fa-refresh"></i> Find Pathways</span></button>
-    <select class='hide' id="node-input-seeker-show-percent"></select>
+    <select class='hide' style="width:100px;" id="node-input-seeker-show-percent"></select>
+    <select class='hide' style="width:100px;" id="node-input-seeker-show-ordering"></select>
+    <button id="node-input-seeker-show-pathway-but" class="red-ui-button">Show Pathway</button>
   </div>
 
   <div class="form-row node-input-target-row node-input-target-list-row" style="margin-top: 40px; position: relative; min-height: 100px">
@@ -7026,6 +6638,7 @@ RED.nodes.registerType("Seeker",{color:"#e5e4ef",icon:"font-awesome/fa-ship",cat
     <label>Total Paths: 
         <span id="node-input-seeker-totalPaths"></span><img class='hide' id="node-input-seeker-spinner" src='red/images/spin.svg'/>
     </label>
+    <button id="node-input-seeker-extract-pathway-but" style="float: right" class="red-ui-button">Extract Pathway to Clipboard</button>
   </div>
 
 </script>
@@ -7043,7 +6656,7 @@ RED.nodes.registerType("Seeker",{color:"#e5e4ef",icon:"font-awesome/fa-ship",cat
 </script>
 <!-- --- [red-module:@gregoriusrippenstein/node-red-contrib-introspection/sink] --- -->
 <script type="text/javascript">
-RED.nodes.registerType("Sink",{color:"#e5e4ef",icon:"font-awesome/fa-anchor",category:"introspection",paletteLabel:"Sink",defaults:{name:{value:""}},inputs:1,outputs:0,label:function(){return this.name||this._def.paletteLabel},labelStyle:function(){return this.name?"node_label_italic":""},oneditprepare:function(){var n=this;let i=1;window._introSpectionsinkStack=[];var o=$("#node-input-sink-target-filter").searchBox({style:"compact",delay:300,change:function(){let t=$(this).val().trim().toLowerCase();var e,n=$("#node-input-sink-target-container-div").treeList("data");""===t?($("#node-input-sink-target-container-div").treeList("filter",null),o.searchBox("count","")):(e=$("#node-input-sink-target-container-div").treeList("filter",function(e){return-1<e._label.toLowerCase().indexOf(t)||-1<e.node.type.toLowerCase().indexOf(t)||e.sublabel.toLowerCase().indexOf(t)}),o.searchBox("count",e+" / "+n.length))}});$("#node-input-sink-target-container-div").css({width:"100%",height:"95%"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistconfirm",function(e,t){t.node&&!t.children&&(RED.view.reveal(t.node.id),RED.view.select(t.node.id),setTimeout(()=>{RED.editor.edit(t.node)},100))}).on("treelistselect",function(e,t){var n;t.node&&(t.children?(n=t.children.filter(e=>e.node.z==RED.workspaces.active()).map(e=>e.node.id),RED.tray.hide(),RED.view.selectNodes({selected:n,onselect:()=>{RED.tray.show()},oncancel:()=>{RED.tray.show()}})):(RED.workspaces.show(t.node.z,!1,!1,!0),RED.view.reveal(t.node.id,!0),RED.view.redraw()))});let s=e=>{var t=RED.nodes.node(e[e.length-1]);let n=[];return e.forEach(function(e){var t,e=RED.nodes.node(e)||RED.nodes.junction(e);void 0!==e&&(t=RED.nodes.workspace(e.z)||RED.nodes.subflow(e.z),n.push({label:"",_label:RED.utils.getNodeLabel(e),node:e,sublabel:t&&RED.utils.getNodeLabel(t)||e.z,icon:RED.utils.createNodeIcon(e,!0),class:"intro-remove-top-left"}))}),{node:t,label:RED.utils.getNodeLabel(t),_label:RED.utils.getNodeLabel(t),_pathlen:e.length,sublabel:"Length: "+e.length,selected:!1,checkbox:!1,children:n}};var a=function(t,n){if(n.indexOf(t.id)<0)switch(t.type){case"link in":t.links.forEach(e=>{e=RED.nodes.node(e);e&&a(e,[...n,t.id])});break;case"Seeker":n.push(t.id),window._introSpectionsinkStack=[n,...window._introSpectionsinkStack];break;default:RED.nodes.getNodeLinks(t,i).forEach(e=>{a(e.source,[...n,t.id])})}};$("#node-input-sink-start-but").on("click",e=>{e&&e.preventDefault(),$("#node-input-sink-start-but").prop("disabled",!0),$("#node-input-sink-totalPaths").html(""),$("#node-input-sink-spinner").show(),window._introSpectionsinkStack=[],setTimeout(()=>{RED.nodes.getNodeLinks(n,i).forEach(e=>{a(e.source,[n.id])});var t,e=window._introSpectionsinkStack.length;$("#node-input-sink-start-but").prop("disabled",!1),$("#node-input-sink-totalPaths").html(e),$("#node-input-sink-spinner").hide(),50<e?($("#node-input-sink-show-percent").show(),(t=$("#node-input-sink-show-percent")).html(""),["-",5,10,20,30,40,50,75,100].forEach(function(e){t.append($("<option></option>").val(e).html(100==e?"All":"-"==e?"Select..":e+"%"))}),t.val("-"),$("#node-input-sink-show-percent").on("change",e=>{e&&e.preventDefault();e=window._introSpectionsinkStack.length;let t=25;"-"!=$("#node-input-sink-show-percent").val()&&(t=parseInt(e*(parseInt($("#node-input-sink-show-percent").val())/100))),$("#node-input-sink-totalPaths").html(t+" / "+e),setTimeout(()=>{$("#node-input-sink-target-container-div").treeList("data",window._introSpectionsinkStack.sort((e,t)=>e.length<t.length?-1:1).slice(0,t).map(e=>s(e)))},300)}),$("#node-input-sink-show-percent").trigger("change")):setTimeout(()=>{$("#node-input-sink-target-container-div").treeList("data",window._introSpectionsinkStack.sort((e,t)=>e.length<t.length?-1:1).map(e=>s(e)))},300)},300)})},oneditsave:function(){delete window._introSpectionsinkStack},oneditcancel:function(){delete window._introSpectionsinkStack},oneditresize:function(e){for(var t=$("#dialog-form>div:not(.node-input-target-list-row)"),n=$("#dialog-form").height(),i=0;i<t.length;i++)n-=$(t[i]).outerHeight(!0);$("#dialog-form>div.node-input-target-list-row").css("height",n+"px")}});
+RED.nodes.registerType("Sink",{color:"#e5e4ef",icon:"font-awesome/fa-anchor",category:"introspection",paletteLabel:"Sink",defaults:{name:{value:""}},inputs:1,outputs:0,label:function(){return this.name||this._def.paletteLabel},labelStyle:function(){return this.name?"node_label_italic":""},oneditprepare:function(){var n=this;let o=1,i=(window._introSpectionsinkStack=[],window._introWorker=void 0,e=>{var t=RED.nodes.node(e[e.length-1]);let n=[];return e.forEach(function(e){var t,e=RED.nodes.node(e)||RED.nodes.junction(e);void 0!==e&&(t=RED.nodes.workspace(e.z)||RED.nodes.subflow(e.z),n.push({label:"",_label:RED.utils.getNodeLabel(e),node:e,sublabel:t&&RED.utils.getNodeLabel(t)||e.z,icon:RED.utils.createNodeIcon(e,!0),class:"intro-remove-top-left"}))}),{node:t,label:RED.utils.getNodeLabel(t),_label:RED.utils.getNodeLabel(t),_pathlen:e.length,sublabel:"Length: "+e.length,selected:!1,checkbox:!1,children:n}});var a=$("#node-input-sink-target-filter").searchBox({style:"compact",delay:300,change:function(){let t=$(this).val().trim().toLowerCase();var e,n=$("#node-input-sink-target-container-div").treeList("data");""===t?($("#node-input-sink-target-container-div").treeList("filter",null),a.searchBox("count","")):(e=$("#node-input-sink-target-container-div").treeList("filter",function(e){return-1<e._label.toLowerCase().indexOf(t)||-1<e.node.type.toLowerCase().indexOf(t)||e.sublabel.toLowerCase().indexOf(t)}),a.searchBox("count",e+" / "+n.length))}}),d=((e=>{let n=`#node-input-${e}-target-container-div`,o=`#node-input-${e}-extract-pathway-but`,i=`#node-input-${e}-show-pathway-but`;$(n).css({width:"100%",height:"95%"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistconfirm",function(e,t){t.node&&!t.children&&(RED.view.reveal(t.node.id),RED.view.select(t.node.id),setTimeout(()=>{RED.editor.edit(t.node)},100))}).on("treelistselect",function(e,t){t.node&&!t.children&&(RED.workspaces.show(t.node.z,!1,!1,!0),RED.view.reveal(t.node.id,!0),RED.view.redraw()),1==$(n).treeList("data").filter(e=>e.expanded).length?($(o).prop("disabled",!1),$(i).prop("disabled",!1)):($(o).prop("disabled",!0),$(i).prop("disabled",!0))})})("sink"),function(t,n){if(n.indexOf(t.id)<0&&!t.d)switch(t.type){case"link in":t.links.forEach(e=>{e=RED.nodes.node(e);e&&d(e,[...n,t.id])});break;case"Seeker":n.push(t.id),window._introSpectionsinkStack=[n,...window._introSpectionsinkStack];break;default:RED.nodes.getNodeLinks(t,o).forEach(e=>{d(e.source,[...n,t.id])})}});let l=e=>{e&&e.preventDefault();let t=window._introSpectionsinkStack.length,n=25,o=("-"!=$("#node-input-sink-show-percent").val()&&(n=parseInt(t*(parseInt($("#node-input-sink-show-percent").val())/100))),e=$("#node-input-sink-show-ordering").val(),{1:(e,t)=>e.length<t.length?-1:1,2:(e,t)=>e.length>t.length?-1:1,3:(e,t)=>RED.utils.getNodeLabel(RED.nodes.node(e[e.length-1]))<RED.utils.getNodeLabel(RED.nodes.node(t[t.length-1]))?-1:1,4:(e,t)=>{e=RED.utils.getNodeLabel(RED.nodes.node(e[e.length-1]));return RED.utils.getNodeLabel(RED.nodes.node(t[t.length-1]))<e?-1:1},5:(e,t)=>.5<Math.random()?-1:1}[parseInt(e)]||((e,t)=>e.length<t.length?-1:1));setTimeout(()=>{setTimeout(()=>{$("#node-input-sink-totalPaths").html(n>t?""+t:n+" / "+t)},10),setTimeout(()=>{$("#node-input-sink-target-container-div").treeList("data",window._introSpectionsinkStack.sort(o).slice(0,n).map(e=>i(e)))},20)},100)},s=()=>{let e=window._introSpectionsinkStack.length;setTimeout(()=>{$("#node-input-sink-start-but").prop("disabled",!1),$("#node-input-sink-totalPaths").html(e),$("#node-input-sink-spinner").hide()},10);var t="sink",n=e;$(`#node-input-${t}-show-percent`).show(),$(`#node-input-${t}-show-ordering`).show();var o,i=$(`#node-input-${t}-show-percent`),a=(i.html(""),i.append($("<option></option>").val("-").html("Show..")),[5,10,20,30,40,50,75].forEach(e=>{var t=parseInt(e*n/100);0!=t&&i.append($("<option></option>").val(e).html(t+" paths"))}),i.append($("<option></option>").val(100).html("All")),i.val("-"),(i=$(`#node-input-${t}-show-ordering`)).html(""),{"Count Asc":1,"Count Desc":2,"Name Asc":3,"Name Desc":4,Random:5});for(o in a)i.append($("<option></option>").val(a[o]).html(o));i.val(1),$("#node-input-sink-show-ordering").on("change",l),$("#node-input-sink-show-percent").on("change",l),$("#node-input-sink-show-percent").trigger("change")};$("#node-input-sink-show-pathway-but").on("click",e=>{e&&e.preventDefault();var e=$("#node-input-sink-target-container-div").treeList("data").filter(e=>e.expanded);1==(e=e).length?(e=e[0].children.filter(e=>e.node.z==RED.workspaces.active()).map(e=>e.node.id),RED.tray.hide(),RED.view.selectNodes({selected:e,onselect:()=>{RED.tray.show()},oncancel:()=>{RED.tray.show()}})):RED.notify("Only one expanded pathway can be shown.",{type:"warning"})}),$("#node-input-sink-extract-pathway-but").on("click",e=>{e&&e.preventDefault(),(e=>{if(1==e.length){e=e[0].children.map(e=>e.node).filter(e=>"link in"!=e.type&&"link out"!=e.type&&"Seeker"!=e.type&&"Sink"!=e.type&&"junction"!=e.type);let n=RED.nodes.createExportableNodeSet(e);n=n.map((e,t)=>(delete e.z,e.y=50*t,e.x=0,t!=n.length-1?e.wires=[[n[t+1].id]]:e.wires=[[]],e)),RED.clipboard.copyText(JSON.stringify(n))&&RED.notify("Pathway copied to clipboard",{type:"success"})}else RED.notify("Only one expanded pathway can be extracted.",{type:"warning"})})($("#node-input-sink-target-container-div").treeList("data").filter(e=>e.expanded))}),$("#node-input-sink-start-but").on("click",e=>{if(e&&e.preventDefault(),setTimeout(()=>{$("#node-input-sink-start-but").prop("disabled",!0),$("#node-input-sink-totalPaths").html(""),$("#node-input-sink-spinner").show(),$("#node-input-sink-show-percent").hide(),$("#node-input-sink-show-ordering").hide()},10),window._introSpectionsinkStack=[],"undefined"!=typeof Worker){let t=new Worker("data:text/javascript;base64,bGV0IGludHJvU3BlY3Rpb25TdGFjaz1bXSxncmFwaD1bXSxncmFwaEluZGV4PXt9LFJFRD17bm9kZXM6e25vZGU6ZT0+Z3JhcGhbZ3JhcGhJbmRleFtlXV0sZ2V0Tm9kZUxpbmtzOnM9PnMuaW53aXJlcy5tYXAoZT0+KHt0YXJnZXQ6cyxzb3VyY2U6UkVELm5vZGVzLm5vZGUoZSl9KSl9fTt2YXIgdHJhdmVyc2U9ZnVuY3Rpb24ocyxhKXtpZihhLmluZGV4T2Yocy5pZCk8MCYmIXMuZClzd2l0Y2gocy50eXBlKXtjYXNlImxpbmsgaW4iOnMubGlua3MuZm9yRWFjaChlPT57ZT1SRUQubm9kZXMubm9kZShlKTtlJiZ0cmF2ZXJzZShlLFsuLi5hLHMuaWRdKX0pO2JyZWFrO2Nhc2UiU2Vla2VyIjphLnB1c2gocy5pZCkscG9zdE1lc3NhZ2UoYSk7YnJlYWs7ZGVmYXVsdDpSRUQubm9kZXMuZ2V0Tm9kZUxpbmtzKHMpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUuc291cmNlLFsuLi5hLHMuaWRdKX0pfX07b25tZXNzYWdlPWZ1bmN0aW9uKGUpe2xldCBzPWUuZGF0YS5zaW5rSWQ7KGdyYXBoPShncmFwaD1lLmRhdGEubm9kZXMubWFwKGU9Pih7d2lyZXM6ZS53aXJlcyxsaW5rczplLmxpbmtzLGQ6ZS5kaXNhYmxlZHx8ZS5kLGlkOmUuaWQsdHlwZTplLnR5cGV9KSkuZmlsdGVyKGU9PiEhZS53aXJlcykubWFwKGU9PihlLmZsYXR3aXJlcz1lLndpcmVzLmZsYXQoKSxlKSkpLm1hcChzPT4ocy5pbndpcmVzPWdyYXBoLmZpbHRlcihlPT4tMTxlLmZsYXR3aXJlcy5pbmRleE9mKHMuaWQpKS5tYXAoZT0+ZS5pZCkscykpKS5mb3JFYWNoKChlLHMpPT5ncmFwaEluZGV4W2UuaWRdPXMpLFJFRC5ub2Rlcy5nZXROb2RlTGlua3MoUkVELm5vZGVzLm5vZGUocykpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUuc291cmNlLFtzXSl9KSxwb3N0TWVzc2FnZSgiZG9uZSIpfTs=");(window._introWorker=t).onmessage=function(e){"done"==e.data?(t.terminate(),delete window._introWorker,s()):(window._introSpectionsinkStack.push(e.data),$("#node-input-sink-totalPaths").html(window._introSpectionsinkStack.length),26==window._introSpectionsinkStack.length&&$("#node-input-sink-target-container-div").treeList("data",window._introSpectionsinkStack.sort((e,t)=>e.length<t.length?-1:1).slice(0,25).map(e=>i(e))))},setTimeout(()=>{t.postMessage({sinkId:n.id,nodes:RED.nodes.createCompleteNodeSet({credentials:!1})})},10)}else setTimeout(()=>{RED.nodes.getNodeLinks(n,o).forEach(e=>{d(e.source,[n.id])}),s()},300)})},oneditsave:function(){window._introWorker&&(window._introWorker.terminate(),delete window._introWorker),delete window._introSpectionsinkStack},oneditcancel:function(){window._introWorker&&(window._introWorker.terminate(),delete window._introWorker),delete window._introSpectionsinkStack},oneditresize:function(e){for(var t=$("#dialog-form>div:not(.node-input-target-list-row)"),n=$("#dialog-form").height(),o=0;o<t.length;o++)n-=$(t[o]).outerHeight(!0);$("#dialog-form>div.node-input-target-list-row").css("height",n+"px")}});
 </script>
 
 <script type="text/html" data-template-name="Sink">
@@ -7054,7 +6667,9 @@ RED.nodes.registerType("Sink",{color:"#e5e4ef",icon:"font-awesome/fa-anchor",cat
 
   <div class="form-row node-input-target-row">
     <button id="node-input-sink-start-but" class="red-ui-button"><i class="fa fa-refresh"></i> Find Pathways</button>
-    <select class='hide' id="node-input-sink-show-percent"></select>
+    <select class='hide' style="width:100px;" id="node-input-sink-show-percent"></select>
+    <select class='hide' style="width:100px;" id="node-input-sink-show-ordering"></select>
+    <button id="node-input-sink-show-pathway-but" class="red-ui-button">Show Pathway</button>
   </div>
 
   <div class="form-row node-input-target-row node-input-target-list-row" style="margin-top: 40px; position: relative; min-height: 100px">
@@ -7066,7 +6681,8 @@ RED.nodes.registerType("Sink",{color:"#e5e4ef",icon:"font-awesome/fa-anchor",cat
   <div class="form-row" style="margin-top: -40px;">
     <label>Total Paths: 
         <span id="node-input-sink-totalPaths"></span><img id="node-input-sink-spinner" class="hide" src='red/images/spin.svg'/>
-    </label>
+     </label>
+     <button id="node-input-sink-extract-pathway-but" class="red-ui-button" style="float: right">Extract Pathway to Clipboard</button>
   </div>
 </script>
 

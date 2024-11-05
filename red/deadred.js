@@ -1624,35 +1624,6 @@ var DEADRED = (function() {
         }
         setTimeout( defineCustomDropHandler, 300 )
 
-        // handle a generate paste in the browser window. But this only
-        // works outside of the workspace area. But this is only a prototype.
-        $(window).on('paste', (event) => {
-            try {
-                window.pasteEvent = event
-
-                // there too many edge cases so explicitly on those elements that are
-                // safe are selected here.
-                if (!event.target || !(event.target.id == "red-ui-header" ||
-                                       event.target.id == "red-ui-workspace-chart" )) {
-                    return
-                }
-
-                let pasteText = event.originalEvent.clipboardData.getData('text')
-                let data = JSON.parse(pasteText)
-
-                if (Array.isArray(data)) {
-                    try {
-                        RED.view.importNodes(data, {
-                            generateIds: false,
-                            addFlow: false,
-                            touchImport: false,
-                            generateDefaultNames: false
-                        })
-                    } catch (ex) { RED.notify( `Error: ${ex.message}`, { type: "warning"}) }
-                }
-            } catch (ex) { RED.notify(`Error: ${ex.message}`, { type: "warning" }) }
-        })
-
         setTimeout( () => {
             $("#red-ui-header-button-deploy").hide()
             $("#red-ui-header-button-deploy-options").hide()
