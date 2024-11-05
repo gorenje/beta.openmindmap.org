@@ -884,7 +884,7 @@
             "BlogChanges"
         ],
         "user": false,
-        "version": "0.1.13-b1"
+        "version": "0.1.13-b2"
     },
     {
         "enabled": false,
@@ -896,7 +896,7 @@
             "BlogDetails"
         ],
         "user": false,
-        "version": "0.1.13-b1"
+        "version": "0.1.13-b2"
     },
     {
         "enabled": false,
@@ -908,7 +908,7 @@
             "BlogPages"
         ],
         "user": false,
-        "version": "0.1.13-b1"
+        "version": "0.1.13-b2"
     },
     {
         "enabled": false,
@@ -920,7 +920,7 @@
             "BlogPageInfo"
         ],
         "user": false,
-        "version": "0.1.13-b1"
+        "version": "0.1.13-b2"
     },
     {
         "enabled": false,
@@ -932,7 +932,7 @@
             "BlogContent"
         ],
         "user": false,
-        "version": "0.1.13-b1"
+        "version": "0.1.13-b2"
     },
     {
         "enabled": false,
@@ -944,7 +944,7 @@
             "PubMedium"
         ],
         "user": false,
-        "version": "0.1.13-b1"
+        "version": "0.1.13-b2"
     },
     {
         "enabled": true,
