@@ -31981,6 +31981,7 @@ RED.sidebar.config = (function() {
     }
 
     function init() {
+        /*
         RED.sidebar.addTab({
             id: "config",
             label: RED._("sidebar.config.label"),
@@ -31991,6 +31992,7 @@ RED.sidebar.config = (function() {
             action: "core:show-config-tab",
             onchange: function() { refreshConfigNodeList(); }
         });
+        */
         RED.actions.add("core:show-config-tab", function() {RED.sidebar.show('config')});
         RED.actions.add("core:select-all-config-nodes", function() {
             $(content).find(".red-ui-palette-node").addClass("selected");
@@ -32285,6 +32287,7 @@ RED.sidebar.context = (function() {
 
         RED.actions.add("core:show-context-tab",show);
 
+        /*
         RED.sidebar.addTab({
             id: "context",
             label: RED._("sidebar.context.label"),
@@ -32296,6 +32299,7 @@ RED.sidebar.context = (function() {
             enableOnEdit: true,
             action: "core:show-context-tab"
         });
+        */
 
         RED.events.on("view:selection-changed", function(event) {
             var selectedNode = event.nodes && event.nodes.length === 1 && event.nodes[0];
