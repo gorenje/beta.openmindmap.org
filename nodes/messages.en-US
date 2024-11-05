@@ -33,24 +33,12 @@
     "@gorenje/node-red-mindmap/thought": {},
     "@gorenje/node-red-mindmap/topic": {},
     "@gorenje/node-red-mindmap/treasure": {},
-    "@gregoriusrippenstein/node-red-contacts/addressbook": {},
     "@gregoriusrippenstein/node-red-contacts/contact": {
         "contact": {
             "label": {
                 "firstname": "First Name",
                 "statusset": "Status Set",
                 "surname": "Surname"
-            },
-            "status": {
-                "timeout": "No more time to waiting",
-                "waiting": "Waiting for Godot"
-            }
-        }
-    },
-    "@gregoriusrippenstein/node-red-contacts/generator": {
-        "generator": {
-            "label": {
-                "statusset": "Status Set"
             },
             "status": {
                 "timeout": "No more time to waiting",

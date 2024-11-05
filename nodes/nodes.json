@@ -956,30 +956,6 @@
             "Contact"
         ],
         "user": false,
-        "version": "0.0.3-b1"
-    },
-    {
-        "enabled": false,
-        "id": "@gregoriusrippenstein/node-red-contacts/generator",
-        "local": true,
-        "module": "@gregoriusrippenstein/node-red-contacts",
-        "name": "generator",
-        "types": [
-            "Generator"
-        ],
-        "user": false,
-        "version": "0.0.3-b1"
-    },
-    {
-        "enabled": false,
-        "id": "@gregoriusrippenstein/node-red-contacts/addressbook",
-        "local": true,
-        "module": "@gregoriusrippenstein/node-red-contacts",
-        "name": "addressbook",
-        "types": [
-            "AdressBookCfg"
-        ],
-        "user": false,
-        "version": "0.0.3-b1"
+        "version": "0.0.3-b2"
     }
 ]

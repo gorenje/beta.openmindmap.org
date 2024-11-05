@@ -1517,9 +1517,77 @@ var DEADRED = (function() {
                             waitingOnNode--
                         }
                     })
-                } else if ( itm.type.startsWith("image/") ) {
+
+                } else if (itm.type.startsWith("audio/") && itm.kind == "file") {
                     waitingOnNode++
-                    console.log( "dadsadad")
+
+                    let file = event.originalEvent.dataTransfer.files[idx]
+                    let yPos = waitingOnNode * 40
+
+
+                    let audioTag = (dataB64,mimetype,filename) => {
+                        return `<div class="audio-container">
+                                <audio controls preload=none>
+                                <source src="${dataB64}" type="${mimetype}" />
+                                </audio>
+                                <p>Download <a href="${dataB64}" download="${filename}">file</a></p>
+                                </div>`.replace(/\n\s+/g, "\n")
+                    }
+
+                    file2base64Image(file, dataUrl => {
+                        nodesToBeImported.push({
+                            "id": RED.nodes.id(),
+                            "type": "Inspiration",
+                            "name": file.name,
+                            "info": audioTag(dataUrl, itm.type, file.name),
+                            "sumPass": false,
+                            "sumPassPrio": 0,
+                            "sumPassNodeId": "",
+                            "createdAt": new Date().toISOString(),
+                            "updatedAt": new Date().toISOString(),
+                            "x": 0,
+                            "y": yPos,
+                            "wires": [[]]
+                        })
+                    })
+
+                } else if (itm.type.startsWith("video/") && itm.kind == "file") {
+                    waitingOnNode++
+
+                    let file = event.originalEvent.dataTransfer.files[idx]
+                    let yPos = waitingOnNode * 40
+
+
+                    let videoTag = (dataUrl,mimetype,filename) => {
+                        return `<div class="video-container">
+                                <video width="640" height="360" controls>
+                                <source src="${dataUrl}" type="${mimetype}">
+                                Your browser doesn't support HTML5 video.
+                                </video>
+                                <p>Download <a href="${dataUrl}" download="${filename}">file</a></p>
+                                </div>`.replace(/\n\s+/g, "\n")
+                    }
+
+                    file2base64Image(file, dataUrl => {
+                        nodesToBeImported.push({
+                            "id": RED.nodes.id(),
+                            "type": "Image",
+                            "name": file.name,
+                            "info": videoTag(dataUrl, itm.type, file.name),
+                            "sumPass": false,
+                            "sumPassPrio": 0,
+                            "sumPassNodeId": "",
+                            "createdAt": new Date().toISOString(),
+                            "updatedAt": new Date().toISOString(),
+                            "x": 0,
+                            "y": yPos,
+                            "wires": [[]]
+                        })
+                    })
+
+                } else if ( itm.type.startsWith("image/") && itm.kind == "file") {
+                    waitingOnNode++
+
                     let file = event.originalEvent.dataTransfer.files[idx]
                     let yPos = waitingOnNode * 40
 

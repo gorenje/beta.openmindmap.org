@@ -46,17 +46,5 @@
         "runtime": false,
         "user": false,
         "version": "0.1.13-b1"
-    },
-    {
-        "editor": true,
-        "enabled": true,
-        "id": "@gregoriusrippenstein/node-red-contacts/addressbook_sidebar",
-        "local": true,
-        "module": "@gregoriusrippenstein/node-red-contacts",
-        "name": "addressbook_sidebar",
-        "plugins": [],
-        "runtime": false,
-        "user": false,
-        "version": "0.0.3-b1"
     }
 ]
