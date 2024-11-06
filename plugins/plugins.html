@@ -1975,6 +1975,38 @@ var retrieveBlogPages = () => {
 };
 
 
+function generateMarkdown(e) {
+    if ( e ) { e.preventDefault() }
+
+    let ndes = RED.view.selection().nodes;
+
+    if ( !ndes || ndes.length != 1) {
+        RED.notify( "Too many or too few nodes selected", { type: "warning"})
+        return
+    }
+
+    let worker = new Worker("data:text/javascript;base64,bGV0IGludHJvU3BlY3Rpb25TdGFjaz1bXSxncmFwaD1bXSxncmFwaEluZGV4PXt9LFJFRD17bm9kZXM6e25vZGU6ZT0+Z3JhcGhbZ3JhcGhJbmRleFtlXV0sZ2V0Tm9kZUxpbmtzOmE9PmEuZmxhdHdpcmVzLm1hcChlPT4oe3RhcmdldDpSRUQubm9kZXMubm9kZShlKSxzb3VyY2U6YX0pKX19LHRyYXZlcnNlPWZ1bmN0aW9uKGEsbil7dmFyIGU7aWYobi5pbmRleE9mKGEuaWQpPDAmJiFhLmQpaWYoMD09YS5mbGF0d2lyZXMubGVuZ3RoKWU9bi5tYXAoZT0+e2U9UkVELm5vZGVzLm5vZGUoZSk7cmV0dXJuYCMgJHtlLm5hbWUucmVwbGFjZSgiXFxuIiwiICIpfQoKJHtlLnRleHR9CmB9KS5qb2luKCJcbiIpLHBvc3RNZXNzYWdlKGUpO2Vsc2Ugc3dpdGNoKGEudHlwZSl7Y2FzZSJsaW5rIGNhbGwiOlJFRC5ub2Rlcy5nZXROb2RlTGlua3MoYSkuZm9yRWFjaChlPT57dHJhdmVyc2UoZS50YXJnZXQsWy4uLm4sYS5pZF0pfSksYS5saW5rcy5mb3JFYWNoKGU9PntlPVJFRC5ub2Rlcy5ub2RlKGUpO2UmJnRyYXZlcnNlKGUsWy4uLm4sYS5pZF0pfSk7YnJlYWs7Y2FzZSJsaW5rIG91dCI6YS5saW5rcy5mb3JFYWNoKGU9PntlPVJFRC5ub2Rlcy5ub2RlKGUpO2UmJnRyYXZlcnNlKGUsWy4uLm4sYS5pZF0pfSk7YnJlYWs7ZGVmYXVsdDpSRUQubm9kZXMuZ2V0Tm9kZUxpbmtzKGEpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUudGFyZ2V0LFsuLi5uLGEuaWRdKX0pfX07b25tZXNzYWdlPWZ1bmN0aW9uKGUpe2xldCBhPWUuZGF0YS5zdGFydE5vZGVJZDsoZ3JhcGg9ZS5kYXRhLm5vZGVzLm1hcChlPT4oe3dpcmVzOmUud2lyZXMsbGlua3M6ZS5saW5rcyxkOmUuZGlzYWJsZWR8fGUuZCxpZDplLmlkLHR5cGU6ZS50eXBlLHRleHQ6ZS5pbmZvLG5hbWU6ZS5uYW1lfSkpLmZpbHRlcihlPT4hIWUud2lyZXMpLm1hcChlPT4oZS5mbGF0d2lyZXM9ZS53aXJlcy5mbGF0KCksZSkpKS5mb3JFYWNoKChlLGEpPT5ncmFwaEluZGV4W2UuaWRdPWEpLFJFRC5ub2Rlcy5nZXROb2RlTGlua3MoUkVELm5vZGVzLm5vZGUoYSkpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUudGFyZ2V0LFthXSl9KSxwb3N0TWVzc2FnZSgiZXJyb3Igbm8gZW5kIGZvdW5kIil9Ow==");   
+
+    worker.onmessage = (event) => {
+        if (RED.clipboard.copyText(event.data)) {
+            RED.notify("Markdown copied to clipboard", { type: "success" });
+        }
+
+        $('#blogpagessidebar-tab-generate-markdown-container').html( 
+            RED.utils.renderMarkdown(event.data)
+        ).find('a').attr( 'target', "_blank")
+
+        worker.terminate()
+    }
+
+    setTimeout(() => {
+        worker.postMessage({
+            startNodeId: ndes[0].id,
+            nodes: RED.nodes.createCompleteNodeSet({ credentials: false })
+        });
+    }, 10)
+}
+
   
   var initialiseSidebarNodeOnce = () => {
     RED.events.off('runtime-state', initialiseSidebarNodeOnce);
@@ -2003,7 +2035,9 @@ var retrieveBlogPages = () => {
             } else if (tab.id == "func-blogpagessidebar-tab-blogchanges" ) {
                 setTimeout(updateBlogChanges, 150);
             } else if (tab.id == "func-blogpagessidebar-tab-mindmap-stats" ) {
-                setTimeout(updateMindMapStats, 150)
+                setTimeout(updateMindMapStats, 150) 
+            } else if (tab.id == "func-blogpagessidebar-tab-generate-markdown") {
+                /* TODO do something here */
             }
         }
     });
@@ -2028,6 +2062,12 @@ var retrieveBlogPages = () => {
         id: 'func-blogpagessidebar-tab-mindmap-stats',
         iconClass: 'fa fa-percent',
         label: 'Stats'
+    });
+
+    tabs.addTab({
+        id: 'func-blogpagessidebar-tab-generate-markdown',
+        iconClass: 'fa fa-newspaper-o',
+        label: 'Document'
     });
 
     /***
@@ -2346,6 +2386,7 @@ var retrieveBlogPages = () => {
         $('#node-input-blogchangesidebar-tab-tracker').treeList('data', []);
     });
 
+    $('#node-input-generate-markdown-button').on("click", generateMarkdown)
 
     // ensure all functions are defined that are used in the 'onchange' callback before
     // setting the default tab.
@@ -2461,6 +2502,20 @@ RED.events.on('runtime-state', initialiseSidebarNodeOnce);
         </div>
 
         <div id="node-input-mindmap-stats-target-container-div" style="margin-top:10px; min-height: 500px;"></div>
+    </div>
+</div>
+
+    <div id="func-blogpagessidebar-tab-generate-markdown" style="display:none">
+    <div class="form-row" style="margin-left: 10px; margin-top: 30px;">
+        <button id="node-input-generate-markdown-button"
+             class="red-ui-button"><i class="fa fa-newspaper-o"></i> Generate Markdown</button>
+    </div>
+
+    <div class="form-row" style="margin-left: 10px; height: calc(50%); width: 95%;">
+        <div class="red-ui-help">
+            <span id="blogpagessidebar-tab-generate-markdown-container"class="red-ui-text-bidi-aware" dir="">
+            </span>
+        </div>
     </div>
 </div>
 </div>
