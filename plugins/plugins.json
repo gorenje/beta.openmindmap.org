@@ -9,7 +9,7 @@
         "plugins": [],
         "runtime": false,
         "user": false,
-        "version": "0.8.4-b1"
+        "version": "0.8.4-b2"
     },
     {
         "editor": true,
@@ -21,7 +21,7 @@
         "plugins": [],
         "runtime": false,
         "user": false,
-        "version": "0.9.17-b1"
+        "version": "0.9.18-b1"
     },
     {
         "editor": true,
@@ -45,6 +45,6 @@
         "plugins": [],
         "runtime": false,
         "user": false,
-        "version": "0.1.13-b3"
+        "version": "0.1.13-b5"
     }
 ]

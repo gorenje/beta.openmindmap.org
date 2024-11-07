@@ -466,7 +466,7 @@
             "FlowHubCfg"
         ],
         "user": false,
-        "version": "0.8.4-b1"
+        "version": "0.8.4-b2"
     },
     {
         "enabled": true,
@@ -478,7 +478,7 @@
             "Seeker"
         ],
         "user": false,
-        "version": "0.9.17-b1"
+        "version": "0.9.18-b1"
     },
     {
         "enabled": true,
@@ -490,7 +490,7 @@
             "Sink"
         ],
         "user": false,
-        "version": "0.9.17-b1"
+        "version": "0.9.18-b1"
     },
     {
         "enabled": true,
@@ -502,7 +502,7 @@
             "ClientCode"
         ],
         "user": false,
-        "version": "0.9.17-b1"
+        "version": "0.9.18-b1"
     },
     {
         "enabled": false,
@@ -514,7 +514,7 @@
             "GetFlows"
         ],
         "user": false,
-        "version": "0.9.17-b1"
+        "version": "0.9.18-b1"
     },
     {
         "enabled": false,
@@ -526,7 +526,7 @@
             "SendFlow"
         ],
         "user": false,
-        "version": "0.9.17-b1"
+        "version": "0.9.18-b1"
     },
     {
         "enabled": false,
@@ -538,7 +538,7 @@
             "InstallPackage"
         ],
         "user": false,
-        "version": "0.9.17-b1"
+        "version": "0.9.18-b1"
     },
     {
         "enabled": true,
@@ -884,7 +884,7 @@
             "BlogChanges"
         ],
         "user": false,
-        "version": "0.1.13-b3"
+        "version": "0.1.13-b5"
     },
     {
         "enabled": false,
@@ -896,7 +896,7 @@
             "BlogDetails"
         ],
         "user": false,
-        "version": "0.1.13-b3"
+        "version": "0.1.13-b5"
     },
     {
         "enabled": false,
@@ -908,7 +908,7 @@
             "BlogPages"
         ],
         "user": false,
-        "version": "0.1.13-b3"
+        "version": "0.1.13-b5"
     },
     {
         "enabled": false,
@@ -920,7 +920,7 @@
             "BlogPageInfo"
         ],
         "user": false,
-        "version": "0.1.13-b3"
+        "version": "0.1.13-b5"
     },
     {
         "enabled": false,
@@ -932,7 +932,7 @@
             "BlogContent"
         ],
         "user": false,
-        "version": "0.1.13-b3"
+        "version": "0.1.13-b5"
     },
     {
         "enabled": false,
@@ -944,7 +944,7 @@
             "PubMedium"
         ],
         "user": false,
-        "version": "0.1.13-b3"
+        "version": "0.1.13-b5"
     },
     {
         "enabled": true,

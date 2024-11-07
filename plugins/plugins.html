@@ -92,7 +92,7 @@
          name: "FlowHub.org", // long name for the menu
          content: content,
          enableOnEdit: true,
-         iconClass: "fa fa-window-minimize",
+         iconClass: "fa fa-save",
          visible: true
       });
       
@@ -720,7 +720,7 @@
    
    function setupTreelist(){var e=collectOrphans();if(0==e.length){RED.notify("No Orphans Found",{type:"success",timeout:2e3});try{$("#node-input-orphan-target-container-div").treeList("empty")}catch(e){}}else{try{$("#node-input-orphan-target-container-div").treeList("empty")}catch(e){$("#node-input-orphan-target-container-div").css({width:"100%",height:"calc(100%)"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistselect",function(e,t){t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),RED.view.reveal(t.node.id,!0),RED.view.redraw())}).on("treelistconfirm",function(e,t){var n;t.node&&(n=t.node.id,setTimeout(()=>{var e=RED.nodes.node(n);e&&(RED.view.reveal(e.id),RED.view.select(e.id),RED.editor.edit(e)),n==RED.workspaces.active()&&RED.workspaces.edit()},50))}),$("#node-input-orphan-target-filter").show();var n=$("#node-input-orphan-target-filter").searchBox({style:"compact",delay:300,change:function(){var e,t=$(this).val().trim().toLowerCase();""===t?($("#node-input-orphan-target-container-div").treeList("filter",null),n.searchBox("count","")):(e=$("#node-input-orphan-target-container-div").treeList("filter",function(e){return-1<e.label.toLowerCase().indexOf(t)||-1<e.node.type.toLowerCase().indexOf(t)}),n.searchBox("count",e+" / "+$("#node-input-orphan-target-container-div").treeList("data").length))}})}$("#node-input-orphan-target-container-div").treeList("data",e.sort((e,t)=>e.node.z>t.node.z))}}function collectOrphans(){let t=new Set;var n=[],i=(RED.nodes.eachLink(e=>{t.add(e.source),t.add(e.target)}),RED.nodes.eachNode(e=>{(!t.has(e)||"link out"==e.type&&"link"==e.mode&&0==e.links.reduce((e,t)=>e||!!RED.nodes.node(t),!1))&&n.push(e)}),[]),r={};return n.forEach(function(e){var t=RED.nodes.getType(e.type);if(t){var n=t.label,n=("function"==typeof n?n.call(e):n)||"",o=e.type;if(0===o.indexOf("subflow:"))return}t&&n||(n=e.type),r[e.id]={node:e,label:n,sublabel:o,selected:!1,checkbox:!1},i.push(r[e.id])}),i}
    
-   function nr_intro_generate_svg_4_0(r,t){return e=>{try{handleSvgObject($($("#red-ui-workspace-chart").find("svg")[0]),e,t)}catch(t){var n="Error Generating SVG: "+JSON.stringify(t);r.notify(n,{type:"error"}),e('<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg width="1000" height="1000" viewBox="0 0 1000 1000" pointer-events="all" style="cursor: crosshair; touch-action: none;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style>.small { font: bold 20px sans-serif; fill: red;}</style><text x="10" y="30" class="small">'+n+"</text></svg>")}}}function nr_intro_generate_svg_3_1(r,t){return e=>{try{handleSvgObject($($("#red-ui-workspace-chart").find("svg")[0]),e,t)}catch(t){var n="Error Generating SVG: "+JSON.stringify(t);r.notify(n,{type:"error"}),e('<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg width="1000" height="1000" viewBox="0 0 1000 1000" pointer-events="all" style="cursor: crosshair; touch-action: none;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style>.small { font: bold 20px sans-serif; fill: red;}</style><text x="10" y="30" class="small">'+n+"</text></svg>")}}}function nr_intro_generate_svg_3_0(r,t){return e=>{try{handleSvgObject($($("svg")[0]),e,t)}catch(t){var n="Error Generating SVG: "+JSON.stringify(t);r.notify(n,{type:"error"}),e('<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg width="1000" height="1000" viewBox="0 0 1000 1000" pointer-events="all" style="cursor: crosshair; touch-action: none;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style>.small { font: bold 20px sans-serif; fill: red;}</style><text x="10" y="30" class="small">'+n+"</text></svg>")}}}function handleSvgObject(a,e,t){var n=a.clone(),r=(n.find("foreignObject").remove(),n.find("svg.__screenshot").remove(),'width="'+a.attr("width")+'" height="'+a.attr("height")+'"'),s=RED.settings.version.split("."),i=parseInt(s[0]),s=parseInt(s[1]);if(3<=i&&1<=s){var o=$($($(a).children("g")[0]).children("g")[0]).children("g"),l={x:8e3,y:8e3,w:-1,h:-1};for(let t=1;t<o.length;t++){var g=o[t].getBBox();0==g.width&&0==g.height||(l.x=Math.min(g.x,l.x),l.y=Math.min(g.y,l.y),l.w=Math.max(g.width,l.w),l.h=Math.max(g.height,l.h))}r+=` viewBox='${l.x} ${l.y} ${l.w} ${l.h}'`}function c(t,e){for(var n=0;n<t.length;n++){var s=t.item(n),i=e[n];["stroke-width","fill-opacity","stroke-opacity","opacity","stroke-dasharray"].forEach(function(t){s.setAttribute(t,$(i).attr(t)||$(i).css(t))}),["fill","stroke"].forEach(function(t){var e,n,r=(e=$(i).attr(t)||$(i).css(t))&&null!==e&&"none"!=e?(n=e.match(/^#(.)(.)(.)$/))?"#"+n[1]+n[1]+n[2]+n[2]+n[3]+n[3]:(n=e.match(/^#......$/))?e:null===(n=e.match(/^rgb\(([0-9]+),\s+([0-9]+),\s+([0-9]+)/))?(r=e.match(/^rgba\(([0-9]+),\s+([0-9]+),\s+([0-9]+),\s+([0-9]+)/))?{clr:"#"+("0"+parseInt(r[1],10).toString(16)).slice(-2)+("0"+parseInt(r[2],10).toString(16)).slice(-2)+("0"+parseInt(r[3],10).toString(16)).slice(-2),opa:r[4]}:(console.log("Screenshot node: returned unknown color: "+e),e):"#"+("0"+parseInt(n[1],10).toString(16)).slice(-2)+("0"+parseInt(n[2],10).toString(16)).slice(-2)+("0"+parseInt(n[3],10).toString(16)).slice(-2):"none";"object"==typeof r?(s.setAttribute(t+"-opacity",r.opa),s.setAttribute(t,r.clr)):s.setAttribute(t,r)}),$(i).hasClass("hide")&&("g"==s.tagName&&s.setAttribute("opacity","0"),s.setAttribute("visibility","hidden"))}}var i='<?xml version="1.0" standalone="no"?>\r\n<svg '+r+' pointer-events="all" style="cursor: crosshair; touch-action: none;" xmlns="http://www.w3.org/2000/svg" class="__screenshot" xmlns:xlink="http://www.w3.org/1999/xlink">\r\n',s=n.html(),h=(new DOMParser).parseFromString(i+s+"\r\n</svg>","image/svg+xml"),v=t=>t,f=(t.rmidsandclasses&&(v=e=>(["g","rect","line","path","circle","image","text"].forEach(t=>{$(e.getElementsByTagName(t)).each((t,e)=>{e.setAttribute("class",""),e.setAttribute("id","")})}),e)),["g","rect","line","path","circle","image"].forEach(function(t){c(h.getElementsByTagName(t),a.find(t))}),["text"].forEach(function(t){c(h.getElementsByTagName(t),a.find(t));for(var e=h.getElementsByTagName(t),n=a.find(t),r=0;r<e.length;r++){var s=e.item(r),i=n[r];["font-family","font-size","font-size-adjust","font-stretch","font-style","font-variant","font-weight","text-anchor","dominant-baseline"].forEach(function(t){s.setAttribute(t,$(i).attr(t)||$(i).css(t))})}}),h.getElementsByTagName("image")),w={},m=(n,r,s)=>{var i=n.getAttribute("xlink:href")||n.getAttribute("href"),a=i.substr(-4,4).toLowerCase(),o={".jpg":"jpeg",jpeg:"jpeg",".png":"png",".svg":"svg+xml"};if(w[i])return n.setAttribute("xlink:href","data:image/"+o[a]+";base64,"+w[i]),s(r-1);switch(a){case".jpg":case"jpeg":case".png":var l=new XMLHttpRequest;l.open("GET",i,!0),l.responseType="arraybuffer";l.onload=function(t){var e=l.response;e&&(e=(t=>{for(var e="",n=new Uint8Array(t),r=n.byteLength,s=0;s<r;s++)e+=String.fromCharCode(n[s]);return window.btoa(e)})(e),w[i]=e,n.setAttribute("xlink:href","data:image/"+o[a]+";base64,"+e)),s(r-1)},l.send(null);break;case".svg":$.get(i,function(t){var e=new XMLSerializer,e=btoa(e.serializeToString(t));w[i]=e,n.setAttribute("xlink:href","data:image/svg+xml;base64,"+e),s(r-1)})}},d=t=>{t<0?e((new XMLSerializer).serializeToString(v(h))):m(f.item(t),t,d)};0<f.length?m(f.item(f.length-1),f.length-1,d):e((new XMLSerializer).serializeToString(v(h)))}function generatorFunctionForVersion(t,e){var n,r=t.settings.version.split("."),s=r[0],r=r[1];if("3"==s){if("0"==r)return nr_intro_generate_svg_3_0(t,e);if("1"==r)return nr_intro_generate_svg_3_1(t,e)}return"4"==s&&"0"==r?nr_intro_generate_svg_4_0(t,e):(n=t,t=>{var e="Node-RED version ("+n.settings.version+") not supported";n.notify(e,{type:"error"}),t&&t('<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg width="1000" height="1000" viewBox="0 0 1000 1000" pointer-events="all" style="cursor: crosshair; touch-action: none;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style>.small { font: bold 20px sans-serif; fill: red;}</style><text x="10" y="30" class="small">'+e+"</text></svg>")})}function addPanZoom(){var t=d3.select("#node-input-screenshot-svgcontainer svg"),e=(t.html("<g>"+t.html()+"</g>"),setTimeout(()=>{var t=$("#node-input-screenshot-svgcontainer svg"),e=$(t).attr("viewBox").split(" ");t.animate({height:parseInt(e[3]),width:parseInt(e[2])},800,"swing")},100),t.select("g")),n=d3.behavior.zoom().scaleExtent([.1,200]).on("zoom",function(t){e.attr({transform:"translate("+n.translate()+") scale("+n.scale()+")"})});t.call(n)}
+   function nr_intro_generate_svg_4_0(r,t){return e=>{try{handleSvgObject($($("#red-ui-workspace-chart").find("svg")[0]),e,t)}catch(t){var n="Error Generating SVG: "+JSON.stringify(t);r.notify(n,{type:"error"}),e('<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg width="1000" height="1000" viewBox="0 0 1000 1000" pointer-events="all" style="cursor: crosshair; touch-action: none;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style>.small { font: bold 20px sans-serif; fill: red;}</style><text x="10" y="30" class="small">'+n+"</text></svg>")}}}function nr_intro_generate_svg_3_1(r,t){return e=>{try{handleSvgObject($($("#red-ui-workspace-chart").find("svg")[0]),e,t)}catch(t){var n="Error Generating SVG: "+JSON.stringify(t);r.notify(n,{type:"error"}),e('<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg width="1000" height="1000" viewBox="0 0 1000 1000" pointer-events="all" style="cursor: crosshair; touch-action: none;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style>.small { font: bold 20px sans-serif; fill: red;}</style><text x="10" y="30" class="small">'+n+"</text></svg>")}}}function nr_intro_generate_svg_3_0(r,t){return e=>{try{handleSvgObject($($("svg")[0]),e,t)}catch(t){var n="Error Generating SVG: "+JSON.stringify(t);r.notify(n,{type:"error"}),e('<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg width="1000" height="1000" viewBox="0 0 1000 1000" pointer-events="all" style="cursor: crosshair; touch-action: none;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style>.small { font: bold 20px sans-serif; fill: red;}</style><text x="10" y="30" class="small">'+n+"</text></svg>")}}}function handleSvgObject(a,e,t){var n=a.clone(),r=(n.find("foreignObject").remove(),n.find("svg.__screenshot").remove(),'width="'+a.attr("width")+'" height="'+a.attr("height")+'"'),s=RED.settings.version.split("."),i=parseInt(s[0]),s=parseInt(s[1]);if(3<=i&&1<=s||4<=i){var o=$($($(a).children("g")[0]).children("g")[0]).children("g"),l={x:8e3,y:8e3,w:-1,h:-1};for(let t=1;t<o.length;t++){var g=o[t].getBBox();0==g.width&&0==g.height||(l.x=Math.min(g.x,l.x),l.y=Math.min(g.y,l.y),l.w=Math.max(g.width,l.w),l.h=Math.max(g.height,l.h))}r+=` viewBox='${l.x} ${l.y} ${l.w} ${l.h}'`}function c(t,e){for(var n=0;n<t.length;n++){var s=t.item(n),i=e[n];["stroke-width","fill-opacity","stroke-opacity","opacity","stroke-dasharray"].forEach(function(t){s.setAttribute(t,$(i).attr(t)||$(i).css(t))}),["fill","stroke"].forEach(function(t){var e,n,r=(e=$(i).attr(t)||$(i).css(t))&&null!==e&&"none"!=e?(n=e.match(/^#(.)(.)(.)$/))?"#"+n[1]+n[1]+n[2]+n[2]+n[3]+n[3]:(n=e.match(/^#......$/))?e:null===(n=e.match(/^rgb\(([0-9]+),\s+([0-9]+),\s+([0-9]+)/))?(r=e.match(/^rgba\(([0-9]+),\s+([0-9]+),\s+([0-9]+),\s+([0-9]+)/))?{clr:"#"+("0"+parseInt(r[1],10).toString(16)).slice(-2)+("0"+parseInt(r[2],10).toString(16)).slice(-2)+("0"+parseInt(r[3],10).toString(16)).slice(-2),opa:r[4]}:(console.log("Screenshot node: returned unknown color: "+e),e):"#"+("0"+parseInt(n[1],10).toString(16)).slice(-2)+("0"+parseInt(n[2],10).toString(16)).slice(-2)+("0"+parseInt(n[3],10).toString(16)).slice(-2):"none";"object"==typeof r?(s.setAttribute(t+"-opacity",r.opa),s.setAttribute(t,r.clr)):s.setAttribute(t,r)}),$(i).hasClass("hide")&&("g"==s.tagName&&s.setAttribute("opacity","0"),s.setAttribute("visibility","hidden"))}}var s='<?xml version="1.0" standalone="no"?>\r\n<svg '+r+' pointer-events="all" style="cursor: crosshair; touch-action: none;" xmlns="http://www.w3.org/2000/svg" class="__screenshot" xmlns:xlink="http://www.w3.org/1999/xlink">\r\n',i=n.html(),h=(new DOMParser).parseFromString(s+i+"\r\n</svg>","image/svg+xml"),v=t=>t,f=(t.rmidsandclasses&&(v=e=>(["g","rect","line","path","circle","image","text"].forEach(t=>{$(e.getElementsByTagName(t)).each((t,e)=>{e.setAttribute("class",""),e.setAttribute("id","")})}),e)),["g","rect","line","path","circle","image"].forEach(function(t){c(h.getElementsByTagName(t),a.find(t))}),["text"].forEach(function(t){c(h.getElementsByTagName(t),a.find(t));for(var e=h.getElementsByTagName(t),n=a.find(t),r=0;r<e.length;r++){var s=e.item(r),i=n[r];["font-family","font-size","font-size-adjust","font-stretch","font-style","font-variant","font-weight","text-anchor","dominant-baseline"].forEach(function(t){s.setAttribute(t,$(i).attr(t)||$(i).css(t))})}}),h.getElementsByTagName("image")),w={},m=(n,r,s)=>{var i=n.getAttribute("xlink:href")||n.getAttribute("href"),a=i.substr(-4,4).toLowerCase(),o={".jpg":"jpeg",jpeg:"jpeg",".png":"png",".svg":"svg+xml"};if(w[i])return n.setAttribute("xlink:href","data:image/"+o[a]+";base64,"+w[i]),s(r-1);switch(a){case".jpg":case"jpeg":case".png":var l=new XMLHttpRequest;l.open("GET",i,!0),l.responseType="arraybuffer";l.onload=function(t){var e=l.response;e&&(e=(t=>{for(var e="",n=new Uint8Array(t),r=n.byteLength,s=0;s<r;s++)e+=String.fromCharCode(n[s]);return window.btoa(e)})(e),w[i]=e,n.setAttribute("xlink:href","data:image/"+o[a]+";base64,"+e)),s(r-1)},l.send(null);break;case".svg":$.get(i,function(t){var e=new XMLSerializer,e=btoa(e.serializeToString(t));w[i]=e,n.setAttribute("xlink:href","data:image/svg+xml;base64,"+e),s(r-1)})}},d=t=>{t<0?e((new XMLSerializer).serializeToString(v(h))):m(f.item(t),t,d)};0<f.length?m(f.item(f.length-1),f.length-1,d):e((new XMLSerializer).serializeToString(v(h)))}function generatorFunctionForVersion(t,e){var n,r=t.settings.version.split("."),s=r[0],r=r[1];if("3"==s){if("0"==r)return nr_intro_generate_svg_3_0(t,e);if("1"==r)return nr_intro_generate_svg_3_1(t,e)}return"4"==s&&"0"==r?nr_intro_generate_svg_4_0(t,e):(n=t,t=>{var e="Node-RED version ("+n.settings.version+") not supported";n.notify(e,{type:"error"}),t&&t('<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg width="1000" height="1000" viewBox="0 0 1000 1000" pointer-events="all" style="cursor: crosshair; touch-action: none;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style>.small { font: bold 20px sans-serif; fill: red;}</style><text x="10" y="30" class="small">'+e+"</text></svg>")})}function addPanZoom(){var t=d3.select("#node-input-screenshot-svgcontainer svg"),e=(t.html("<g>"+t.html()+"</g>"),setTimeout(()=>{var t=$("#node-input-screenshot-svgcontainer svg"),e=$(t).attr("viewBox").split(" ");t.animate({height:parseInt(e[3]),width:parseInt(e[2])},800,"swing")},100),t.select("g")),n=d3.behavior.zoom().scaleExtent([.1,200]).on("zoom",function(t){e.attr({transform:"translate("+n.translate()+") scale("+n.scale()+")"})});t.call(n)}
 
    function setupTreelistInfoness(){var e=collectUndocumentedNodes();if(0==e.length){RED.notify("All nodes documented",{type:"success",timeout:2e3});try{$("#node-input-orphan-target-container-div").treeList("empty")}catch(e){}}else{try{$("#node-input-orphan-target-container-div").treeList("empty")}catch(e){$("#node-input-orphan-target-container-div").css({width:"100%",height:"calc(100%)"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistselect",function(e,t){t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),RED.view.reveal(t.node.id,!0),RED.view.redraw())}).on("treelistconfirm",function(e,t){var i;t.node&&(i=t.node.id,setTimeout(()=>{var e=RED.nodes.node(i);e&&(RED.view.reveal(e.id),RED.view.select(e.id),RED.editor.edit(e,"editor-tab-description")),i==RED.workspaces.active()&&RED.workspaces.edit()},50))}),$("#node-input-orphan-target-filter").show();var i=$("#node-input-orphan-target-filter").searchBox({style:"compact",delay:300,change:function(){var e,t=$(this).val().trim().toLowerCase();""===t?($("#node-input-orphan-target-container-div").treeList("filter",null),i.searchBox("count","")):(e=$("#node-input-orphan-target-container-div").treeList("filter",function(e){return-1<e.label.toLowerCase().indexOf(t)||-1<e.node.type.toLowerCase().indexOf(t)}),i.searchBox("count",e+" / "+$("#node-input-orphan-target-container-div").treeList("data").length))}})}$("#node-input-orphan-target-container-div").treeList("data",e.sort((e,t)=>e.node.z>t.node.z))}}function collectUndocumentedNodes(){let t=[];RED.nodes.eachNode(e=>{if($("#"+e.id).find(".red-ui-info-available-indicator").remove(),e.info&&e.info.trim()){var i=document.createElementNS("http://www.w3.org/2000/svg","g"),n=(i.setAttribute("class","red-ui-info-available-indicator"),document.createElementNS("http://www.w3.org/2000/svg","circle"));n.setAttribute("cx","5"),n.setAttribute("cy","5"),n.setAttribute("r","5"),n.setAttribute("fill","yellow"),n.setAttribute("id","infoclk-"+e.id),n.setAttribute("style","cursor: pointer;"),i.append(n),$(i).insertBefore($("#"+e.id).find(".red-ui-flow-node-changed"));let t=e.id;$("#infoclk-"+e.id).on("click",e=>{e&&e.preventDefault();e=RED.nodes.node(t);RED.editor.edit(e,"editor-tab-description"),RED.sidebar.show("info")})}else e.z==RED.workspaces.active()&&t.push(e)});var o=[],r={};return t.forEach(function(e){var t=RED.nodes.getType(e.type);if(t){var i,n=t.label,n=("function"==typeof n?n.call(e):n)||"";if(0===(i=e.type).indexOf("subflow:"))return}t&&n||(n=e.type),r[e.id]={node:e,label:n,sublabel:i,selected:!1,checkbox:!1},o.push(r[e.id])}),o}
 
@@ -743,8 +743,8 @@
       // --> more details: https://nodered.org/docs/api/ui/sidebar/
       RED.sidebar.addTab({
          id: "Introspection",
-         label: "Introspection", // short name for the tab
-         name: "Introspection", // long name for the menu
+         label: "Screenshot", // short name for the tab
+         name: "Screenshot", // long name for the menu
          content: content,
          enableOnEdit: true,
          iconClass: "fa fa-camera" // your fontawesome icon
@@ -764,6 +764,7 @@
             iconClass: 'fa fa-photo',
             label: 'Screenshot'
       });
+      
 /*      
       // Add tab, orphans
       tabs.addTab({
@@ -1041,15 +1042,15 @@
    <ul style="min-width: 600px; margin-bottom: 20px;" id="func-introspection-tabs"></ul>
 </div>
 
-<div id="func-introspection-tabs-content" style="min-height: calc(100% - 95px);">
+<div id="func-introspection-tabs-content" class='red-ui-panels'>
 
    <!-- Screenshot Tab in Sidebar -->
 
-   <div id="func-introspection-tab-screenshot" style="display:none; min-height: calc(100%);">
+   <div id="func-introspection-tab-screenshot" class='red-ui-panel' style="display:none;">
       <div class="form-row">
          <div class="col-100">
 
-            <div class="form-row" style="margin-left: 10px; margin-top: 30px;">
+            <div class="form-row" style="margin-left: 10px;">
                <button type="button" id="node-screenshot-capture-btn"
                        class="red-ui-button red-ui-button-large"><i class="fa fa-camera"></i> Capture</button>
 
@@ -1339,6 +1340,8 @@
          No warranty of success is provided, implied or expressed.
       </div>
    </div>
+
+
 </script>
 <!-- --- [red-plugin:@gorenje/node-red-mindmap/customdraganddrop] --- -->
 <script type="text/javascript">
@@ -1770,7 +1773,6 @@ var fillNumOfUpdates = () => {
 var setupTreelistForBlogChanges = () => {
     return $("#node-input-blogchangesidebar-target-container-div").css({
         width: "100%",
-        height: "calc(100%)"
     }).treeList(
         {
             multi: false
@@ -1814,7 +1816,6 @@ var setupTreelistForBlogChanges = () => {
 var setupTabTrackerTreelist = () => {
     return $("#node-input-blogchangesidebar-tab-tracker").css({
         width: "100%",
-        height: "calc(100%)"
     }).treeList(
         {
             multi: false
@@ -1975,38 +1976,10 @@ var retrieveBlogPages = () => {
 };
 
 
-function generateMarkdown(e) {
-    if ( e ) { e.preventDefault() }
+let prepareSeekerSidebarTreeListWidget=()=>{let t="#func-sidebar-seeker-seeker-target-container-div",e="#func-sidebar-seeker-seeker-extract-markdown-but",n="#func-sidebar-seeker-seeker-extract-html-but",r="#func-sidebar-seeker-seeker-show-pathway-but",a=()=>{1==$(t).treeList("data").filter(e=>e.expanded).length?($(e).prop("disabled",!1),$(n).prop("disabled",!1),$(r).prop("disabled",!1)):($(e).prop("disabled",!0),$(n).prop("disabled",!0),$(r).prop("disabled",!0))};try{$(t).treeList("empty"),$(t).treeList("data",[])}catch(e){$(t).css({width:"100%",height:"calc(100%)"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistconfirm",function(e,t){t.node&&!t.children&&(RED.view.reveal(t.node.id),RED.view.select(t.node.id),setTimeout(()=>{RED.editor.edit(t.node)},100)),a()}).on("treelistselect",function(e,t){t.node&&!t.children&&(RED.workspaces.show(t.node.z,!1,!1,!0),RED.view.reveal(t.node.id,!0),RED.view.redraw()),a()})}},siderbarPathToTreeListEntry=e=>{var t=RED.nodes.node(e[e.length-1]);let n=[];return e.forEach(function(e){var t,e=RED.nodes.node(e)||RED.nodes.junction(e);void 0!==e&&(t=RED.nodes.workspace(e.z)||RED.nodes.subflow(e.z),n.push({label:"",_label:RED.utils.getNodeLabel(e),node:e,sublabel:t&&RED.utils.getNodeLabel(t)||e.z,icon:RED.utils.createNodeIcon(e,!0),class:"intro-remove-top-left"}))}),{node:t,label:RED.utils.getNodeLabel(t),_label:RED.utils.getNodeLabel(t),_pathlen:e.length,sublabel:"Length: "+e.length,selected:!1,checkbox:!1,children:n}};function prepareAndFillDropDowns(n){$("#func-sidebar-seeker-seeker-show-percent").show(),$("#func-sidebar-seeker-seeker-show-ordering").show();var e,r=$("#func-sidebar-seeker-seeker-show-percent"),t=(r.html(""),r.append($("<option></option>").val("-").html("Show..")),[5,10,20,30,40,50,75].forEach(e=>{var t=parseInt(e*n/100);0!=t&&r.append($("<option></option>").val(e).html(t+" paths"))}),r.append($("<option></option>").val(100).html("All")),r.val("-"),(r=$("#func-sidebar-seeker-seeker-show-ordering")).html(""),{"Count Asc":1,"Count Desc":2,"Name Asc":3,"Name Desc":4,Random:5});for(e in t)r.append($("<option></option>").val(t[e]).html(e));r.val(1)}function obtainSortFunction(e){return{1:(e,t)=>e.length<t.length?-1:1,2:(e,t)=>e.length>t.length?-1:1,3:(e,t)=>RED.utils.getNodeLabel(RED.nodes.node(e[e.length-1]))<RED.utils.getNodeLabel(RED.nodes.node(t[t.length-1]))?-1:1,4:(e,t)=>{e=RED.utils.getNodeLabel(RED.nodes.node(e[e.length-1]));return RED.utils.getNodeLabel(RED.nodes.node(t[t.length-1]))<e?-1:1},5:(e,t)=>.5<Math.random()?-1:1}[parseInt(e)]||((e,t)=>e.length<t.length?-1:1)}function sidebarSeekerHandleExpandedNodes(e){1==e.length?(e=e[0].children.filter(e=>e.node.z==RED.workspaces.active()).map(e=>e.node.id),RED.tray.hide(),RED.view.selectNodes({selected:e,onselect:()=>{RED.tray.show()},oncancel:()=>{RED.tray.show()}})):RED.notify("Only one expanded pathway can be shown.",{type:"warning"})}let sidebarSeekerHandleDropDownChange=e=>{e&&e.preventDefault();let t=window._sidebarSeekerStack.length,n=25,r=("-"!=$("#func-sidebar-seeker-seeker-show-percent").val()&&(n=parseInt(t*(parseInt($("#func-sidebar-seeker-seeker-show-percent").val())/100))),obtainSortFunction($("#func-sidebar-seeker-seeker-show-ordering").val()));setTimeout(()=>{setTimeout(()=>{$("#func-sidebar-seeker-seeker-totalPaths").html(n>t?""+t:n+" / "+t)},10),setTimeout(()=>{$("#func-sidebar-seeker-seeker-target-container-div").treeList("data",window._sidebarSeekerStack.sort(r).slice(0,n).map(e=>siderbarPathToTreeListEntry(e)))},20)},100)},sidebarSeekerSetupTreelistOnCompletion=()=>{let e=window._sidebarSeekerStack.length;setTimeout(()=>{$("#func-sidebar-seeker-seeker-start-but").prop("disabled",!1),$("#func-sidebar-seeker-seeker-totalPaths").html(e),$("#func-sidebar-seeker-seeker-spinner").hide()},10),prepareAndFillDropDowns(e),$("#func-sidebar-seeker-seeker-show-ordering").on("change",sidebarSeekerHandleDropDownChange),$("#func-sidebar-seeker-seeker-show-percent").on("change",sidebarSeekerHandleDropDownChange),$("#func-sidebar-seeker-seeker-show-percent").trigger("change")},sidebarSeekerExtractFlowHandler=(e,t)=>{1==e.length?(e=e[0].children.map(e=>e.node).filter(e=>["link in","link out","Seeker","Sink","junction"].indexOf(e.type)<0),e=RED.nodes.createExportableNodeSet(e).map(e=>(e.id=RED.nodes.id(),e)).map((e,t)=>{let n=e.name;try{e._def=e._def||RED.nodes.getType(e.type),n=RED.utils.getNodeLabel(e,e.info).replace("\\n"," ")}catch(e){}return`# ${n}
 
-    let ndes = RED.view.selection().nodes;
-
-    if ( !ndes || ndes.length != 1) {
-        RED.notify( "Too many or too few nodes selected", { type: "warning"})
-        return
-    }
-
-    let worker = new Worker("data:text/javascript;base64,bGV0IGludHJvU3BlY3Rpb25TdGFjaz1bXSxncmFwaD1bXSxncmFwaEluZGV4PXt9LFJFRD17bm9kZXM6e25vZGU6ZT0+Z3JhcGhbZ3JhcGhJbmRleFtlXV0sZ2V0Tm9kZUxpbmtzOmE9PmEuZmxhdHdpcmVzLm1hcChlPT4oe3RhcmdldDpSRUQubm9kZXMubm9kZShlKSxzb3VyY2U6YX0pKX19LHRyYXZlcnNlPWZ1bmN0aW9uKGEsbil7dmFyIGU7aWYobi5pbmRleE9mKGEuaWQpPDAmJiFhLmQpaWYoMD09YS5mbGF0d2lyZXMubGVuZ3RoKWU9bi5tYXAoZT0+e2U9UkVELm5vZGVzLm5vZGUoZSk7cmV0dXJuYCMgJHtlLm5hbWUucmVwbGFjZSgiXFxuIiwiICIpfQoKJHtlLnRleHR9CmB9KS5qb2luKCJcbiIpLHBvc3RNZXNzYWdlKGUpO2Vsc2Ugc3dpdGNoKGEudHlwZSl7Y2FzZSJsaW5rIGNhbGwiOlJFRC5ub2Rlcy5nZXROb2RlTGlua3MoYSkuZm9yRWFjaChlPT57dHJhdmVyc2UoZS50YXJnZXQsWy4uLm4sYS5pZF0pfSksYS5saW5rcy5mb3JFYWNoKGU9PntlPVJFRC5ub2Rlcy5ub2RlKGUpO2UmJnRyYXZlcnNlKGUsWy4uLm4sYS5pZF0pfSk7YnJlYWs7Y2FzZSJsaW5rIG91dCI6YS5saW5rcy5mb3JFYWNoKGU9PntlPVJFRC5ub2Rlcy5ub2RlKGUpO2UmJnRyYXZlcnNlKGUsWy4uLm4sYS5pZF0pfSk7YnJlYWs7ZGVmYXVsdDpSRUQubm9kZXMuZ2V0Tm9kZUxpbmtzKGEpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUudGFyZ2V0LFsuLi5uLGEuaWRdKX0pfX07b25tZXNzYWdlPWZ1bmN0aW9uKGUpe2xldCBhPWUuZGF0YS5zdGFydE5vZGVJZDsoZ3JhcGg9ZS5kYXRhLm5vZGVzLm1hcChlPT4oe3dpcmVzOmUud2lyZXMsbGlua3M6ZS5saW5rcyxkOmUuZGlzYWJsZWR8fGUuZCxpZDplLmlkLHR5cGU6ZS50eXBlLHRleHQ6ZS5pbmZvLG5hbWU6ZS5uYW1lfSkpLmZpbHRlcihlPT4hIWUud2lyZXMpLm1hcChlPT4oZS5mbGF0d2lyZXM9ZS53aXJlcy5mbGF0KCksZSkpKS5mb3JFYWNoKChlLGEpPT5ncmFwaEluZGV4W2UuaWRdPWEpLFJFRC5ub2Rlcy5nZXROb2RlTGlua3MoUkVELm5vZGVzLm5vZGUoYSkpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUudGFyZ2V0LFthXSl9KSxwb3N0TWVzc2FnZSgiZXJyb3Igbm8gZW5kIGZvdW5kIil9Ow==");   
-
-    worker.onmessage = (event) => {
-        if (RED.clipboard.copyText(event.data)) {
-            RED.notify("Markdown copied to clipboard", { type: "success" });
-        }
-
-        $('#blogpagessidebar-tab-generate-markdown-container').html( 
-            RED.utils.renderMarkdown(event.data)
-        ).find('a').attr( 'target', "_blank")
-
-        worker.terminate()
-    }
-
-    setTimeout(() => {
-        worker.postMessage({
-            startNodeId: ndes[0].id,
-            nodes: RED.nodes.createCompleteNodeSet({ credentials: false })
-        });
-    }, 10)
-}
-
+${e.info}
+`}).join("\n"),RED.clipboard.copyText("markdown"==t?e:RED.utils.renderMarkdown(e))&&RED.notify("Pathway copied as "+("markdown"==t?"Markdown":"HTML")+" to clipboard",{type:"success"}),$("#func-sidebar-seeker-seeker-generate-markdown-container").html(RED.utils.renderMarkdown(e))):RED.notify("Only one expanded pathway can be extracted.",{type:"warning"})},sidebarSeekerFindPathWaysButtonPressHandler=e=>{e&&e.preventDefault();let n=RED.view.selection().nodes;if(n&&1==n.length){$("#func-sidebar-seeker-seeker-spinner").show();window._sidebarSeekerStack=[],window._sidebarSeekerWorker=void 0,prepareSeekerSidebarTreeListWidget();let t=new Worker("data:text/javascript;base64,bGV0IGludHJvU3BlY3Rpb25TdGFjaz1bXSxncmFwaD1bXSxncmFwaEluZGV4PXt9LFJFRD17bm9kZXM6e25vZGU6ZT0+Z3JhcGhbZ3JhcGhJbmRleFtlXV0sZ2V0Tm9kZUxpbmtzOnM9PnMuZmxhdHdpcmVzLm1hcChlPT4oe3RhcmdldDpSRUQubm9kZXMubm9kZShlKSxzb3VyY2U6c30pKX19LHRyYXZlcnNlPWZ1bmN0aW9uKHMsYSl7aWYoYS5pbmRleE9mKHMuaWQpPDAmJiFzLmQpaWYoMD09cy5mbGF0d2lyZXMubGVuZ3RoKWEucHVzaChzLmlkKSxwb3N0TWVzc2FnZShhKTtlbHNlIHN3aXRjaChzLnR5cGUpe2Nhc2UibGluayBjYWxsIjpSRUQubm9kZXMuZ2V0Tm9kZUxpbmtzKHMpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUudGFyZ2V0LFsuLi5hLHMuaWRdKX0pLHMubGlua3MuZm9yRWFjaChlPT57ZT1SRUQubm9kZXMubm9kZShlKTtlJiZ0cmF2ZXJzZShlLFsuLi5hLHMuaWRdKX0pO2JyZWFrO2Nhc2UibGluayBvdXQiOnMubGlua3MuZm9yRWFjaChlPT57ZT1SRUQubm9kZXMubm9kZShlKTtlJiZ0cmF2ZXJzZShlLFsuLi5hLHMuaWRdKX0pO2JyZWFrO2RlZmF1bHQ6UkVELm5vZGVzLmdldE5vZGVMaW5rcyhzKS5mb3JFYWNoKGU9Pnt0cmF2ZXJzZShlLnRhcmdldCxbLi4uYSxzLmlkXSl9KX19O29ubWVzc2FnZT1mdW5jdGlvbihlKXtsZXQgcz1lLmRhdGEuc2Vla2VySWQ7KGdyYXBoPWUuZGF0YS5ub2Rlcy5tYXAoZT0+KHt3aXJlczplLndpcmVzLGxpbmtzOmUubGlua3MsZDplLmRpc2FibGVkfHxlLmQsaWQ6ZS5pZCx0eXBlOmUudHlwZX0pKS5maWx0ZXIoZT0+ISFlLndpcmVzKS5tYXAoZT0+KGUuZmxhdHdpcmVzPWUud2lyZXMuZmxhdCgpLGUpKSkuZm9yRWFjaCgoZSxzKT0+Z3JhcGhJbmRleFtlLmlkXT1zKSxSRUQubm9kZXMuZ2V0Tm9kZUxpbmtzKFJFRC5ub2Rlcy5ub2RlKHMpKS5mb3JFYWNoKGU9Pnt0cmF2ZXJzZShlLnRhcmdldCxbc10pfSkscG9zdE1lc3NhZ2UoImRvbmUiKX07");(window._sidebarSeekerWorker=t).onmessage=function(e){"done"==e.data?(t.terminate(),delete window._introWorker,sidebarSeekerSetupTreelistOnCompletion()):(window._sidebarSeekerStack.push(e.data),$("#func-sidebar-seeker-seeker-totalPaths").html(window._sidebarSeekerStack.length),26==window._sidebarSeekerStack.length&&$("#func-sidebar-seeker-seeker-target-container-div").treeList("data",window._sidebarSeekerStack.sort((e,t)=>e.length<t.length?-1:1).slice(0,25).map(e=>siderbarPathToTreeListEntry(e))))},setTimeout(()=>{t.postMessage({seekerId:n[0].id,nodes:RED.nodes.createCompleteNodeSet({credentials:!1})})},10)}else RED.notify("Select exactly one node to find all pathways.",{type:"warning"})};
   
   var initialiseSidebarNodeOnce = () => {
     RED.events.off('runtime-state', initialiseSidebarNodeOnce);
@@ -2015,8 +1988,8 @@ function generateMarkdown(e) {
 
     RED.sidebar.addTab({
         id: "BlogPagesSidebar",
-        label: "mindmap", // short name for the tab
-        name: "mindmap", // long name for the menu
+        label: "MindMap", // short name for the tab
+        name: "MindMap", // long name for the menu
         content: content,
         closeable: true,
         enableOnEdit: true,
@@ -2036,7 +2009,7 @@ function generateMarkdown(e) {
                 setTimeout(updateBlogChanges, 150);
             } else if (tab.id == "func-blogpagessidebar-tab-mindmap-stats" ) {
                 setTimeout(updateMindMapStats, 150) 
-            } else if (tab.id == "func-blogpagessidebar-tab-generate-markdown") {
+            } else if (tab.id == "func-blogpagessidebar-tab-seeker-sidebar") {
                 /* TODO do something here */
             }
         }
@@ -2065,7 +2038,7 @@ function generateMarkdown(e) {
     });
 
     tabs.addTab({
-        id: 'func-blogpagessidebar-tab-generate-markdown',
+        id: 'func-blogpagessidebar-tab-seeker-sidebar',
         iconClass: 'fa fa-newspaper-o',
         label: 'Document'
     });
@@ -2386,7 +2359,45 @@ function generateMarkdown(e) {
         $('#node-input-blogchangesidebar-tab-tracker').treeList('data', []);
     });
 
-    $('#node-input-generate-markdown-button').on("click", generateMarkdown)
+    $('#func-sidebar-seeker-seeker-start-but').on('click', sidebarSeekerFindPathWaysButtonPressHandler)
+
+    $('#func-sidebar-seeker-seeker-show-pathway-but').on('click', e => {
+        if (e) e.preventDefault()
+        let expandedNodes = $("#func-sidebar-seeker-seeker-target-container-div").treeList("data").filter(d => d.expanded)
+        sidebarSeekerHandleExpandedNodes(expandedNodes)
+    })
+
+    $('#func-sidebar-seeker-seeker-extract-markdown-but').on('click', e => {
+        if (e) e.preventDefault()
+        let expandedNodes = $("#func-sidebar-seeker-seeker-target-container-div").treeList("data").filter(d => d.expanded)
+        sidebarSeekerExtractFlowHandler(expandedNodes, "markdown")
+    })
+
+    $('#func-sidebar-seeker-seeker-extract-html-but').on('click', e => {
+        if (e) e.preventDefault()
+        let expandedNodes = $("#func-sidebar-seeker-seeker-target-container-div").treeList("data").filter(d => d.expanded)
+        sidebarSeekerExtractFlowHandler(expandedNodes, "html")
+    })
+
+    var search = $("#func-sidebar-seeker-seeker-target-filter").searchBox({
+        style: "compact",
+        delay: 300,
+        change: function () {
+            let val = $(this).val().trim().toLowerCase();
+            let items = $("#func-sidebar-seeker-seeker-target-container-div").treeList('data');
+
+            if (val === "") {
+                $("#func-sidebar-seeker-seeker-target-container-div").treeList("filter", null);
+                search.searchBox("count", "");
+            } else {
+                var count = $("#func-sidebar-seeker-seeker-target-container-div").treeList("filter", function (item) {
+                    return item._label.toLowerCase().indexOf(val) > -1 || item.node.type.toLowerCase().indexOf(val) > -1 || item.sublabel.toLowerCase().indexOf(val)
+                });
+                search.searchBox("count", count + " / " + items.length);
+            }
+        }
+    });
+
 
     // ensure all functions are defined that are used in the 'onchange' callback before
     // setting the default tab.
@@ -2428,16 +2439,16 @@ RED.events.on('runtime-state', initialiseSidebarNodeOnce);
 
 </div>
 
-    <div id="func-blogpagessidebar-tab-blogchanges" style="display:none">
+    <div id="func-blogpagessidebar-tab-blogchanges" class="red-ui-panel" style="display:none">
 
-    <div class="form-row" style="margin-left: 10px; margin-top: 30px;">
+    <div class="form-row" style="margin-left: 10px;">
         <button id="node-input-blogchangesidebar-refresh-button"
-     class="red-ui-button"><i class="fa fa-shower"></i> Refresh</button>
-        <select id="node-input-blogchangesidebar-numOfUpdates"></select>
+             class="red-ui-button"><i class="fa fa-shower"></i> Refresh</button>
+        <select style="margin-top: 10px;" id="node-input-blogchangesidebar-numOfUpdates"></select>
     </div>
 
     <div class="form-row node-input-target-row node-input-target-list-row"
-        style="min-height: 250px; height: 450px; margin-left: 10px; margin-right: 15px;">
+        style="height: 35vh; margin-left: 10px; margin-right: 15px;">
         <div>
             <label for="node-input-blogchangesidebar-target-filter" style="width: 100%">
                     <span>Search Blog Latest Changes: </span>
@@ -2445,11 +2456,11 @@ RED.events.on('runtime-state', initialiseSidebarNodeOnce);
             <input type="text" id="node-input-blogchangesidebar-target-filter">
         </div>
 
-        <div id="node-input-blogchangesidebar-target-container-div" style="margin-top:10px; min-height: 450px;"></div>
+        <div id="node-input-blogchangesidebar-target-container-div" style="margin-top:10px; height: 35vh;"></div>
     </div>
 
     <div class="form-row node-input-target-row node-input-target-list-row"
-        style="min-height: 300px; height: 300px; margin-left: 10px; margin-right: 15px; margin-top: 120px;">
+        style="height: 35vh; margin-left: 10px; margin-right: 15px; margin-top: 5vh;">
         <div>
             <label for="node-input-blogchangesidebar-tab-tracker-filter" style="width: 100%">
                         <span>Search Tab Stack: </span>
@@ -2457,18 +2468,18 @@ RED.events.on('runtime-state', initialiseSidebarNodeOnce);
             <input type="text" id="node-input-blogchangesidebar-tab-tracker-filter">
         </div>
 
-        <div id="node-input-blogchangesidebar-tab-tracker" style="margin-top:10px; min-height: 300px;"></div>
+        <div id="node-input-blogchangesidebar-tab-tracker" style="height: 30vh; margin-top: 10px;"></div>
     </div>
     
-    <div class="form-row" style="margin-left: 10px; margin-top: 100px;">
+    <div class="form-row" style="margin-left: 10px;">
         <button id="node-input-blogchangesidebar-clear-stack-button"
              class="red-ui-button"><i class="fa fa-shower"></i> Clear Stack</button>
     </div>
 </div>
 
-    <div id="func-blogpagessidebar-tab-mindmap-stats" style="display:none">
+    <div id="func-blogpagessidebar-tab-mindmap-stats" class="red-ui-panel" style="display:none">
 
-    <div class="form-row" style="margin-left: 10px; margin-top: 30px;">
+    <div class="form-row" style="margin-left: 10px;">
         <select id="node-input-mindmap-stats-numOfUpdates"></select>
 
         <span style="margin-left: 10px;" id="mindmap-stats-nodeCount-selection">0</span> /
@@ -2493,7 +2504,7 @@ RED.events.on('runtime-state', initialiseSidebarNodeOnce);
     </div>
 
     <div class="form-row node-input-target-row node-input-target-list-row"
-        style="min-height: 300px; height: 500px; margin-left: 10px; margin-right: 15px;">
+        style="height: 65vh; margin-left: 10px; margin-right: 15px;">
         <div>
             <label for="node-input-mindmap-stats-target-filter">
                         <span>Search: </span>
@@ -2501,22 +2512,53 @@ RED.events.on('runtime-state', initialiseSidebarNodeOnce);
             <input type="text" id="node-input-mindmap-stats-target-filter">
         </div>
 
-        <div id="node-input-mindmap-stats-target-container-div" style="margin-top:10px; min-height: 500px;"></div>
+        <div id="node-input-mindmap-stats-target-container-div"></div>
     </div>
 </div>
 
-    <div id="func-blogpagessidebar-tab-generate-markdown" style="display:none">
-    <div class="form-row" style="margin-left: 10px; margin-top: 30px;">
-        <button id="node-input-generate-markdown-button"
-             class="red-ui-button"><i class="fa fa-newspaper-o"></i> Generate Markdown</button>
-    </div>
+       <!-- Seeker sidebar -->
+   <div id="func-blogpagessidebar-tab-seeker-sidebar" class="red-ui-panel" style="display:none;">   
 
-    <div class="form-row" style="margin-left: 10px; height: calc(50%); width: 95%;">
-        <div class="red-ui-help">
-            <span id="blogpagessidebar-tab-generate-markdown-container"class="red-ui-text-bidi-aware" dir="">
+      <div class="form-row func-sidebar-seeker-target-row" style="margin-left: 10px; height: 3vh;">
+         <button id="func-sidebar-seeker-seeker-start-but" class="red-ui-button"><span><i class="fa fa-refresh"></i> Find Pathways</span></button>
+         <select class='hide' style="margin-top: 10px; width:100px;" id="func-sidebar-seeker-seeker-show-percent"></select>
+         <select class='hide' style="margin-top: 10px; width:100px;" id="func-sidebar-seeker-seeker-show-ordering"></select>
+         <button id="func-sidebar-seeker-seeker-show-pathway-but" class="red-ui-button">Show Pathway</button>
+      </div>
+
+      <div class="form-row"
+         style="margin-left: 10px; position: relative; height: 25vh; margin-right: 15px;">
+         <div style="margin-bottom: 5px; width: 35%; padding-left: 60%;">
+            <input type="text" id="func-sidebar-seeker-seeker-target-filter">
+         </div>
+   
+         <div id="func-sidebar-seeker-seeker-target-container-div"></div>
+      </div>
+   
+      <div class="form-row" style="margin-top: 60px; margin-bottom: 20px; margin-left: 10px; height: 4vh;">
+         <label>Total Paths: 
+           <span style="display: block;" id="func-sidebar-seeker-seeker-totalPaths"></span>
+           <img class='hide' id="func-sidebar-seeker-seeker-spinner" src='red/images/spin.svg'/>
+         </label>
+
+         <button id="func-sidebar-seeker-seeker-extract-markdown-but" 
+            style="float: right; margin-right: 15px;" class="red-ui-button"><i class="fa fa-copy"></i> Markdown</button>
+         <button id="func-sidebar-seeker-seeker-extract-html-but" 
+            style="float: right; margin-right: 5px;" class="red-ui-button"><i class="fa fa-copy"></i> HTML</button>
+      </div>
+
+      <div class="form-row" style="margin-left: 10px; width: 95%;">
+         <hr/>
+      </div>
+
+      <div class="red-ui-panel" 
+           style="margin-left: 10px; overflow: hidden; display: flex; flex-direction: column; width: 97%; height: 47vh;">
+         <div class="red-ui-help" style="flex: 1 1 auto; overflow-y: auto;">
+            <span id="func-sidebar-seeker-seeker-generate-markdown-container"
+                  class="red-ui-text-bidi-aware" dir="">
             </span>
-        </div>
-    </div>
-</div>
+         </div>
+      </div>
+   </div>
 </div>
 </script>
