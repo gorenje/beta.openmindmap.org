@@ -1114,6 +1114,9 @@ var RED = (function() {
                 if (theme.header.title) {
                     $('<span>').html(theme.header.title).appendTo(logo);
                 }
+                if (theme.header.colour) {
+                    $('#red-ui-header').css('background', theme.header.colour);
+                }
             }
             if (theme.themes) {
                 knownThemes = theme.themes;
