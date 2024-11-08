@@ -54,7 +54,16 @@
     "tlsConfigDisableLocalFiles": false,
     "editorTheme": {
       "palette": {
-        "categories": ["mindmap", "People", "common", "function", "network", "sequence", "parser", "storage"]
+        "categories": [
+          "mindmap",
+          "pathways",
+          "common",
+          "function",
+          "network",
+          "sequence",
+          "parser",
+          "storage"
+        ]
         },
         "projects": {
             "enabled": false,
