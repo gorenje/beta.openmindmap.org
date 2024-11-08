@@ -9,7 +9,9 @@
     },
     "header": {
         "title": "Open Mind Map",
-        "image": "favicon/open_mind_logo_minus_head.svg"
+        "image": "favicon/open_mind_logo_minus_head.svg",
+        "colour": "#062002",
+        "url": "https://openmindmap.org"
     },
     "asset": {
         "red": "red/red.min.js",
