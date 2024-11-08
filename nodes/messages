@@ -1,10 +1,4 @@
 {
-    "@gorenje/node-red-contrib-blogger/blogchanges": {},
-    "@gorenje/node-red-contrib-blogger/blogcontent": {},
-    "@gorenje/node-red-contrib-blogger/blogdetails": {},
-    "@gorenje/node-red-contrib-blogger/blogpageinfo": {},
-    "@gorenje/node-red-contrib-blogger/blogpages": {},
-    "@gorenje/node-red-contrib-blogger/pubmedium": {},
     "@gorenje/node-red-mindmap/advantage": {},
     "@gorenje/node-red-mindmap/aphorism": {},
     "@gorenje/node-red-mindmap/art": {},

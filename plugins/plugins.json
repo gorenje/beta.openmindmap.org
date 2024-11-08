@@ -9,7 +9,7 @@
         "plugins": [],
         "runtime": false,
         "user": false,
-        "version": "0.8.4-b2"
+        "version": "0.8.4-b3"
     },
     {
         "editor": true,
@@ -38,13 +38,13 @@
     {
         "editor": true,
         "enabled": true,
-        "id": "@gorenje/node-red-contrib-blogger/blog-pages-sidebar",
+        "id": "@gorenje/node-red-mindmap-sidebar/blog-pages-sidebar",
         "local": true,
-        "module": "@gorenje/node-red-contrib-blogger",
+        "module": "@gorenje/node-red-mindmap-sidebar",
         "name": "blog-pages-sidebar",
         "plugins": [],
         "runtime": false,
         "user": false,
-        "version": "0.1.13-b5"
+        "version": "0.1.13-b6"
     }
 ]

@@ -466,7 +466,7 @@
             "FlowHubCfg"
         ],
         "user": false,
-        "version": "0.8.4-b2"
+        "version": "0.8.4-b3"
     },
     {
         "enabled": true,
@@ -873,78 +873,6 @@
         ],
         "user": false,
         "version": "0.3.9-b1"
-    },
-    {
-        "enabled": false,
-        "id": "@gorenje/node-red-contrib-blogger/blogchanges",
-        "local": true,
-        "module": "@gorenje/node-red-contrib-blogger",
-        "name": "blogchanges",
-        "types": [
-            "BlogChanges"
-        ],
-        "user": false,
-        "version": "0.1.13-b5"
-    },
-    {
-        "enabled": false,
-        "id": "@gorenje/node-red-contrib-blogger/blogdetails",
-        "local": true,
-        "module": "@gorenje/node-red-contrib-blogger",
-        "name": "blogdetails",
-        "types": [
-            "BlogDetails"
-        ],
-        "user": false,
-        "version": "0.1.13-b5"
-    },
-    {
-        "enabled": false,
-        "id": "@gorenje/node-red-contrib-blogger/blogpages",
-        "local": true,
-        "module": "@gorenje/node-red-contrib-blogger",
-        "name": "blogpages",
-        "types": [
-            "BlogPages"
-        ],
-        "user": false,
-        "version": "0.1.13-b5"
-    },
-    {
-        "enabled": false,
-        "id": "@gorenje/node-red-contrib-blogger/blogpageinfo",
-        "local": true,
-        "module": "@gorenje/node-red-contrib-blogger",
-        "name": "blogpageinfo",
-        "types": [
-            "BlogPageInfo"
-        ],
-        "user": false,
-        "version": "0.1.13-b5"
-    },
-    {
-        "enabled": false,
-        "id": "@gorenje/node-red-contrib-blogger/blogcontent",
-        "local": true,
-        "module": "@gorenje/node-red-contrib-blogger",
-        "name": "blogcontent",
-        "types": [
-            "BlogContent"
-        ],
-        "user": false,
-        "version": "0.1.13-b5"
-    },
-    {
-        "enabled": false,
-        "id": "@gorenje/node-red-contrib-blogger/pubmedium",
-        "local": true,
-        "module": "@gorenje/node-red-contrib-blogger",
-        "name": "pubmedium",
-        "types": [
-            "PubMedium"
-        ],
-        "user": false,
-        "version": "0.1.13-b5"
     },
     {
         "enabled": true,

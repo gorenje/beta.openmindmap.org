@@ -1,5 +1,4 @@
 {
-    "@gorenje/node-red-contrib-blogger": [],
     "@gorenje/node-red-mindmap": [
         "aeon.svg",
         "archive_org.svg",
@@ -11,6 +10,7 @@
         "node-red.svg",
         "open_mind_logo.svg"
     ],
+    "@gorenje/node-red-mindmap-sidebar": [],
     "@gregoriusrippenstein/node-red-contacts": [],
     "@gregoriusrippenstein/node-red-contrib-flowhub": [
         "flowhubdiff.svg",
