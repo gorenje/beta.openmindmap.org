@@ -3,7 +3,7 @@
         "view": {
             "view-store-zoom": false,
             "view-store-position": false,
-            "view-show-grid": true,
+            "view-show-grid": false,
             "view-snap-grid": false,
             "view-grid-size": "20",
             "view-node-status": true,
