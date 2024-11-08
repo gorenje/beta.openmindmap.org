@@ -30,9 +30,6 @@
     "@gregoriusrippenstein/node-red-contacts/contact": {},
     "@gregoriusrippenstein/node-red-contrib-flowhub/flowhubcfg": {},
     "@gregoriusrippenstein/node-red-contrib-introspection/clientcode": {},
-    "@gregoriusrippenstein/node-red-contrib-introspection/getflows": {},
-    "@gregoriusrippenstein/node-red-contrib-introspection/installpackage": {},
     "@gregoriusrippenstein/node-red-contrib-introspection/seeker": {},
-    "@gregoriusrippenstein/node-red-contrib-introspection/sendflow": {},
     "@gregoriusrippenstein/node-red-contrib-introspection/sink": {}
 }

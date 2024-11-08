@@ -478,7 +478,7 @@
             "Seeker"
         ],
         "user": false,
-        "version": "0.9.18-b1"
+        "version": "0.9.18-b2"
     },
     {
         "enabled": true,
@@ -490,7 +490,7 @@
             "Sink"
         ],
         "user": false,
-        "version": "0.9.18-b1"
+        "version": "0.9.18-b2"
     },
     {
         "enabled": true,
@@ -502,43 +502,7 @@
             "ClientCode"
         ],
         "user": false,
-        "version": "0.9.18-b1"
-    },
-    {
-        "enabled": false,
-        "id": "@gregoriusrippenstein/node-red-contrib-introspection/getflows",
-        "local": true,
-        "module": "@gregoriusrippenstein/node-red-contrib-introspection",
-        "name": "getflows",
-        "types": [
-            "GetFlows"
-        ],
-        "user": false,
-        "version": "0.9.18-b1"
-    },
-    {
-        "enabled": false,
-        "id": "@gregoriusrippenstein/node-red-contrib-introspection/sendflow",
-        "local": true,
-        "module": "@gregoriusrippenstein/node-red-contrib-introspection",
-        "name": "sendflow",
-        "types": [
-            "SendFlow"
-        ],
-        "user": false,
-        "version": "0.9.18-b1"
-    },
-    {
-        "enabled": false,
-        "id": "@gregoriusrippenstein/node-red-contrib-introspection/installpackage",
-        "local": true,
-        "module": "@gregoriusrippenstein/node-red-contrib-introspection",
-        "name": "installpackage",
-        "types": [
-            "InstallPackage"
-        ],
-        "user": false,
-        "version": "0.9.18-b1"
+        "version": "0.9.18-b2"
     },
     {
         "enabled": true,
@@ -884,6 +848,6 @@
             "Contact"
         ],
         "user": false,
-        "version": "0.0.3-b2"
+        "version": "0.0.3-b3"
     }
 ]
