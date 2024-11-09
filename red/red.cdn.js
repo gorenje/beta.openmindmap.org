@@ -873,16 +873,18 @@ var RED = (function() {
         menuOptions.push(null);
         menuOptions.push({id:"menu-item-search",label:RED._("menu.label.search"),onselect:"core:search"});
         menuOptions.push(null);
-        menuOptions.push({id:"menu-item-config-nodes",label:RED._("menu.label.displayConfig"),onselect:"core:show-config-tab"});
+//        menuOptions.push({id:"menu-item-config-nodes",label:RED._("menu.label.displayConfig"),onselect:"core:show-config-tab"});
         menuOptions.push({id:"menu-item-workspace",label:RED._("menu.label.flows"),options:[
             {id:"menu-item-workspace-add",label:RED._("menu.label.add"),onselect:"core:add-flow"},
             {id:"menu-item-workspace-edit",label:RED._("menu.label.rename"),onselect:"core:edit-flow"},
             {id:"menu-item-workspace-delete",label:RED._("menu.label.delete"),onselect:"core:remove-flow"}
         ]});
+/*
         menuOptions.push({id:"menu-item-subflow",label:RED._("menu.label.subflows"), options: [
             {id:"menu-item-subflow-create",label:RED._("menu.label.createSubflow"),onselect:"core:create-subflow"},
             {id:"menu-item-subflow-convert",label:RED._("menu.label.selectionToSubflow"),disabled:true,onselect:"core:convert-to-subflow"},
         ]});
+*/
         menuOptions.push({id:"menu-item-group",label:RED._("menu.label.groups"), options: [
             {id:"menu-item-group-group",label:RED._("menu.label.groupSelection"),disabled:true,onselect:"core:group-selection"},
             {id:"menu-item-group-ungroup",label:RED._("menu.label.ungroupSelection"),disabled:true,onselect:"core:ungroup-selection"},
