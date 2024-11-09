@@ -1094,7 +1094,7 @@ If you want every 20 minutes from now - use the <i>"interval"</i> option.</p>
             };
 
             var uiComponents = RED.debug.init(options);
-
+/*
             RED.sidebar.addTab({
                 id: "debug",
                 label: this._("debug.sidebar.label"),
@@ -1106,6 +1106,7 @@ If you want every 20 minutes from now - use the <i>"interval"</i> option.</p>
                 iconClass: "fa fa-bug",
                 action: "core:show-debug-tab"
             });
+*/
             RED.actions.add("core:show-debug-tab",function() { RED.sidebar.show('debug'); });
 
             var that = this;
