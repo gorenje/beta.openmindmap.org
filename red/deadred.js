@@ -1456,9 +1456,8 @@ var DEADRED = (function() {
             selectedNodes.forEach((node) => RED.view.clickNodeButton(node));
         });
 
-
+        // remove the deploy/save options.
         setTimeout( () => {
-            $("#red-ui-header-button-deploy").hide()
             $("#red-ui-header-button-deploy-options").hide()
         }, 1400);
 

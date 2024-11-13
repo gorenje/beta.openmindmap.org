@@ -155,8 +155,8 @@
             "undeployedChanges": "You have undeployed changes.\n\nLeaving this page will lose these changes.",
             "unknown": "The workspace contains some unknown node types:"
         },
-        "deploy": "Deploy",
-        "deployFailed": "Deploy failed: __message__",
+        "deploy": "Save",
+        "deployFailed": "Save failed: __message__",
         "errors": {
             "noResponse": "no response from server"
         },
