@@ -639,7 +639,7 @@
             "groupRemoveSelection": "Supprimer du groupe",
             "groupSelection": "Grouper la s\u00e9lection",
             "groups": "Groupes",
-            "help": "Site web de Node-RED",
+            "help": "Site web de OpenMindMap.org",
             "hideSelectedNodeLabels": "Masquer les \u00e9tiquettes des noeuds s\u00e9lectionn\u00e9s",
             "import": "Importer",
             "importExample": "Importer un exemple de flux",
