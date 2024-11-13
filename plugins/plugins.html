@@ -1361,7 +1361,7 @@
     var initialiseConfigNodeOnce = () => {
         RED.events.off('runtime-state', initialiseConfigNodeOnce);
 
-        let customDropHandler = (event) => {
+        let customDropHandler = async (event) => {
             /* for debugging purposes - inspect the original Event to discover the type:
             * console> window.ddEvent.originalEvent.dataTransfer.items[0].type
             */
@@ -1370,199 +1370,84 @@
             let itemPtr = event.originalEvent.dataTransfer.items
             let itemCount = itemPtr.length
 
-            let nodesToBeImported = []
-            let waitingOnNode = 0;
-
-            for (let idx = 0; idx < itemCount; idx++) {
-                let itm = itemPtr[idx]
-
-                /* these are bookmarks that can be dragged onto the workspace */
-                if ((itm.type == "text/uri-list" || itm.type == "text/x-moz-url") && itm.kind == "string") {
-                    waitingOnNode++;
-                    let yPos = 40 * waitingOnNode
-
-                    itm.getAsString((url) => {
-                        let urlAndTitle = url.split("\n")
-
-                        let onSuccess = (resp) => {
-                            let data = {
-                                "id": RED.nodes.id(),
-                                "type": "Bookmark",
-                                "name": urlAndTitle[1] || "Web Bookmark",
-                                "info": urlAndTitle[0] + "\n\n",
-                                "sumPass": false,
-                                "sumPassPrio": 0,
-                                "sumPassNodeId": "",
-                                "createdAt": new Date().toISOString(),
-                                "updatedAt": new Date().toISOString(),
-                                "x": 0,
-                                "y": yPos,
-                                "wires": [[]]
-                            }
-
-                            if (resp.image_url) {
-                                data.info = `${urlAndTitle[0]}\n\n![img](${resp.image_url})\n\n`
-                            }
-
-                            let nodeCopy = nodesToBeImported.filter(d => d.info.indexOf(urlAndTitle[0]) > -1)[0]
-
-                            if (!nodeCopy) {
-                                nodesToBeImported.push(data)
-                            } else {
-                                if (data.name != "Web Bookmark" && (nodeCopy.name == "Web Bookmark" || nodeCopy.name == "No Name")) {
-                                    nodeCopy.name = data.name
-                                    nodeCopy.type = data.type
-                                }
-                                waitingOnNode--
-                            }
-                        }
-
-                        $.ajax({
-                            url: "/writermap/content",
-                            type: "POST",
-                            data: JSON.stringify({ bookmark_url: urlAndTitle[0] }),
-                            contentType: 'application/json',
-                            processData: false,
-                            success: onSuccess,
-                            error: function (err) {
-                                // Error handling
-                                waitingOnNode--;
-                                RED.notify(`Bookmark upload not possible: ${err.message}`, {
-                                    type: "warning"
-                                }
-                                );
-                            }
-                        })
-
-                    })
-                } else if (itm.type.startsWith("image/") && itm.kind == "file") {
-                    waitingOnNode++
-                    let yPos = waitingOnNode * 40
-
-                    let file = event.originalEvent.dataTransfer.files[idx]
-
-                    let formData = new FormData();
-                    formData.append('file', file, file.name);
-
-                    let onSuccess = (response) => {
-                        nodesToBeImported.push({
-                            "id": RED.nodes.id(),
-                            "type": "Image",
-                            "name": file.name,
-                            "info": `![img](${response.relative_url})\n`,
-                            "sumPass": false,
-                            "sumPassPrio": 0,
-                            "sumPassNodeId": "",
-                            "createdAt": new Date().toISOString(),
-                            "updatedAt": new Date().toISOString(),
-                            "x": 0,
-                            "y": yPos,
-                            "wires": [[]]
-                        })
-                    }
-
-                    $.ajax({
-                        url: "/writermap/content",
-                        type: "POST",
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        enctype: 'multipart/form-data',
-                        success: onSuccess,
-                        error: function (err) {
-                            // Error handling
-                            waitingOnNode--
-                            RED.notify(`Image upload not possible: ${err.message}`, {
-                                type: "warning"
-                            }
-                            );
-                        }
-                    })
-                } else if (itm.type.startsWith("audio/") && itm.kind == "file") {
-                    waitingOnNode++
-                    let yPos = waitingOnNode * 40
-
-                    let file = event.originalEvent.dataTransfer.files[idx]
-
-                    let formData = new FormData();
-                    formData.append('file', file, file.name);
-
-                    let audioTag = (resp) => {
-                        return `<div class="audio-container">
+            let audioTag = (resp) => {
+                return `<div class="audio-container">
                                 <audio controls preload=none>
                                 <source src="${resp.relative_url}" type="${resp.mimetype}" />
                                 </audio>
                                 <p>Download <a href="${resp.relative_url}" download="${resp.filename}">file</a></p>
                                 </div>`.replace(/\n\s+/g, "\n")
-                    }
+            }
 
-                    let onSuccess = (response) => {
-                        nodesToBeImported.push({
-                            "id": RED.nodes.id(),
-                            "type": "Inspiration",
-                            "name": file.name,
-                            "info": audioTag(response),
-                            "sumPass": false,
-                            "sumPassPrio": 0,
-                            "sumPassNodeId": "",
-                            "createdAt": new Date().toISOString(),
-                            "updatedAt": new Date().toISOString(),
-                            "x": 0,
-                            "y": yPos,
-                            "wires": [[]]
-                        })
-                    }
-
-                    $.ajax({
-                        url: "/writermap/content",
-                        type: "POST",
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        enctype: 'multipart/form-data',
-                        success: onSuccess,
-                        error: function (err) {
-                            // Error handling
-                            waitingOnNode--
-                            RED.notify(`Audio upload not possible: ${err.message}`, {
-                                type: "warning"
-                            }
-                            );
-                        }
-                    })
-                } else if (itm.type.startsWith("video/") && itm.kind == "file") {
-                    waitingOnNode++
-                    let yPos = waitingOnNode * 40
-
-                    let file = event.originalEvent.dataTransfer.files[idx]
-
-                    let formData = new FormData();
-                    formData.append('file', file, file.name);
-
-                    let videoTag = (resp) => {
-                        return `<div class="video-container">
+            let videoTag = (resp) => {
+                return `<div class="video-container">
                                 <video width="640" height="360" controls="controls" preload="none" poster="${resp.poster_url}">
                                 <source src="${resp.relative_url}" type="${resp.mimetype}">
                                 Your browser doesn't support HTML5 video.
                                 </video>
                                 <p>Download <a href="${resp.relative_url}" download="${resp.filename}">file</a></p>
                                 </div>`.replace(/\n\s+/g, "\n")
+            }
+
+            let imageTag = (resp) => {
+                return `![img](${resp.relative_url})`
+            }
+
+            let file2base64Image = (file, cb) => {
+                var reader = new FileReader();
+                reader.onload = (function (fd) {
+                    return function (e) {
+                        cb(e.target.result);
+                    };
+                })(file);
+                reader.readAsDataURL(file);
+            }
+
+            let defineNodeDefaults = (yPos) => {
+                return {
+                    "id": RED.nodes.id(),
+                    "sumPass": false,
+                    "sumPassPrio": 0,
+                    "sumPassNodeId": "",
+                    "createdAt": new Date().toISOString(),
+                    "updatedAt": new Date().toISOString(),
+                    "x": 0,
+                    "y": yPos,
+                    "wires": [[]]
+                }
+            }
+
+            let pushNodeOntoStackOrImportDirectly = (nde) => {
+                return RED.view.importNodes([nde])
+            }
+
+            let handleFileKind = (itm,file) => {
+                if (itm.type.startsWith("image/")) {
+                    let formData = new FormData();
+                    formData.append('file', file, file.name);
+
+                    let onError = (err) => {
+                        file2base64Image(file, dataUrl => {
+                            let response = {
+                                relative_url: dataUrl,
+                                mimetype: itm.type,
+                                filename: file.name
+                            }
+                            pushNodeOntoStackOrImportDirectly({
+                                ...defineNodeDefaults(0),
+                                "type": "Image",
+                                "name": file.name,
+                                "info": `${imageTag(response)}\n`,
+                            })
+                        })
                     }
 
                     let onSuccess = (response) => {
-                        nodesToBeImported.push({
-                            "id": RED.nodes.id(),
+                        pushNodeOntoStackOrImportDirectly({
+                            ...defineNodeDefaults(0),
                             "type": "Image",
                             "name": file.name,
-                            "info": videoTag(response),
-                            "sumPass": false,
-                            "sumPassPrio": 0,
-                            "sumPassNodeId": "",
-                            "createdAt": new Date().toISOString(),
-                            "updatedAt": new Date().toISOString(),
-                            "x": 0,
-                            "y": yPos,
-                            "wires": [[]]
+                            "info": `${imageTag(response)}\n`,
                         })
                     }
 
@@ -1574,79 +1459,296 @@
                         processData: false,
                         enctype: 'multipart/form-data',
                         success: onSuccess,
-                        error: function (err) {
-                            // Error handling
-                            waitingOnNode--
-                            RED.notify(`Video upload not possible: ${err.message}`, {
-                                type: "warning"
-                            }
-                            );
-                        }
+                        error: onError
                     })
-                } else if ((itm.type == "text/markdown" || itm.type == "text/plain") && itm.kind == "file") {
-                    waitingOnNode++
+                } else if (itm.type.startsWith("audio/")) {
+                    let formData = new FormData();
+                    formData.append('file', file, file.name);
 
-                    let file = event.originalEvent.dataTransfer.files[idx]
-                    let yPos = waitingOnNode * 40
+                    let onError = (err) => {
+                        file2base64Image(file, dataUrl => {
+                            let response = {
+                                relative_url: dataUrl,
+                                mimetype: itm.type,
+                                filename: file.name
+                            }
 
+                            pushNodeOntoStackOrImportDirectly({
+                                ...defineNodeDefaults(0),
+                                "type": "Inspiration",
+                                "name": file.name,
+                                "info": `${audioTag(response)}\n`,
+                            })
+                        })
+                    }
+
+                    let onSuccess = (response) => {
+                        pushNodeOntoStackOrImportDirectly({
+                            ...defineNodeDefaults(0),
+                            "type": "Inspiration",
+                            "name": file.name,
+                            "info": audioTag(response),
+                        })
+                    }
+
+                    $.ajax({
+                        url: "/writermap/content",
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        enctype: 'multipart/form-data',
+                        success: onSuccess,
+                        error: onError
+                    })
+                } else if (itm.type.startsWith("video/")) {
+                    let formData = new FormData();
+                    formData.append('file', file, file.name);
+
+                    let onError = (err) => {
+                        file2base64Image(file, dataUrl => {
+                            let response = {
+                                relative_url: dataUrl,
+                                mimetype: itm.type,
+                                filename: file.name,
+                                poster_url: ""
+                            }
+
+                            pushNodeOntoStackOrImportDirectly({
+                                ...defineNodeDefaults(0),
+                                "type": "Image",
+                                "name": file.name,
+                                "info": `${videoTag(response)}\n`,
+                            })
+                        })
+                    }
+
+                    let onSuccess = (response) => {
+                        pushNodeOntoStackOrImportDirectly({
+                            ...defineNodeDefaults(0),
+                            "type": "Image",
+                            "name": file.name,
+                            "info": videoTag(response),
+                        })
+                    }
+
+                    $.ajax({
+                        url: "/writermap/content",
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        enctype: 'multipart/form-data',
+                        success: onSuccess,
+                        error: onError
+                    })
+                } else if (itm.type == "text/markdown" || itm.type == "text/plain") {
                     file.arrayBuffer().then(d => {
-                        nodesToBeImported.push({
-                            "id": RED.nodes.id(),
+                        pushNodeOntoStackOrImportDirectly({
+                            ...defineNodeDefaults(0),
                             "type": "Text",
                             "name": file.name,
                             "info": new TextDecoder().decode(d),
-                            "sumPass": false,
-                            "sumPassPrio": 0,
-                            "sumPassNodeId": "",
-                            "createdAt": new Date().toISOString(),
-                            "updatedAt": new Date().toISOString(),
-                            "x": 0,
-                            "y": yPos,
-                            "wires": [[]]
                         })
                     }).catch(ex => { console.log(ex) })
-                } else if ((itm.type == "text/markdown" || itm.type == "text/plain") && itm.kind == "string") {
-                    waitingOnNode++
+                }
+            }
 
-                    let yPos = waitingOnNode * 40
+            let stringKindsStoredForLater = {}
+            let isThisABookmarkImport = false
+            const bookmarkTypes = ["text/x-moz-place", "text/x-moz-url", "text/uri-list"]
 
-                    event.originalEvent.dataTransfer.items[idx].getAsString(content => {
-                        nodesToBeImported.push({
-                            "id": RED.nodes.id(),
-                            "type": "Text",
-                            "name": "No Name",
-                            "info": content,
-                            "sumPass": false,
-                            "sumPassPrio": 0,
-                            "sumPassNodeId": "",
-                            "createdAt": new Date().toISOString(),
-                            "updatedAt": new Date().toISOString(),
-                            "x": 0,
-                            "y": yPos,
-                            "wires": [[]]
-                        })
+            let storeStringKind = async (itm) => {
+                return new Promise((resolve, reject) => {
+                    itm.getAsString((content) => {
+                        isThisABookmarkImport = isThisABookmarkImport || bookmarkTypes.indexOf(itm.type) > -1
+
+                        let data = {
+                            type: itm.type,
+                            content: content,
+                            lines: (content || "").split("\n").filter(d => !!d)
+                        };
+
+                        (stringKindsStoredForLater[data.type] ||= []).push(data);
+                        stringKindsStoredForLater[data.type].sort((a, b) => a.lines.length > b.lines.length ? -1 : 1)
+
+                        resolve()
+                    })
+                })
+            }
+
+            for (let idx = 0; idx < itemCount; idx++) {
+                let itm = itemPtr[idx]
+
+                if (itm.kind == "file") {
+                    handleFileKind(itm,event.originalEvent.dataTransfer.files[idx])
+                } else if (itm.kind == "string") {
+                    // we do this because a bookmark has - up to - three different items
+                    // representing the same URL. What we do is filter by url and only
+                    // import that URL once. I.e. dragging and dropping a bookmark into
+                    // Node-RED will - potentially - generate 5 (in Firefox) items of types:
+                    //   - text/uri-list
+                    //   - text/x-moz-url
+                    //   - text/plain
+                    //   - text/html
+                    //   - text/x-moz-place
+                    // Potentially there are more.
+                    await storeStringKind(itm)
+                } else {
+                    RED.notify(`Unsupported drag&drop kind: '${itm.kind}'`, { type: "error" })
+                }
+            }
+
+            let handleXMozPlace = (hsh) => {
+                /* this handles the text/x-moz-place type which has JSON content for 
+                 * better handling of the url details. 
+                 *  
+                 * For example 
+                 *        '{"title":"Instagram","id":331,"itemGuid":"XXXXX",
+                 *         "instanceId":"TTTTTT","parent":3,"parentGuid":"toolbar_____",
+                 *         "dateAdded":1692630076737000,"lastModified":1692630076737000,
+                 *         "type":"text/x-moz-place","uri":"http://instagr.am/"}'
+                 * 
+                 */
+                let url = hsh["uri"];
+                let title = hsh["title"] || "Bookmark"
+
+                let onError = (err) => {
+                    let data = {
+                        ...defineNodeDefaults(0),
+                        "type": "Bookmark",
+                        "name": title,
+                        "info": url + "\n\n",
+                        "createdAt": new Date(hsh["dateAdded"] / 1000).toISOString(),
+                        "updatedAt": new Date(hsh["lastModified"] / 1000).toISOString(),
+                    }
+
+                    pushNodeOntoStackOrImportDirectly(data)
+                }
+
+
+                let onSuccess = (resp) => {
+                    let data = {
+                        ...defineNodeDefaults(0),
+                        "type": "Bookmark",
+                        "name": title,
+                        "info": url + "\n\n",
+                        "createdAt": new Date(hsh["dateAdded"] / 1000).toISOString(),
+                        "updatedAt": new Date(hsh["lastModified"] / 1000).toISOString(),
+                    }
+
+                    if (resp.type == "image") {
+                        data.info = `${urlAndTitle[0]}\n\n${imageTag(resp)}\n`
+                        data.type = "Image"
+                    }
+
+                    if (resp.type == "audio") {
+                        data.info = `${urlAndTitle[0]}\n\n${audioTag(resp)}\n`
+                        data.type = "Inspiration"
+                    }
+
+                    if (resp.type == "video") {
+                        data.info = `${urlAndTitle[0]}\n\n${videoTag(resp)}\n`
+                        data.type = "Image"
+                    }
+
+                    pushNodeOntoStackOrImportDirectly(data)
+                }
+
+                $.ajax({
+                    url: "/writermap/content",
+                    type: "POST",
+                    data: JSON.stringify({ bookmark_url: url }),
+                    contentType: 'application/json',
+                    processData: false,
+                    success: onSuccess,
+                    error: onError
+                })
+            }
+
+            let handleStringkind = (hsh) => {
+                /* these are bookmarks that can be dragged onto the workspace */
+                if ( bookmarkTypes.indexOf(hsh.type) > -1 )  {
+
+                    let urlAndTitle = hsh.lines
+
+                    let onError = (err) => {
+                        let data = {
+                            ...defineNodeDefaults(0),
+                            "type": "Bookmark",
+                            "name": urlAndTitle[1] || "Bookmark",
+                            "info": urlAndTitle[0] + "\n\n",
+                        }
+                        
+                        pushNodeOntoStackOrImportDirectly(data)
+                    }
+
+                    let onSuccess = (resp) => {
+                        let data = {
+                            ...defineNodeDefaults(0),
+                            "type": "Bookmark",
+                            "name": urlAndTitle[1] || "Bookmark",
+                            "info": urlAndTitle[0] + "\n\n",
+                        }
+
+                        if (resp.type == "image") {
+                            data.info = `${urlAndTitle[0]}\n\n${imageTag(resp)}\n`
+                            data.type = "Image"
+                        }
+
+                        if (resp.type == "audio") {
+                            data.info = `${urlAndTitle[0]}\n\n${audioTag(resp)}\n`
+                            data.type = "Inspiration"
+                        }
+
+                        if (resp.type == "video") {
+                            data.info = `${urlAndTitle[0]}\n\n${videoTag(resp)}\n`
+                            data.type = "Image"
+                        }
+
+                        pushNodeOntoStackOrImportDirectly(data)
+                    }
+
+                    $.ajax({
+                        url: "/writermap/content",
+                        type: "POST",
+                        data: JSON.stringify({ bookmark_url: urlAndTitle[0] }),
+                        contentType: 'application/json',
+                        processData: false,
+                        success: onSuccess,
+                        error: onError
+                    })
+                } else if (hsh.type == "text/html" && !isThisABookmarkImport) {
+                    pushNodeOntoStackOrImportDirectly({
+                        ...defineNodeDefaults(0),
+                        "type": "Code-Base",
+                        "name": "HTML Content",
+                        "info": hsh.content,
+                    })
+                } else if ((hsh.type == "text/markdown" || hsh.type == "text/plain") && !isThisABookmarkImport) {
+                    pushNodeOntoStackOrImportDirectly({
+                        ...defineNodeDefaults(0),
+                        "type": "Text",
+                        "name": hsh.lines[0].substr(0, 30) + (hsh.lines[0].length > 30 ? "..." : ""),
+                        "info": hsh.content,
                     })
                 }
             }
 
-            let checkIfAllIsThere = () => {
-                if (waitingOnNode > 0 && nodesToBeImported.length == waitingOnNode) {
-                    setTimeout(() => {
-                        try {
-                            RED.view.importNodes(nodesToBeImported)
-                        } catch (ex) { /*keep quiet*/ }
-                    }, 400);
-                } else {
-                    setTimeout(checkIfAllIsThere, 400)
-                }
-            }
+            window.stringKindsStoredForLater = stringKindsStoredForLater
 
-            if (waitingOnNode > 0) {
-                setTimeout(checkIfAllIsThere, 200)
-                setTimeout(() => {
-                    /* this causes the waiting to stop */
-                    nodesToBeImported.length = waitingOnNode
-                }, (1000 * waitingOnNode) + 60000)
+            if ( isThisABookmarkImport ) {
+                if ("text/x-moz-place" in stringKindsStoredForLater) {
+                    handleXMozPlace(JSON.parse(stringKindsStoredForLater["text/x-moz-place"][0].content))
+                } else if ("text/x-moz-url" in stringKindsStoredForLater) {
+                    handleStringkind(stringKindsStoredForLater["text/x-moz-url"][0])
+                } else if ("text/uri-list" in stringKindsStoredForLater) {
+                    handleStringkind(stringKindsStoredForLater["text/uri-list"][0])
+                }
+            } else {
+                Object.keys(stringKindsStoredForLater).forEach(type => {
+                    handleStringkind(stringKindsStoredForLater[type][0])
+                })
             }
         }
 
@@ -1661,7 +1763,7 @@
                 setTimeout(defineCustomDropHandler, 300)
             }
         }
-        // setTimeout(defineCustomDropHandler, 300)
+        setTimeout(defineCustomDropHandler, 300)
 
         // @ts-ignore
         // handle a generate paste in the browser window. But this only
@@ -1700,304 +1802,30 @@ $(window).on('paste', (event) => {
 
 </script>
 
-<!-- --- [red-plugin:@gorenje/node-red-mindmap-sidebar/blog-pages-sidebar] --- -->
+<!-- --- [red-plugin:@gorenje/node-red-mindmap/mindmap-sidebar] --- -->
 <script type="text/javascript">
 
 (function() {
 
-  /**
- * Code for the mindmap stats tab
- */
-var fillNumOfUpdatesMindMapStats = () => {
-    var sltObj = $('#node-input-mindmap-stats-numOfUpdates');
-    sltObj.html("");
+  var fillNumOfUpdatesMindMapStats=()=>{var t=$("#node-input-mindmap-stats-numOfUpdates");t.html(""),t.append($("<option></option>").val(-1).html("-- All --")),[5,10,20,50,100,150,200].forEach(function(e){t.append($("<option></option>").val(e).html(e))}),t.val(20)},setupTreelistForMindMapStats=()=>$("#node-input-mindmap-stats-target-container-div").treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistselect",function(e,t){var o;t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),o=t.node.id,setTimeout(()=>{RED.view.reveal(o,!0),RED.view.redraw()},38))}).on("treelistconfirm",function(e,t){var o;t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),o=t.node.id,setTimeout(()=>{var e=RED.nodes.node(o);e&&(RED.view.reveal(e.id),RED.view.select(e.id),RED.editor.edit(e)),o==RED.workspaces.active()&&RED.workspaces.edit()},50))});
 
-    sltObj.append(
-        $('<option></option>').val(-1).html("-- All --")
-    );
-    [5, 10, 20, 50, 100, 150, 200].forEach(function (v) {
-        sltObj.append($('<option></option>').val(v).html(v));
-    });
+var fillNumOfUpdates=()=>{var t=$("#node-input-mindmapchangessidebar-numOfUpdates");t.html(""),t.append($("<option></option>").val(-1).html("-- All --")),[5,10,20,50,100,150,200].forEach(function(e){t.append($("<option></option>").val(e).html(e))}),t.val(20)},setupTreelistForMindMapChanges=()=>$("#node-input-mindmapchangessidebar-target-container-div").css({width:"100%"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistselect",function(e,t){var o;t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),o=t.node.id,setTimeout(()=>{RED.view.reveal(o,!0),RED.view.redraw()},38))}).on("treelistconfirm",function(e,t){var o;t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),o=t.node.id,setTimeout(()=>{var e=RED.nodes.node(o);e&&(RED.view.reveal(e.id),RED.view.select(e.id),RED.editor.edit(e)),o==RED.workspaces.active()&&RED.workspaces.edit()},50))}),setupTabTrackerTreelist=()=>$("#node-input-mindmapchangessidebar-tab-tracker").css({width:"100%"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistselect",function(e,t){t.obj&&RED.workspaces.show(t.obj.id,!1,!1,!0)}).on("treelistconfirm",function(e,t){t.obj&&(RED.workspaces.show(t.obj.id,!1,!1,!0),setTimeout(()=>{RED.workspaces.edit(t.obj.id)},132))});
 
-    sltObj.val(20);
-};
-
-var setupTreelistForMindMapStats = () => {
-    return $("#node-input-mindmap-stats-target-container-div").treeList(
-        {
-            multi: false
-        }
-    ).on("treelistitemmouseover", function (e, item) {
-    }).on("treelistitemmouseout", function (e, item) {
-    }).on('treelistselect', function (event, item) {
-        if (item.node) {
-            RED.workspaces.show(item.node.z, false, false, true);
-            var ndeid = item.node.id;
-            setTimeout(() => {
-                RED.view.reveal(ndeid, true);
-                RED.view.redraw();
-            }, 38);
-        }
-    }).on('treelistconfirm', function (event, item) {
-        if (item.node) {
-            RED.workspaces.show(item.node.z, false, false, true);
-            var ndeid = item.node.id;
-
-            setTimeout(() => {
-                const nodeToShow = RED.nodes.node(ndeid)
-
-                if (nodeToShow) {
-                    RED.view.reveal(nodeToShow.id);
-                    RED.view.select(nodeToShow.id);
-                    RED.editor.edit(nodeToShow);
-                }
-
-                if (ndeid == RED.workspaces.active()) {
-                    RED.workspaces.edit()
-                }
-            }, 50);
-        }
-    });
-};
-
-
-
-/**
- * Code for the blog changes tab
- */
-var fillNumOfUpdates = () => {
-    var sltObj = $('#node-input-blogchangesidebar-numOfUpdates');
-    sltObj.html("");
-
-    sltObj.append(
-        $('<option></option>').val(-1).html("-- All --")
-    );
-    [5, 10, 20, 50, 100, 150, 200].forEach(function (v) {
-        sltObj.append($('<option></option>').val(v).html(v));
-    });
-
-    sltObj.val(20);
-};
-
-var setupTreelistForBlogChanges = () => {
-    return $("#node-input-blogchangesidebar-target-container-div").css({
-        width: "100%",
-    }).treeList(
-        {
-            multi: false
-        }
-    ).on("treelistitemmouseover", function (e, item) {
-    }).on("treelistitemmouseout", function (e, item) {
-    }).on('treelistselect', function (event, item) {
-        if (item.node) {
-            RED.workspaces.show(item.node.z, false, false, true);
-            var ndeid = item.node.id;
-            setTimeout(() => {
-                RED.view.reveal(ndeid, true);
-                RED.view.redraw();
-            }, 38);
-        }
-    }).on('treelistconfirm', function (event, item) {
-        if (item.node) {
-            RED.workspaces.show(item.node.z, false, false, true);
-            var ndeid = item.node.id;
-
-            setTimeout(() => {
-                const nodeToShow = RED.nodes.node(ndeid)
-
-                if (nodeToShow) {
-                    RED.view.reveal(nodeToShow.id);
-                    RED.view.select(nodeToShow.id);
-                    RED.editor.edit(nodeToShow);
-                }
-
-                if (ndeid == RED.workspaces.active()) {
-                    RED.workspaces.edit()
-                }
-            }, 50);
-        }
-    });
-};
-
-/**
- * tab tracker list
- */
-var setupTabTrackerTreelist = () => {
-    return $("#node-input-blogchangesidebar-tab-tracker").css({
-        width: "100%",
-    }).treeList(
-        {
-            multi: false
-        }
-    ).on("treelistitemmouseover", function (e, item) {
-    }).on("treelistitemmouseout", function (e, item) {
-    }).on('treelistselect', function (event, item) {
-        if (item.obj) {
-            RED.workspaces.show(item.obj.id, false, false, true);
-        }
-    }).on('treelistconfirm', function (event, item) {
-        if (item.obj) {
-            RED.workspaces.show(item.obj.id, false, false, true);
-            setTimeout(() => {
-                RED.workspaces.edit(item.obj.id)
-            }, 132)
-        }
-    });
-};
-
-
-
-/**
- * Code for the blog pages tab
- */
-var setupTreelist = () => {
-    return $("#node-input-blogpagessidebar-target-container-div").css({
-        width: "100%",
-        height: "calc(100%)"
-    }).treeList(
-        {
-            multi: false
-        }
-    ).on("treelistitemmouseover", function (e, item) {
-        /* if ( item.node && item.node.z == RED.workspaces.active()) {
-         *   RED.view.reveal(item.node.id,true)
-         *   RED.view.redraw();
-         * }*/
-    }).on("treelistitemmouseout", function (e, item) {
-    }).on('treelistselect', function (event, item) {
-        if (item.node) {
-            RED.workspaces.show(item.node.z, false, false, true);
-            var ndeid = item.node.id;
-            setTimeout(() => {
-                RED.view.reveal(ndeid, true);
-                RED.view.redraw();
-            }, 38);
-        }
-    }).on('treelistconfirm', function (event, item) {
-        if (item.node) {
-            RED.workspaces.show(item.node.z, false, false, true);
-
-            var ndeid = item.node.id;
-            setTimeout(() => {
-                const nodeToShow = RED.nodes.node(ndeid)
-
-                if (nodeToShow) {
-                    RED.view.reveal(nodeToShow.id);
-                    RED.view.select(nodeToShow.id);
-                    RED.editor.edit(nodeToShow);
-                }
-
-                if (ndeid == RED.workspaces.active()) {
-                    RED.workspaces.edit()
-                }
-            }, 50);
-        }
-    });
-};
-
-var retrieveBlogPages = () => {
-    var blogPageNodes = [];
-
-    RED.nodes.eachNode(function (n) {
-        if (n.type == "link in" && n.name.match(/^\[[^\]]+\] /)) {
-            blogPageNodes.push({ ...n });
-        }
-    });
-
-    blogPageNodes = blogPageNodes.filter(function (nde) {
-        return RED.nodes.getNodeLinks(nde.id).filter(function (b) {
-            return b.target.type == "BlogPageInfo"
-        }).length > 0;
-    })
-    blogPageNodes.sort(function (a, b) { return a.name > b.name });
-
-    var items = [];
-    var nodeItemMap = {};
-
-    var duplicatePaths = {};
-
-    blogPageNodes.forEach(function (nde) {
-        var nId = nde.id;
-        var n = RED.nodes.node(nId);
-
-        var blogInfoNode = { reloadOnEdit: false };
-        RED.nodes.getNodeLinks(nId).forEach(function (lnk) {
-            if (lnk.target.type == "BlogPageInfo") {
-                blogInfoNode = RED.nodes.node(lnk.target.id);
-            }
-        });
-
-        /* provide an indication what the different pages are doing */
-        var sublabel = blogInfoNode.reloadOnEdit ? "↻" : "─";
-        sublabel += blogInfoNode.draft ? "Ɛ" : "─";
-        sublabel += blogInfoNode.redirectToNode ? "↗" : "─";
-        sublabel += blogInfoNode.incIndex ? "⌂" : "─";
-        sublabel += blogInfoNode.incRss ? "⋔" : "─";
-        sublabel += blogInfoNode.incSitemap ? "⅄" : "─";
-        sublabel += blogInfoNode.image ? "⊞" : "─";
-
-        var nodeDef = RED.nodes.getType(n.type);
-        var label;
-
-        if (nodeDef) {
-            var l = nodeDef.label;
-            label = (typeof l === "function" ? l.call(n) : l) || "";
-
-            if (sublabel.indexOf("subflow:") === 0) {
-                return;
-            }
-        }
-
-        if (!nodeDef || !label) {
-            label = n.type;
-        }
-
-        (duplicatePaths[label] ||= []).push(n.id);
-
-        nodeItemMap[n.id] = {
-            node: n,
-            label: label,
-            icon: n.d ? "fa fa-eye-slash" : "fa fa-eye",
-            class: "",
-            sublabel: sublabel,
-            selected: false,
-            checkbox: false,
-            children: undefined
-        };
-
-        items.push(nodeItemMap[n.id]);
-    });
-
-    $.each(duplicatePaths, (propName) => {
-        if (duplicatePaths[propName].length > 1) {
-            items.forEach((itm) => {
-                if (itm.label == propName) {
-                    itm.sublabel = "DUPLICATE";
-                    itm.class = "duplicate-path"
-                }
-            });
-        }
-    });
-
-    $("#node-input-blogpagessidebar-target-container-div").treeList(
-        'data', items
-    );
-};
-
-
-let prepareSeekerSidebarTreeListWidget=()=>{let e="#func-blogpagessidebar-tab-seeker-sidebar",t="#func-sidebar-seeker-seeker-target-container-div",r=()=>{1==$(t).treeList("data").filter(e=>e.expanded).length?$(e).find(".pathway-handler-but").prop("disabled",!1):$(e).find(".pathway-handler-but").prop("disabled",!0)};try{$(t).treeList("empty"),$(t).treeList("data",[])}catch(e){$(t).css({width:"100%",height:"calc(100%)"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistconfirm",function(e,t){t.node&&!t.children&&(RED.view.reveal(t.node.id),RED.view.select(t.node.id),setTimeout(()=>{RED.editor.edit(t.node)},100)),r()}).on("treelistselect",function(e,t){var n;t.node&&!t.children&&(RED.workspaces.show(t.node.z,!1,!1,!0),RED.view.reveal(t.node.id,!0),RED.view.redraw(),0<$("#docnode-"+t.node.id).length)&&(n=$("#func-sidebar-seeker-seeker-generate-markdown-container").parent()).animate({scrollTop:$("#docnode-"+t.node.id).offset().top-n.offset().top+n.scrollTop()}),r()})}},siderbarPathToTreeListEntry=e=>{var t=RED.nodes.node(e[e.length-1]);let n=[];return e.forEach(function(e){var t,e=RED.nodes.node(e)||RED.nodes.junction(e);void 0!==e&&(t=RED.nodes.workspace(e.z)||RED.nodes.subflow(e.z),n.push({label:"",_label:RED.utils.getNodeLabel(e),node:e,sublabel:t&&RED.utils.getNodeLabel(t)||e.z,icon:RED.utils.createNodeIcon(e,!0),class:"intro-remove-top-left"}))}),{node:t,label:RED.utils.getNodeLabel(t)||d.type+": "+d.id,_label:RED.utils.getNodeLabel(t)||d.type+": "+d.id,_pathlen:e.length,sublabel:"Length: "+e.length,selected:!1,checkbox:!1,children:n}};function prepareAndFillDropDowns(n){$("#func-sidebar-seeker-seeker-show-percent").show(),$("#func-sidebar-seeker-seeker-show-ordering").show();var e,r=$("#func-sidebar-seeker-seeker-show-percent"),t=(r.html(""),r.append($("<option></option>").val("-").html("Show..")),[5,10,20,30,40,50,75].forEach(e=>{var t=parseInt(e*n/100);0!=t&&r.append($("<option></option>").val(e).html(t+" paths"))}),r.append($("<option></option>").val(100).html("All")),r.val("-"),(r=$("#func-sidebar-seeker-seeker-show-ordering")).html(""),{"Count Asc":1,"Count Desc":2,"Name Asc":3,"Name Desc":4,Random:5});for(e in t)r.append($("<option></option>").val(t[e]).html(e));r.val(1)}function obtainSortFunction(e){return{1:(e,t)=>e.length<t.length?-1:1,2:(e,t)=>e.length>t.length?-1:1,3:(e,t)=>RED.utils.getNodeLabel(RED.nodes.node(e[e.length-1]))<RED.utils.getNodeLabel(RED.nodes.node(t[t.length-1]))?-1:1,4:(e,t)=>{e=RED.utils.getNodeLabel(RED.nodes.node(e[e.length-1]));return RED.utils.getNodeLabel(RED.nodes.node(t[t.length-1]))<e?-1:1},5:(e,t)=>.5<Math.random()?-1:1}[parseInt(e)]||((e,t)=>e.length<t.length?-1:1)}function sidebarSeekerHandleExpandedNodes(e){1==e.length?(e=e[0].children.filter(e=>e.node.z==RED.workspaces.active()).map(e=>e.node.id),RED.tray.hide(),RED.view.selectNodes({selected:e,onselect:()=>{RED.tray.show()},oncancel:()=>{RED.tray.show()}})):RED.notify("Only one expanded pathway can be shown.",{type:"warning"})}let sidebarSeekerHandleDropDownChange=e=>{e&&e.preventDefault();let t=window._sidebarSeekerStack.length,n=25,r=("-"!=$("#func-sidebar-seeker-seeker-show-percent").val()&&(n=parseInt(t*(parseInt($("#func-sidebar-seeker-seeker-show-percent").val())/100))),obtainSortFunction($("#func-sidebar-seeker-seeker-show-ordering").val()));setTimeout(()=>{setTimeout(()=>{$("#func-sidebar-seeker-seeker-totalPaths").html(n>t?""+t:n+" / "+t)},10),setTimeout(()=>{$("#func-sidebar-seeker-seeker-target-container-div").treeList("data",window._sidebarSeekerStack.sort(r).slice(0,n).map(e=>siderbarPathToTreeListEntry(e)))},20)},100)},sidebarSeekerSetupTreelistOnCompletion=()=>{let e=window._sidebarSeekerStack.length;setTimeout(()=>{$("#func-sidebar-seeker-seeker-start-but").prop("disabled",!1),$("#func-sidebar-seeker-seeker-totalPaths").html(e),$("#func-sidebar-seeker-seeker-spinner").hide()},10),prepareAndFillDropDowns(e),$("#func-sidebar-seeker-seeker-show-ordering").on("change",sidebarSeekerHandleDropDownChange),$("#func-sidebar-seeker-seeker-show-percent").on("change",sidebarSeekerHandleDropDownChange),$("#func-sidebar-seeker-seeker-show-percent").trigger("change")},sidebarSeekerExtractFlowHandler=(t,n)=>{if(1==t.length){let e=t[0].children.map(e=>e.node).filter(e=>["link in","link out","Seeker","Sink","junction"].indexOf(e.type)<0);var r=RED.nodes.createExportableNodeSet(e).map((e,t)=>{let n=e.name||e.type+": "+e.id;try{e._def=e._def||RED.nodes.getType(e.type),e._def&&e._def._&&e._&&(n=RED.utils.getNodeLabel(e,e.info).replace("\\n"," "))}catch(e){}return`<div id='docnode-${e.id}'></div>
+let prepareSeekerSidebarTreeListWidget=()=>{let e="#func-mindmapsidebar-tab-seeker-sidebar",t="#func-sidebar-seeker-seeker-target-container-div",r=()=>{1==$(t).treeList("data").filter(e=>e.expanded).length?$(e).find(".pathway-handler-but").prop("disabled",!1):$(e).find(".pathway-handler-but").prop("disabled",!0)};try{$(t).treeList("empty"),$(t).treeList("data",[])}catch(e){$(t).css({width:"100%",height:"calc(100%)"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistconfirm",function(e,t){t.node&&!t.children&&(RED.view.reveal(t.node.id),RED.view.select(t.node.id),setTimeout(()=>{RED.editor.edit(t.node)},100)),r()}).on("treelistselect",function(e,t){var n;t.node&&!t.children&&(RED.workspaces.show(t.node.z,!1,!1,!0),RED.view.reveal(t.node.id,!0),RED.view.redraw(),0<$("#docnode-"+t.node.id).length)&&(n=$("#func-sidebar-seeker-seeker-generate-markdown-container").parent()).animate({scrollTop:$("#docnode-"+t.node.id).offset().top-n.offset().top+n.scrollTop()}),r()})}},siderbarPathToTreeListEntry=e=>{var t=RED.nodes.node(e[e.length-1]);let n=[];return e.forEach(function(e){var t,e=RED.nodes.node(e)||RED.nodes.junction(e);void 0!==e&&(t=RED.nodes.workspace(e.z)||RED.nodes.subflow(e.z),n.push({label:"",_label:RED.utils.getNodeLabel(e),node:e,sublabel:t&&RED.utils.getNodeLabel(t)||e.z,icon:RED.utils.createNodeIcon(e,!0),class:"intro-remove-top-left"}))}),{node:t,label:RED.utils.getNodeLabel(t)||t.type+": "+t.id,_label:RED.utils.getNodeLabel(t)||t.type+": "+t.id,_pathlen:e.length,sublabel:"Length: "+e.length,selected:!1,checkbox:!1,children:n}};function prepareAndFillDropDowns(n){$("#func-sidebar-seeker-seeker-show-percent").show(),$("#func-sidebar-seeker-seeker-show-ordering").show();var e,r=$("#func-sidebar-seeker-seeker-show-percent"),t=(r.html(""),r.append($("<option></option>").val("-").html("Show..")),[5,10,20,30,40,50,75].forEach(e=>{var t=parseInt(e*n/100);0!=t&&r.append($("<option></option>").val(e).html(t+" paths"))}),r.append($("<option></option>").val(100).html("All")),r.val("-"),(r=$("#func-sidebar-seeker-seeker-show-ordering")).html(""),{"Count Asc":1,"Count Desc":2,"Name Asc":3,"Name Desc":4,Random:5});for(e in t)r.append($("<option></option>").val(t[e]).html(e));r.val(1)}function obtainSortFunction(e){return{1:(e,t)=>e.length<t.length?-1:1,2:(e,t)=>e.length>t.length?-1:1,3:(e,t)=>RED.utils.getNodeLabel(RED.nodes.node(e[e.length-1]))<RED.utils.getNodeLabel(RED.nodes.node(t[t.length-1]))?-1:1,4:(e,t)=>{e=RED.utils.getNodeLabel(RED.nodes.node(e[e.length-1]));return RED.utils.getNodeLabel(RED.nodes.node(t[t.length-1]))<e?-1:1},5:(e,t)=>.5<Math.random()?-1:1}[parseInt(e)]||((e,t)=>e.length<t.length?-1:1)}function sidebarSeekerHandleExpandedNodes(e){1==e.length?(e=e[0].children.filter(e=>e.node.z==RED.workspaces.active()).map(e=>e.node.id),RED.tray.hide(),RED.view.selectNodes({selected:e,onselect:()=>{RED.tray.show()},oncancel:()=>{RED.tray.show()}})):RED.notify("Only one expanded pathway can be shown.",{type:"warning"})}let sidebarSeekerHandleDropDownChange=e=>{e&&e.preventDefault();let t=window._sidebarSeekerStack.length,n=25,r=("-"!=$("#func-sidebar-seeker-seeker-show-percent").val()&&(n=parseInt(t*(parseInt($("#func-sidebar-seeker-seeker-show-percent").val())/100))),obtainSortFunction($("#func-sidebar-seeker-seeker-show-ordering").val()));setTimeout(()=>{setTimeout(()=>{$("#func-sidebar-seeker-seeker-totalPaths").html(n>t?""+t:n+" / "+t)},10),setTimeout(()=>{$("#func-sidebar-seeker-seeker-target-container-div").treeList("data",window._sidebarSeekerStack.sort(r).slice(0,n).map(e=>siderbarPathToTreeListEntry(e)))},20)},100)},sidebarSeekerSetupTreelistOnCompletion=()=>{let e=window._sidebarSeekerStack.length;setTimeout(()=>{$("#func-sidebar-seeker-seeker-start-but").prop("disabled",!1),$("#func-sidebar-seeker-seeker-totalPaths").html(e),$("#func-sidebar-seeker-seeker-spinner").hide()},10),prepareAndFillDropDowns(e),$("#func-sidebar-seeker-seeker-show-ordering").on("change",sidebarSeekerHandleDropDownChange),$("#func-sidebar-seeker-seeker-show-percent").on("change",sidebarSeekerHandleDropDownChange),$("#func-sidebar-seeker-seeker-show-percent").trigger("change")},sidebarSeekerExtractFlowHandler=(t,n)=>{if(1==t.length){let e=t[0].children.map(e=>e.node).filter(e=>["link in","link out","Seeker","Sink","junction"].indexOf(e.type)<0);var r=RED.nodes.createExportableNodeSet(e).map((e,t)=>{let n=e.name||e.type+": "+e.id;try{e._def=e._def||RED.nodes.getType(e.type),e._def&&e._def._&&e._&&(n=RED.utils.getNodeLabel(e,e.info).replace("\\n"," "))}catch(e){}return`<div id='docnode-${e.id}'></div>
 
 # ${n}
+
 ${e.info||"*no content*"}
 `}).join("\n");switch(n){case"json":RED.clipboard.copyText(JSON.stringify((r=>{let a=0;return(r=RED.nodes.createExportableNodeSet(e).map(e=>(e.id=RED.nodes.id(),e))).map((e,t)=>{try{var n;e._def=e._def||RED.nodes.getType(e.type),e._def&&e._def._&&e._?(n=RED.utils.getNodeLabel(e,e.info).split("\\n").length,a+=30*n+30):a+=50}catch(e){a+=50}return delete e.z,e.y=a,e.x=0,e.wires=[[]],t!=r.length-1&&(e.wires=[[r[t+1].id]]),e})})(RED.nodes.createExportableNodeSet(e))))&&RED.notify("Pathway copied as JSON to clipboard",{type:"success"});break;case"markdown":RED.clipboard.copyText(r)&&RED.notify("Pathway copied as Markdown to clipboard",{type:"success"});break;case"html":RED.clipboard.copyText(RED.utils.renderMarkdown(r))&&RED.notify("Pathway copied as HTML to clipboard",{type:"success"});break;default:RED.notify(`Export format <b>${n}</b> not supported.`,{type:"error"})}$("#func-sidebar-seeker-seeker-generate-markdown-container").parent().animate({"background-color":"#ccc"},300).animate({"background-color":"white"},300),$("#func-sidebar-seeker-seeker-generate-markdown-container").html(RED.utils.renderMarkdown(r)).find("a").attr("target","_blank")}else RED.notify("Only one expanded pathway can be extracted.",{type:"warning"})},sidebarSeekerFindPathWaysButtonPressHandler=e=>{e&&e.preventDefault();let n=RED.view.selection().nodes;if(n&&1==n.length){$("#func-sidebar-seeker-seeker-spinner").show();window._sidebarSeekerStack=[],window._sidebarSeekerWorker=void 0,prepareSeekerSidebarTreeListWidget();let t=new Worker("data:text/javascript;base64,bGV0IGludHJvU3BlY3Rpb25TdGFjaz1bXSxncmFwaD1bXSxncmFwaEluZGV4PXt9LFJFRD17bm9kZXM6e25vZGU6ZT0+Z3JhcGhbZ3JhcGhJbmRleFtlXV0sZ2V0Tm9kZUxpbmtzOnM9PnMuZmxhdHdpcmVzLm1hcChlPT4oe3RhcmdldDpSRUQubm9kZXMubm9kZShlKSxzb3VyY2U6c30pKX19LHRyYXZlcnNlPWZ1bmN0aW9uKHMsdCl7aWYodC5pbmRleE9mKHMuaWQpPDAmJiFzLmQpaWYoMD09cy5mbGF0d2lyZXMubGVuZ3RoJiYibGluayBvdXQiIT1zLnR5cGUmJiJsaW5rIGNhbGwiIT1zLnR5cGUpcG9zdE1lc3NhZ2UoWy4uLnQscy5pZF0pO2Vsc2Ugc3dpdGNoKHMudHlwZSl7Y2FzZSJsaW5rIGNhbGwiOjA9PXMubGlua3MubGVuZ3RoJiYwPT1zLmZsYXR3aXJlcy5sZW5ndGg/cG9zdE1lc3NhZ2UoWy4uLnQscy5pZF0pOihSRUQubm9kZXMuZ2V0Tm9kZUxpbmtzKHMpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUudGFyZ2V0LFsuLi50LHMuaWRdKX0pLHMubGlua3MuZm9yRWFjaChlPT57ZT1SRUQubm9kZXMubm9kZShlKTtlJiZ0cmF2ZXJzZShlLFsuLi50LHMuaWRdKX0pKTticmVhaztjYXNlImxpbmsgb3V0IjowPT1zLmxpbmtzLmxlbmd0aD9wb3N0TWVzc2FnZShbLi4udCxzLmlkXSk6cy5saW5rcy5mb3JFYWNoKGU9PntlPVJFRC5ub2Rlcy5ub2RlKGUpO2UmJnRyYXZlcnNlKGUsWy4uLnQscy5pZF0pfSk7YnJlYWs7ZGVmYXVsdDpSRUQubm9kZXMuZ2V0Tm9kZUxpbmtzKHMpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUudGFyZ2V0LFsuLi50LHMuaWRdKX0pfX07b25tZXNzYWdlPWZ1bmN0aW9uKGUpe2xldCBzPWUuZGF0YS5zZWVrZXJJZDsoZ3JhcGg9ZS5kYXRhLm5vZGVzLm1hcChlPT4oe3dpcmVzOmUud2lyZXMsbGlua3M6ZS5saW5rcyxkOmUuZGlzYWJsZWR8fGUuZCxpZDplLmlkLHR5cGU6ZS50eXBlfSkpLmZpbHRlcihlPT4hIWUud2lyZXMpLm1hcChlPT4oZS5mbGF0d2lyZXM9ZS53aXJlcy5mbGF0KCksZSkpKS5mb3JFYWNoKChlLHMpPT5ncmFwaEluZGV4W2UuaWRdPXMpLFJFRC5ub2Rlcy5nZXROb2RlTGlua3MoUkVELm5vZGVzLm5vZGUocykpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUudGFyZ2V0LFtzXSl9KSxwb3N0TWVzc2FnZSgiZG9uZSIpfTs=");(window._sidebarSeekerWorker=t).onmessage=function(e){"done"==e.data?(t.terminate(),delete window._introWorker,sidebarSeekerSetupTreelistOnCompletion()):(window._sidebarSeekerStack.push(e.data),$("#func-sidebar-seeker-seeker-totalPaths").html(window._sidebarSeekerStack.length),26==window._sidebarSeekerStack.length&&$("#func-sidebar-seeker-seeker-target-container-div").treeList("data",window._sidebarSeekerStack.sort((e,t)=>e.length<t.length?-1:1).slice(0,25).map(e=>siderbarPathToTreeListEntry(e))))},setTimeout(()=>{t.postMessage({seekerId:n[0].id,nodes:RED.nodes.createCompleteNodeSet({credentials:!1})})},10)}else RED.notify("Select exactly one node to find all pathways.",{type:"warning"})};
+
   
   var initialiseSidebarNodeOnce = () => {
     RED.events.off('runtime-state', initialiseSidebarNodeOnce);
 
-    var content = $($('script[type="text/x-red"][data-template-name="BlogPagesSidebar"]').i18n().html());
+    var content = $($('script[type="text/x-red"][data-template-name="MindMapSidebar"]').i18n().html());
 
     RED.sidebar.addTab({
-        id: "BlogPagesSidebar",
+        id: "MindMapSidebar",
         label: "mindmap", // short name for the tab
         name: "MindMap", // long name for the menu
         content: content,
@@ -2008,75 +1836,40 @@ ${e.info||"*no content*"}
 
 
     var tabs = RED.tabs.create({
-        id: 'func-blogcntrlsidebar-tabs',
+        id: 'func-mindmapcntrlsidebar-tabs',
         onchange: function (tab) {
-            $('#func-blogcntrlsidebar-tabs-content').children().hide();
+            $('#func-mindmapcntrlsidebar-tabs-content').children().hide();
             $('#' + tab.id).show();
 
-            if (tab.id == "func-blogpagessidebar-tab-blogchanges" ) {
-                setTimeout(updateBlogChanges, 150);
-            } else if (tab.id == "func-blogpagessidebar-tab-mindmap-stats" ) {
+            if (tab.id == "func-mindmapsidebar-tab-mindmapchanges" ) {
+                setTimeout(updateMindMapChanges, 150);
+            } else if (tab.id == "func-mindmapsidebar-tab-mindmap-stats" ) {
                 setTimeout(updateMindMapStats, 150) 
-            } else if (tab.id == "func-blogpagessidebar-tab-seeker-sidebar") {
+            } else if (tab.id == "func-mindmapsidebar-tab-seeker-sidebar") {
                 /* TODO do something here */
             }
         }
     });
 
-/*
-    // Add first tab, pull
-    tabs.addTab({
-        id: 'func-blogpagessidebar-tab-blogpages',
-        iconClass: 'fa fa-sitemap',
-        label: 'Pages'
-    });
-*/
     // Add second tab, changes
     tabs.addTab({
-        id: 'func-blogpagessidebar-tab-blogchanges',
+        id: 'func-mindmapsidebar-tab-mindmapchanges',
         iconClass: 'fa fa-tty',
         label: 'Changes'
     });
 
     // Add third tab, mindmap stats
     tabs.addTab({
-        id: 'func-blogpagessidebar-tab-mindmap-stats',
+        id: 'func-mindmapsidebar-tab-mindmap-stats',
         iconClass: 'fa fa-percent',
         label: 'Stats'
     });
 
     tabs.addTab({
-        id: 'func-blogpagessidebar-tab-seeker-sidebar',
+        id: 'func-mindmapsidebar-tab-seeker-sidebar',
         iconClass: 'fa fa-newspaper-o',
         label: 'Document'
     });
-
-    /***
-    * Blog Pages
-    * ************/
-
-    var blogPagesListing = setupTreelist();
-
-    var blogPagesSearch = $("#node-input-blogpagessidebar-target-filter").searchBox({
-        style: "compact",
-        delay: 300,
-        change: function () {
-            var val = $(this).val().trim().toLowerCase();
-            if (val === "") {
-                blogPagesListing.treeList("filter", null);
-                blogPagesSearch.searchBox("count", "");
-            } else {
-                var count = blogPagesListing.treeList("filter", function (item) {
-                    return item.label.toLowerCase().indexOf(val) > -1 || item.node.type.toLowerCase().indexOf(val) > -1
-                });
-                blogPagesSearch.searchBox("count", count + " / " + blogPagesListing.treeList('data').length);
-            }
-        }
-    });
-
-    $('#node-input-blogpagessidebar-refresh-but').on('click', (e) => {
-        retrieveBlogPages()
-    })
 
     /***
     * Mindmap statistics code
@@ -2184,31 +1977,31 @@ ${e.info||"*no content*"}
     $('#node-input-mindmap-stats-refresh-button').on('click', updateMindMapStats);
 
     /***
-    * Blog Changes
+    * MindMap Changes
     * ************/
 
     fillNumOfUpdates();
 
-    var blogChangesListing = setupTreelistForBlogChanges();
+    var mindMapChangesListing = setupTreelistForMindMapChanges();
 
-    var blogChangeSearch = $("#node-input-blogchangesidebar-target-filter").searchBox({
+    var mindMapChangeSearch = $("#node-input-mindmapchangessidebar-target-filter").searchBox({
         style: "compact",
         delay: 300,
         change: function () {
             var val = $(this).val().trim().toLowerCase();
             if (val === "") {
-                blogChangesListing.treeList("filter", null);
-                blogChangeSearch.searchBox("count", "");
+                mindMapChangesListing.treeList("filter", null);
+                mindMapChangeSearch.searchBox("count", "");
             } else {
-                var count = blogChangesListing.treeList("filter", function (item) {
+                var count = mindMapChangesListing.treeList("filter", function (item) {
                     return item._label.toLowerCase().indexOf(val) > -1 || item.node.type.toLowerCase().indexOf(val) > -1
                 });
-                blogChangeSearch.searchBox("count", count + " / " + blogChangesListing.treeList('data').length);
+                mindMapChangeSearch.searchBox("count", count + " / " + mindMapChangesListing.treeList('data').length);
             }
         }
     });
 
-    var updateBlogChanges = (e) => {
+    var updateMindMapChanges = (e) => {
         if (e) { e.preventDefault(); }
 
         var blogPageNodes = [];
@@ -2226,7 +2019,7 @@ ${e.info||"*no content*"}
 
         blogPageNodes.sort(function (a, b) {
             return a.updatedAt < b.updatedAt;
-        }); let numChanges = parseInt($("#node-input-blogchangesidebar-numOfUpdates").val()
+        }); let numChanges = parseInt($("#node-input-mindmapchangessidebar-numOfUpdates").val()
         ); if (numChanges > 0) {
             blogPageNodes.length = numChanges;
         }
@@ -2261,11 +2054,11 @@ ${e.info||"*no content*"}
             items.push(nodeItemMap[n.id]);
         });
 
-        blogChangesListing.treeList('data', items);
+        mindMapChangesListing.treeList('data', items);
     }
 
-    $("#node-input-blogchangesidebar-numOfUpdates").on("change", updateBlogChanges)
-    $('#node-input-blogchangesidebar-refresh-button').on('click', updateBlogChanges);
+    $("#node-input-mindmapchangessidebar-numOfUpdates").on("change", updateMindMapChanges)
+    $('#node-input-mindmapchangessidebar-refresh-button').on('click', updateMindMapChanges);
 
     /* 
      * Setup the code for the tab tracker.
@@ -2306,19 +2099,19 @@ ${e.info||"*no content*"}
 
         // highlight the last tab, i.e. the tab we're coming from and not the
         // tab we're switching to.
-        let callstack = $('#node-input-blogchangesidebar-tab-tracker').data('callstack') || []
+        let callstack = $('#node-input-mindmapchangessidebar-tab-tracker').data('callstack') || []
         
         let prevItemId = callstack[0]
 
         // we only need two on the stack so avoid having the stack grow to 
         // unhandlable memory monster.
         if ( callstack.length > 3 ) { callstack.length = 3 }
-        $('#node-input-blogchangesidebar-tab-tracker').data('callstack', [newitem.obj.id, ...callstack])
+        $('#node-input-mindmapchangessidebar-tab-tracker').data('callstack', [newitem.obj.id, ...callstack])
 
         /* this behaviour leaves the stack, only placing the new item on top IFF it 
          * isn't already on the statck.
          */
-        let olddata = $('#node-input-blogchangesidebar-tab-tracker').treeList('data').map( (itm) => {
+        let olddata = $('#node-input-mindmapchangessidebar-tab-tracker').treeList('data').map( (itm) => {
             return {
                 class:    "",
                 selected: prevItemId == itm.obj.id,
@@ -2334,16 +2127,16 @@ ${e.info||"*no content*"}
 
         if ( !olddata.some( itm => itm.obj.id == newitem.obj.id) ) {
             // new item isn't already in the treelist
-            $('#node-input-blogchangesidebar-tab-tracker').treeList('data', [newitem, ...olddata])
+            $('#node-input-mindmapchangessidebar-tab-tracker').treeList('data', [newitem, ...olddata])
         } else {
             // newitem is in the list and will be highlighted becuase it has been selected.
-            $('#node-input-blogchangesidebar-tab-tracker').treeList('data', olddata)
+            $('#node-input-mindmapchangessidebar-tab-tracker').treeList('data', olddata)
         }
     })
 
     var tabTrackerListing = setupTabTrackerTreelist();
 
-    var tabTrackerSearch = $("#node-input-blogchangesidebar-tab-tracker-filter").searchBox({
+    var tabTrackerSearch = $("#node-input-mindmapchangessidebar-tab-tracker-filter").searchBox({
         style: "compact",
         delay: 300,
         change: function () {
@@ -2370,8 +2163,8 @@ ${e.info||"*no content*"}
             children: undefined
         }
 
-        let currentWorkspace = RED.workspaces.active()
-        if (!currentWorkspace) { return setTimeout(addInitialWorkspaceHandler, 200); }
+        let currentWorkspace = RED.workspaces.active() 
+        if (!currentWorkspace) { return setTimeout(addInitialWorkspaceHandler,200); }
 
         let obj = RED.nodes.workspace(currentWorkspace)
         if (obj) {
@@ -2385,18 +2178,21 @@ ${e.info||"*no content*"}
             }
         } else { return }
 
-        $('#node-input-blogchangesidebar-tab-tracker').data('callstack', [newitem.obj.id])
-        $('#node-input-blogchangesidebar-tab-tracker').treeList('data', [newitem])
+        $('#node-input-mindmapchangessidebar-tab-tracker').data('callstack', [newitem.obj.id])
+        $('#node-input-mindmapchangessidebar-tab-tracker').treeList('data', [newitem])
     }
-    setTimeout(addInitialWorkspaceHandler, 300)
+    setTimeout(addInitialWorkspaceHandler,300)
 
-    $('#node-input-blogchangesidebar-clear-stack-button').on('click', (e) => {
+    $('#node-input-mindmapchangessidebar-clear-stack-button').on('click', (e) => {
         if (e) e.preventDefault();
 
-        $('#node-input-blogchangesidebar-tab-tracker').treeList('empty');
-        $('#node-input-blogchangesidebar-tab-tracker').treeList('data', []);
+        $('#node-input-mindmapchangessidebar-tab-tracker').treeList('empty');
+        $('#node-input-mindmapchangessidebar-tab-tracker').treeList('data', []);
     });
 
+    /**
+     * Document tab - i.e. the pathway seeker and document generator
+     */
     $('#func-sidebar-seeker-seeker-start-but').on('click', sidebarSeekerFindPathWaysButtonPressHandler)
 
     $('#func-sidebar-seeker-seeker-show-pathway-but').on('click', e => {
@@ -2423,8 +2219,9 @@ ${e.info||"*no content*"}
         sidebarSeekerExtractFlowHandler(expandedNodes, "json")
     })
 
-    // initially disable the buttons.
-    $("#func-blogpagessidebar-tab-seeker-sidebar").find(".pathway-handler-but").prop("disabled", true);
+    // initially disable buttons.
+    $("#func-mindmapsidebar-tab-seeker-sidebar").find(".pathway-handler-but").prop("disabled", true);
+
 
     var search = $("#func-sidebar-seeker-seeker-target-filter").searchBox({
         style: "compact",
@@ -2445,11 +2242,12 @@ ${e.info||"*no content*"}
         }
     });
 
+
     /**
      * Update the createdAt and UpdatedAt flags on all mindmap nodes. This tracks
      * changes that are shown in the mindmap changes tab.
      */
-
+    
     // This covers the case of an old node being copied. Old nodes are those
     // that were created BEFORE their node-type had createdAt and/or updatedAt
     // fields. Those old nodes don't get a value for createdAt and updatedAt.
@@ -2489,16 +2287,16 @@ ${e.info||"*no content*"}
 
     // setup the panel separator for scrolling text.
     RED.panels.create({
-        id: 'func-blogpagessidebar-tab-seeker-sidebar',
+        id: 'func-mindmapsidebar-tab-seeker-sidebar',
         resize: (topSze,botSze) => {
-            $('#func-sidebar-seeker-seeker-generate-markdown-container').parent().parent().css("height",botSze)
-            $('#func-sidebar-seeker-seeker-target-container-div').parent().css('height',topSze - 200) 
+            $('#func-sidebar-seeker-seeker-generate-markdown-container').parent().parent().css("height", botSze)
+            $('#func-sidebar-seeker-seeker-target-container-div').parent().css('height', topSze - 200)
         }
     })
 
     // ensure all functions are defined that are used in the 'onchange' callback before
     // setting the default tab.
-    tabs.activateTab("func-blogpagessidebar-tab-blogchanges");
+    tabs.activateTab("func-mindmapsidebar-tab-mindmapchanges");
 };
 
 RED.events.on('runtime-state', initialiseSidebarNodeOnce);
@@ -2513,68 +2311,51 @@ RED.events.on('runtime-state', initialiseSidebarNodeOnce);
 </style>
 
 <!-- the html for the right sidebar plugin screen -->
-<script type="text/x-red" data-template-name="BlogPagesSidebar">
-<div class="form-row func-blogcntrlsidebar-tabs-row">
-    <ul style="min-width: 600px; margin-bottom: 20px;" id="func-blogcntrlsidebar-tabs"></ul>
+<script type="text/x-red" data-template-name="MindMapSidebar">
+<div class="form-row func-mindmapcntrlsidebar-tabs-row">
+    <ul style="min-width: 600px; margin-bottom: 20px;" id="func-mindmapcntrlsidebar-tabs"></ul>
 </div>
 
-<div id="func-blogcntrlsidebar-tabs-content" style="min-height: calc(100% - 95px);">
-    <div id="func-blogpagessidebar-tab-blogpages" style="display:none">
-
-    <div class="form-row" style="margin-left: 10px;margin-right: 15px; margin-top: 50px;">
-        <button id="node-input-blogpagessidebar-refresh-but"
-            class="red-ui-button"><i class="fa fa-shower"></i> Refresh</button>
-    </div>
-
-    <div class="form-row node-input-target-row node-input-target-list-row"
-        style="min-height: 300px; height: 500px; margin-top: 30px; margin-left: 10px; margin-right: 15px;">
-        <div>
-            <input type="text" id="node-input-blogpagessidebar-target-filter" placeholder="Search">
-        </div>
-        <div id="node-input-blogpagessidebar-target-container-div" style="margin-top: 5px; min-height: 500px;"></div>
-    </div>
-
-</div>
-
-    <div id="func-blogpagessidebar-tab-blogchanges" class="red-ui-panel" style="display:none">
+<div id="func-mindmapcntrlsidebar-tabs-content" style="min-height: calc(100% - 95px);">
+    <div id="func-mindmapsidebar-tab-mindmapchanges" class="red-ui-panel" style="display:none">
 
     <div class="form-row" style="margin-left: 10px;">
-        <button id="node-input-blogchangesidebar-refresh-button"
-             class="red-ui-button"><i class="fa fa-shower"></i> Refresh</button>
-        <select style="margin-top: 10px;" id="node-input-blogchangesidebar-numOfUpdates"></select>
+        <button id="node-input-mindmapchangessidebar-refresh-button"
+             class="red-ui-button"><i class="fa fa-refresh"></i> Update</button>
+        <select style="margin-top: 10px;" id="node-input-mindmapchangessidebar-numOfUpdates"></select>
     </div>
 
     <div class="form-row node-input-target-row node-input-target-list-row"
         style="height: 35vh; margin-left: 10px; margin-right: 15px;">
         <div>
-            <label for="node-input-blogchangesidebar-target-filter" style="width: 100%">
-                    <span>Search Blog Latest Changes: </span>
+            <label for="node-input-mindmapchangessidebar-target-filter" style="width: 100%">
+                    <span>Search Changes: </span>
                 </label>
-            <input type="text" id="node-input-blogchangesidebar-target-filter">
+            <input type="text" id="node-input-mindmapchangessidebar-target-filter">
         </div>
 
-        <div id="node-input-blogchangesidebar-target-container-div" style="margin-top:10px; height: 35vh;"></div>
+        <div id="node-input-mindmapchangessidebar-target-container-div" style="margin-top:10px; height: 35vh;"></div>
     </div>
 
     <div class="form-row node-input-target-row node-input-target-list-row"
         style="height: 35vh; margin-left: 10px; margin-right: 15px; margin-top: 5vh;">
         <div>
-            <label for="node-input-blogchangesidebar-tab-tracker-filter" style="width: 100%">
+            <label for="node-input-mindmapchangessidebar-tab-tracker-filter" style="width: 100%">
                         <span>Search Tab Stack: </span>
                     </label>
-            <input type="text" id="node-input-blogchangesidebar-tab-tracker-filter">
+            <input type="text" id="node-input-mindmapchangessidebar-tab-tracker-filter">
         </div>
 
-        <div id="node-input-blogchangesidebar-tab-tracker" style="height: 30vh; margin-top: 10px;"></div>
+        <div id="node-input-mindmapchangessidebar-tab-tracker" style="height: 30vh; margin-top: 10px;"></div>
     </div>
     
     <div class="form-row" style="margin-left: 10px;">
-        <button id="node-input-blogchangesidebar-clear-stack-button"
+        <button id="node-input-mindmapchangessidebar-clear-stack-button"
              class="red-ui-button"><i class="fa fa-shower"></i> Clear Stack</button>
     </div>
 </div>
 
-    <div id="func-blogpagessidebar-tab-mindmap-stats" class="red-ui-panel" style="display:none">
+    <div id="func-mindmapsidebar-tab-mindmap-stats" class="red-ui-panel" style="display:none">
 
     <div class="form-row" style="margin-left: 10px;">
         <select id="node-input-mindmap-stats-numOfUpdates"></select>
@@ -2597,7 +2378,7 @@ RED.events.on('runtime-state', initialiseSidebarNodeOnce);
 
     <div class="form-row" style="margin-left: 10px;">
         <button id="node-input-mindmap-stats-refresh-button"
-         class="red-ui-button"><i class="fa fa-shower"></i> Refresh</button>
+         class="red-ui-button"><i class="fa fa-refresh"></i> Update</button>
     </div>
 
     <div class="form-row node-input-target-row node-input-target-list-row"
@@ -2614,7 +2395,7 @@ RED.events.on('runtime-state', initialiseSidebarNodeOnce);
 </div>
 
     <!-- Seeker sidebar -->
-<div id="func-blogpagessidebar-tab-seeker-sidebar" style="display:none;">
+<div id="func-mindmapsidebar-tab-seeker-sidebar" style="display:none;">
 
    <div>
       <div class="form-row func-sidebar-seeker-target-row" style="margin-left: 10px; height: 3vh;">
@@ -2623,20 +2404,20 @@ RED.events.on('runtime-state', initialiseSidebarNodeOnce);
          <select class='hide' style="margin-top: 10px; width:100px;" id="func-sidebar-seeker-seeker-show-ordering"></select>
          <button id="func-sidebar-seeker-seeker-show-pathway-but" class="red-ui-button pathway-handler-but">Show Pathway</button>
       </div>
-   
-      <div class="form-row" style="margin-left: 10px; position: relative; height: 25vh; margin-right: 15px;">
+
+      <div class="form-row" style="margin-left: 10px; position: relative; height: 25vh; margin-right: 15px; min-height: 5vh;">
          <div style="margin-bottom: 5px; width: 35%; padding-left: 60%;">
             <input type="text" id="func-sidebar-seeker-seeker-target-filter">
          </div>
-   
+
          <div id="func-sidebar-seeker-seeker-target-container-div"></div>
       </div>
-   
+
       <div class="form-row" style="margin-top: 60px; margin-bottom: 20px; margin-left: 10px; height: 4vh;">
          <label>Total Paths: 
               <span style="display: block;" id="func-sidebar-seeker-seeker-totalPaths"></span>
               <img class='hide' id="func-sidebar-seeker-seeker-spinner" src='red/images/spin.svg'/>
-            </label>
+         </label>
 
          <div style="float:right;">
             <button id="func-sidebar-seeker-seeker-extract-markdown-but"
@@ -2648,7 +2429,6 @@ RED.events.on('runtime-state', initialiseSidebarNodeOnce);
          </div>
       </div>
    </div>
-
    <div>
       <div class="red-ui-panel" 
            style="margin-left: 10px; overflow: hidden; display: flex; flex-direction: column; width: 97%; height: 47vh; margin-top: 10px;">

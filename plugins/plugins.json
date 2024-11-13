@@ -9,7 +9,7 @@
         "plugins": [],
         "runtime": false,
         "user": false,
-        "version": "0.8.4-b3"
+        "version": "0.8.4-b4"
     },
     {
         "editor": true,
@@ -21,7 +21,7 @@
         "plugins": [],
         "runtime": false,
         "user": false,
-        "version": "0.9.18-b2"
+        "version": "0.9.18-b3"
     },
     {
         "editor": true,
@@ -33,18 +33,18 @@
         "plugins": [],
         "runtime": false,
         "user": false,
-        "version": "0.3.9-b1"
+        "version": "0.5.9-b1"
     },
     {
         "editor": true,
         "enabled": true,
-        "id": "@gorenje/node-red-mindmap-sidebar/blog-pages-sidebar",
+        "id": "@gorenje/node-red-mindmap/mindmap-sidebar",
         "local": true,
-        "module": "@gorenje/node-red-mindmap-sidebar",
-        "name": "blog-pages-sidebar",
+        "module": "@gorenje/node-red-mindmap",
+        "name": "mindmap-sidebar",
         "plugins": [],
         "runtime": false,
         "user": false,
-        "version": "0.1.13-b8"
+        "version": "0.5.9-b1"
     }
 ]

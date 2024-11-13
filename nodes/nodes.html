@@ -4214,8 +4214,8 @@ If you want every 20 minutes from now - use the <i>"interval"</i> option.</p>
       /* createdAt and updatedAt are "internal" attributes that track just
          that: when the node was created and the last time it was updated.
          These aren't shown in the edit window because they are maintained
-         internally. These are managed by BlogChanges node (onpaletteadd has
-         event listeners for updating these values).
+         internally. These are managed by event handling in the sidebar JS
+         code.
       */
       createdAt: {
         value: "",
@@ -6707,7 +6707,7 @@ function handleClientCodeFrontend(event,data){var doSend,doStatus,doError,nodeid
   RED.nodes.registerType('ClientCode',{
     color: '#e5e4ef',
     icon: "introspesubflow.svg",
-    category: 'introspection',
+    category: 'function',
     paletteLabel: "ClientCode",
     defaults: {
       name: {

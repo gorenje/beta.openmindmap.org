@@ -466,7 +466,7 @@
             "FlowHubCfg"
         ],
         "user": false,
-        "version": "0.8.4-b3"
+        "version": "0.8.4-b4"
     },
     {
         "enabled": true,
@@ -478,7 +478,7 @@
             "Seeker"
         ],
         "user": false,
-        "version": "0.9.18-b2"
+        "version": "0.9.18-b3"
     },
     {
         "enabled": true,
@@ -490,7 +490,7 @@
             "Sink"
         ],
         "user": false,
-        "version": "0.9.18-b2"
+        "version": "0.9.18-b3"
     },
     {
         "enabled": true,
@@ -502,341 +502,7 @@
             "ClientCode"
         ],
         "user": false,
-        "version": "0.9.18-b2"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/base",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "base",
-        "types": [],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/topic",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "topic",
-        "types": [
-            "Topic"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/observation",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "observation",
-        "types": [
-            "Observation"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/question",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "question",
-        "types": [
-            "Question"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/thought",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "thought",
-        "types": [
-            "Thought"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/idea",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "idea",
-        "types": [
-            "Idea"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/dream",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "dream",
-        "types": [
-            "Dream"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/metaphor",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "metaphor",
-        "types": [
-            "Metaphor"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/aphorism",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "aphorism",
-        "types": [
-            "Aphorism"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/poesie",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "poesie",
-        "types": [
-            "Poesie"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/humour",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "humour",
-        "types": [
-            "Humour"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/treasure",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "treasure",
-        "types": [
-            "Treasure"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/consequence",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "consequence",
-        "types": [
-            "Consequence"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/advantage",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "advantage",
-        "types": [
-            "Advantage"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/disadvantage",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "disadvantage",
-        "types": [
-            "Disadvantage"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/text",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "text",
-        "types": [
-            "Text"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/blog-post",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "blog-post",
-        "types": [
-            "Blog-Post"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/image",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "image",
-        "types": [
-            "Image"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/comment",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "comment",
-        "types": [
-            "Comment"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/codebase",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "codebase",
-        "types": [
-            "Code-Base"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/art",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "art",
-        "types": [
-            "Art"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/learning",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "learning",
-        "types": [
-            "Learning"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/inspiration",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "inspiration",
-        "types": [
-            "Inspiration"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/quote",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "quote",
-        "types": [
-            "Quote"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/definition",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "definition",
-        "types": [
-            "Definition"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/bookmark",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "bookmark",
-        "types": [
-            "Bookmark"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/book",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "book",
-        "types": [
-            "Book"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
-    },
-    {
-        "enabled": true,
-        "id": "@gorenje/node-red-mindmap/author",
-        "local": true,
-        "module": "@gorenje/node-red-mindmap",
-        "name": "author",
-        "types": [
-            "Author"
-        ],
-        "user": false,
-        "version": "0.3.9-b1"
+        "version": "0.9.18-b3"
     },
     {
         "enabled": true,
@@ -849,5 +515,339 @@
         ],
         "user": false,
         "version": "0.0.3-b3"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/base",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "base",
+        "types": [],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/topic",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "topic",
+        "types": [
+            "Topic"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/observation",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "observation",
+        "types": [
+            "Observation"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/question",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "question",
+        "types": [
+            "Question"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/thought",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "thought",
+        "types": [
+            "Thought"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/idea",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "idea",
+        "types": [
+            "Idea"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/dream",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "dream",
+        "types": [
+            "Dream"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/metaphor",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "metaphor",
+        "types": [
+            "Metaphor"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/aphorism",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "aphorism",
+        "types": [
+            "Aphorism"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/poesie",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "poesie",
+        "types": [
+            "Poesie"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/humour",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "humour",
+        "types": [
+            "Humour"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/treasure",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "treasure",
+        "types": [
+            "Treasure"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/consequence",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "consequence",
+        "types": [
+            "Consequence"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/advantage",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "advantage",
+        "types": [
+            "Advantage"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/disadvantage",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "disadvantage",
+        "types": [
+            "Disadvantage"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/text",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "text",
+        "types": [
+            "Text"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/blog-post",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "blog-post",
+        "types": [
+            "Blog-Post"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/image",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "image",
+        "types": [
+            "Image"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/comment",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "comment",
+        "types": [
+            "Comment"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/codebase",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "codebase",
+        "types": [
+            "Code-Base"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/art",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "art",
+        "types": [
+            "Art"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/learning",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "learning",
+        "types": [
+            "Learning"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/inspiration",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "inspiration",
+        "types": [
+            "Inspiration"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/quote",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "quote",
+        "types": [
+            "Quote"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/definition",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "definition",
+        "types": [
+            "Definition"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/bookmark",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "bookmark",
+        "types": [
+            "Bookmark"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/book",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "book",
+        "types": [
+            "Book"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
+    },
+    {
+        "enabled": true,
+        "id": "@gorenje/node-red-mindmap/author",
+        "local": true,
+        "module": "@gorenje/node-red-mindmap",
+        "name": "author",
+        "types": [
+            "Author"
+        ],
+        "user": false,
+        "version": "0.5.9-b1"
     }
 ]
