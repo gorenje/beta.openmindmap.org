@@ -128,7 +128,7 @@
       tabs.addTab({
             id: 'func-flowhub-tab-pull',
             iconClass: 'fa fa-arrow-down',
-            label: 'Pull'
+            label: 'Import'
       });
 
       // Add compare tab
@@ -142,7 +142,7 @@
       tabs.addTab({
             id: 'func-flowhub-tab-push',
             iconClass: 'fa fa-arrow-up',
-            label: 'Push'
+            label: 'Update'
       });
       
       tabs.activateTab("func-flowhub-tab-pull");
@@ -560,26 +560,13 @@
             </div>
 
             <div class="form-row" style="margin-left: 10px;">
-               <label>
-                <span>Import to:</span>
-              </label>
-
-              <span>
-                 <a id="flowhubpull-dialog-import-opt-sb-current" class="red-ui-button toggle" href="#" data-i18n="clipboard.export.current">current flow tab</a>
-                 <a id="flowhubpull-dialog-import-opt-sb-new" class="red-ui-button toggle" href="#" data-i18n="clipboard.import.newFlow">new flow tab</a>
-              </span>
-            </div>
-
-            <div class="form-row" style="margin-left: 10px;">
                <label for="node-input-flowhubpull-flowrevision">Revision:</label>
                <input type="text" id="node-input-flowhubpull-flowrevision" placeholder="Revision"/>
             </div>
 
             <div class="form-row" style="margin-left: 10px;">
                <button id="node-input-flowhubpull-sb-import-flow-but"
-                                             class="red-ui-button">Import Flow</button>
-               <button id="node-input-flowhubpull-sb-check-duplicates-flow-but"
-                                             class="red-ui-button">Duplication?</button>
+                                             class="red-ui-button">Import</button>
             </div>
 
 
