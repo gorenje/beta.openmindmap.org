@@ -478,7 +478,7 @@
             "Seeker"
         ],
         "user": false,
-        "version": "0.9.20-b1"
+        "version": "0.9.20-b2"
     },
     {
         "enabled": true,
@@ -490,7 +490,7 @@
             "Sink"
         ],
         "user": false,
-        "version": "0.9.20-b1"
+        "version": "0.9.20-b2"
     },
     {
         "enabled": true,
@@ -502,7 +502,7 @@
             "ClientCode"
         ],
         "user": false,
-        "version": "0.9.20-b1"
+        "version": "0.9.20-b2"
     },
     {
         "enabled": true,
