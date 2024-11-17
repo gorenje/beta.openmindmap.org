@@ -26622,7 +26622,11 @@ RED.view = (function() {
                 throw error;
             } else if (error.code != "NODE_RED") {
                 console.log(error.stack);
-                RED.notify(RED._("notification.error",{message:error.toString()}),"error");
+		if ( !error.toString().match( "type is undefined" ) ) {
+                  RED.notify(RED._("notification.error",{message:error.toString()}),"error");
+		} else {
+		  console.log( `Ignored Error was: ${error.toString()}` )
+                }
             } else {
                 RED.notify(RED._("notification.error",{message:error.message}),"error");
             }
