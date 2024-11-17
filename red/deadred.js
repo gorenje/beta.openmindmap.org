@@ -1202,6 +1202,25 @@ var DEADRED = (function() {
             }, 10);
         }
 
+        mth = options.url.match(/writermap\/classification/i)
+        if ( mth ) {
+            if ( options.type == "POST" ) {
+                jqXHR.abort();
+                setTimeout( () => {
+                    let d = JSON.parse(options.data).data.trim().split(/\s+/).sort( () => Math.random() > 0.5 ? -1 : 1)
+                    if ( d.length > 3 ) {
+                        d.length = parseInt( 10 * Math.random() ) + 1
+                    }
+                    options.success({ keywords: d })
+                },2500);
+            }
+
+            if ( options.type == "GET" ) {
+                jqXHR.abort();
+                options.success()
+            }
+        }
+
         // capture disable and enable events for the debug node
         mth = options.url.match(/^debug\/([a-z0-9]{16})\/?(.+)?/i)
         if ( mth ) {
