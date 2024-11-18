@@ -1202,35 +1202,6 @@ var DEADRED = (function() {
             }, 10);
         }
 
-        mth = options.url.match(/writermap\/classification/i)
-        if ( mth ) {
-            if ( options.type == "POST" ) {
-                jqXHR.abort();
-                setTimeout( () => {
-                    let words = JSON.parse(options.data).data.trim().split(/\s+/).filter(
-                        d => d.length > 3).map( d => d.replace(/[.,+=@!]/g,'') )
-                    let cnts = [...new Set(words)].map( d => [d, words.filter(e => e == d).length ] ).sort(
-                        (a,b) => a[1] > b[1] ? -1 : 1
-                    )
-
-                    if ( cnts.length > 3 ) {
-                        cnts.length = parseInt( (cnts.length-1) * Math.random() ) + 1
-                    }
-
-                    if ( cnts.length == 0 ) {
-                        options.error()
-                    } else {
-                        options.success({ keywords: cnts.map( d => d[0] ) })
-                    }
-                }, 2500);
-            }
-
-            if ( options.type == "GET" ) {
-                jqXHR.abort();
-                options.success()
-            }
-        }
-
         // capture disable and enable events for the debug node
         mth = options.url.match(/^debug\/([a-z0-9]{16})\/?(.+)?/i)
         if ( mth ) {
