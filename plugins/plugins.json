@@ -33,7 +33,7 @@
         "plugins": [],
         "runtime": false,
         "user": false,
-        "version": "0.6.3-b1"
+        "version": "0.6.5-b1"
     },
     {
         "editor": true,
@@ -45,6 +45,6 @@
         "plugins": [],
         "runtime": false,
         "user": false,
-        "version": "0.6.3-b1"
+        "version": "0.6.5-b1"
     }
 ]
