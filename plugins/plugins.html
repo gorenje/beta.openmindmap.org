@@ -1355,11 +1355,11 @@
                         Your browser doesn't support HTML5 video.
                     </video>
                     <p>Download <a href="${e.relative_url}" download="${e.filename}">file</a></p>
-                </div>`.replace(/\n\s+/g,"\n"),s=e=>`![img](${e.relative_url})`,r=(e,t)=>{var a=new FileReader;a.onload=function(e){t(e.target.result)},a.readAsDataURL(e)},p=e=>({id:RED.nodes.id(),sumPass:!1,sumPassPrio:0,sumPassNodeId:"",createdAt:(new Date).toISOString(),updatedAt:(new Date).toISOString(),x:0,y:e,wires:[[]]}),l=e=>RED.view.importNodes(Array.isArray(e)?e:[e]),d=(e,t)=>{0==e.keywords.length?RED.notify("Text classification no keywords found",{type:"warning"}):RED.notify("Text classification found: "+e.keywords.join(","),{type:"success"});let a=[],n=RED.workspaces.active(),r=(RED.nodes.eachNode(e=>{"Topic"==e.type&&e.z==n&&a.push(e)}),{...p(0),type:"Text",name:t.lines[0].substr(0,30)+(30<t.lines[0].length?"...":""),info:t.content}),o=[],i=0;t=[...new Set(e.keywords)].map(e=>e.trim()).filter(e=>!!e).sort((e,t)=>e<t?-1:1).map(t=>{var e=a.filter(e=>e.name==t)[0];if(!e)return i+=1,{...p(0),type:"Topic",name:t,info:"",y:40*(i-1),x:100};o.push(e)}).filter(e=>!!e);if(0<o.length){let e=t=>{t.id==r.id&&(RED.events.off("nodes:add",e),o.forEach(e=>{RED.nodes.addLink({source:RED.nodes.node(e.id),sourcePort:0,target:t})}),RED.view.redraw(!0))};RED.events.on("nodes:add",e)}r.wires=[[...t].map(e=>e.id)],l([r,...t])},m=e=>{let a=e.content.trim().split(/\s+/).map(e=>e.replace(/[.,+=@!]/g,"").replace(/['"]$/,"").replace(/^['"]/,"")).filter(e=>4<e.length).map(e=>e.toLowerCase()),t=[...new Set(a)].map(t=>[t,a.filter(e=>e==t).length]).sort((e,t)=>e[1]<t[1]?-1:1).filter(e=>1<e[1]);var n;3<t.length&&(n=[t.pop(),t.pop(),t.pop()],t.sort((e,t)=>.5<Math.random()?-1:1),t.length=parseInt((t.length-1)*Math.random())+1,t.length=Math.min(t.length,6),t=[...n,...t]),setTimeout(()=>{d({keywords:t.map(e=>e[0])},e)},parseInt(1759*Math.random()+542))};let c={},y=!1,u=["text/x-moz-place","text/x-moz-url","text/uri-list"];for(let e=0;e<n;e++){var f=a[e];"file"==f.kind?((t,a)=>{var e;t.type.startsWith("image/")?((e=new FormData).append("file",a,a.name),$.ajax({url:"/writermap/content",type:"POST",data:e,contentType:!1,processData:!1,enctype:"multipart/form-data",success:e=>{l({...p(0),type:"Image",name:a.name,info:s(e)+`
-`})},error:e=>{r(a,e=>{e={relative_url:e,mimetype:t.type,filename:a.name};l({...p(0),type:"Image",name:a.name,info:s(e)+`
-`})})}})):t.type.startsWith("audio/")?((e=new FormData).append("file",a,a.name),$.ajax({url:"/writermap/content",type:"POST",data:e,contentType:!1,processData:!1,enctype:"multipart/form-data",success:e=>{l({...p(0),type:"Inspiration",name:a.name,info:o(e)})},error:e=>{r(a,e=>{e={relative_url:e,mimetype:t.type,filename:a.name};l({...p(0),type:"Inspiration",name:a.name,info:o(e)+`
-`})})}})):t.type.startsWith("video/")?((e=new FormData).append("file",a,a.name),$.ajax({url:"/writermap/content",type:"POST",data:e,contentType:!1,processData:!1,enctype:"multipart/form-data",success:e=>{l({...p(0),type:"Image",name:a.name,info:i(e)})},error:e=>{r(a,e=>{e={relative_url:e,mimetype:t.type,filename:a.name,poster_url:""};l({...p(0),type:"Image",name:a.name,info:i(e)+`
-`})})}})):"text/markdown"!=t.type&&"text/plain"!=t.type||a.arrayBuffer().then(e=>{l({...p(0),type:"Text",name:a.name,info:(new TextDecoder).decode(e)})}).catch(e=>{console.log(e)})})(f,t.originalEvent.dataTransfer.files[e]):"string"==f.kind?await(async a=>new Promise((t,e)=>{a.getAsString(e=>{y=y||-1<u.indexOf(a.type);e={type:a.type,content:e,lines:(e||"").split("\n").filter(e=>!!e)};(c[e.type]||=[]).push(e),c[e.type].sort((e,t)=>e.lines.length>t.lines.length?-1:1),t()})}))(f):console.log(`Ignoring unsupported drag&drop kind: '${f.kind}'`)}let g=e=>{if(-1<u.indexOf(e.type)){let a=e.lines;$.ajax({url:"/writermap/content",type:"POST",data:JSON.stringify({bookmark_url:a[0]}),contentType:"application/json",processData:!1,success:e=>{var t={...p(0),type:"Bookmark",name:a[1]||"Bookmark",info:a[0]+"\n\n"};"image"==e.type&&(t.info=""+a[0]+`
+                </div>`.replace(/\n\s+/g,"\n"),s=e=>`![img](${e.relative_url})`,r=(e,t)=>{var a=new FileReader;a.onload=function(e){t(e.target.result)},a.readAsDataURL(e)},p=e=>({id:RED.nodes.id(),sumPass:!1,sumPassPrio:0,sumPassNodeId:"",createdAt:(new Date).toISOString(),updatedAt:(new Date).toISOString(),x:0,y:e,wires:[[]]}),d=e=>RED.view.importNodes(Array.isArray(e)?e:[e]),l=(e,t)=>{0==e.keywords.length?RED.notify("Text classification no keywords found",{type:"warning"}):RED.notify("Text classification found: "+e.keywords.join(","),{type:"success"});let a=[],n=RED.workspaces.active(),r=(RED.nodes.eachNode(e=>{"Keyword"==e.type&&e.z==n&&a.push(e)}),{...p(0),type:"Text",name:t.lines[0].substr(0,30)+(30<t.lines[0].length?"...":""),info:t.content}),o=[],i=0;t=[...new Set(e.keywords)].map(e=>e.trim()).filter(e=>!!e).sort((e,t)=>e<t?-1:1).map(t=>{var e=a.filter(e=>e.name==t)[0];if(!e)return i+=1,{...p(0),type:"Keyword",name:t,info:"",y:40*(i-1),x:100};o.push(e)}).filter(e=>!!e);if(0<o.length){let e=t=>{t.id==r.id&&(RED.events.off("nodes:add",e),o.forEach(e=>{RED.nodes.addLink({source:RED.nodes.node(e.id),sourcePort:0,target:t})}),RED.view.redraw(!0))};RED.events.on("nodes:add",e)}r.wires=[[...t].map(e=>e.id)],d([r,...t])},m=e=>{let a=e.content.trim().split(/\s+/).map(e=>e.replace(/[.,+=@!]/g,"").replace(/['"]$/,"").replace(/^['"]/,"")).filter(e=>4<e.length).map(e=>e.toLowerCase()),t=[...new Set(a)].map(t=>[t,a.filter(e=>e==t).length]).sort((e,t)=>e[1]<t[1]?-1:1).filter(e=>1<e[1]);var n;3<t.length&&(n=[t.pop(),t.pop(),t.pop()],t.sort((e,t)=>.5<Math.random()?-1:1),t.length=parseInt((t.length-1)*Math.random())+1,t.length=Math.min(t.length,6),t=[...n,...t]),setTimeout(()=>{l({keywords:t.map(e=>e[0])},e)},parseInt(1759*Math.random()+542))};let c={},y=!1,u=["text/x-moz-place","text/x-moz-url","text/uri-list"];for(let e=0;e<n;e++){var f=a[e];"file"==f.kind?((t,a)=>{var e;t.type.startsWith("image/")?((e=new FormData).append("file",a,a.name),$.ajax({url:"/writermap/content",type:"POST",data:e,contentType:!1,processData:!1,enctype:"multipart/form-data",success:e=>{d({...p(0),type:"Image",name:a.name,info:s(e)+`
+`})},error:e=>{r(a,e=>{e={relative_url:e,mimetype:t.type,filename:a.name};d({...p(0),type:"Image",name:a.name,info:s(e)+`
+`})})}})):t.type.startsWith("audio/")?((e=new FormData).append("file",a,a.name),$.ajax({url:"/writermap/content",type:"POST",data:e,contentType:!1,processData:!1,enctype:"multipart/form-data",success:e=>{d({...p(0),type:"Inspiration",name:a.name,info:o(e)})},error:e=>{r(a,e=>{e={relative_url:e,mimetype:t.type,filename:a.name};d({...p(0),type:"Inspiration",name:a.name,info:o(e)+`
+`})})}})):t.type.startsWith("video/")?((e=new FormData).append("file",a,a.name),$.ajax({url:"/writermap/content",type:"POST",data:e,contentType:!1,processData:!1,enctype:"multipart/form-data",success:e=>{d({...p(0),type:"Image",name:a.name,info:i(e)})},error:e=>{r(a,e=>{e={relative_url:e,mimetype:t.type,filename:a.name,poster_url:""};d({...p(0),type:"Image",name:a.name,info:i(e)+`
+`})})}})):"text/markdown"!=t.type&&"text/plain"!=t.type||a.arrayBuffer().then(e=>{d({...p(0),type:"Text",name:a.name,info:(new TextDecoder).decode(e)})}).catch(e=>{console.log(e)})})(f,t.originalEvent.dataTransfer.files[e]):"string"==f.kind?await(async a=>new Promise((t,e)=>{a.getAsString(e=>{y=y||-1<u.indexOf(a.type);e={type:a.type,content:e,lines:(e||"").split("\n").filter(e=>!!e)};(c[e.type]||=[]).push(e),c[e.type].sort((e,t)=>e.lines.length>t.lines.length?-1:1),t()})}))(f):console.log(`Ignoring unsupported drag&drop kind: '${f.kind}'`)}let g=e=>{if(-1<u.indexOf(e.type)){let a=e.lines;$.ajax({url:"/writermap/content",type:"POST",data:JSON.stringify({bookmark_url:a[0]}),contentType:"application/json",processData:!1,success:e=>{var t={...p(0),type:"Bookmark",name:a[1]||"Bookmark",info:a[0]+"\n\n"};"image"==e.type&&(t.info=""+a[0]+`
 
 ${s(e)}
 `,t.type="Image"),"audio"==e.type&&(t.info=""+a[0]+`
@@ -1368,7 +1368,7 @@ ${o(e)}
 `,t.type="Inspiration"),"video"==e.type&&(t.info=""+a[0]+`
 
 ${i(e)}
-`,t.type="Image"),l(t)},error:e=>{var t={...p(0),type:"Bookmark",name:a[1]||"Bookmark",info:a[0]+"\n\n"};l(t)}})}else"text/html"!=e.type||y?"text/markdown"!=e.type&&"text/plain"!=e.type||y||$.ajax({url:"/writermap/classification",type:"GET",processData:!1,success:()=>{(t=>{RED.notify("Preparing to classify text content, this might take a moment.",{type:"success"});$.ajax({url:"/writermap/classification",type:"POST",data:JSON.stringify({data:t.content}),contentType:"application/json",processData:!1,success:e=>{d(e,t)},error:e=>{m(t)}})})(e)},error:()=>{m(e)}}):l({...p(0),type:"Code-Base",name:"HTML Content",info:e.content})};window.stringKindsStoredForLater=c,y?"text/x-moz-place"in c?(a=>{let n=a.uri,r=a.title||"Bookmark";$.ajax({url:"/writermap/content",type:"POST",data:JSON.stringify({bookmark_url:n}),contentType:"application/json",processData:!1,success:e=>{var t={...p(0),type:"Bookmark",name:r,info:n+"\n\n",createdAt:new Date(a.dateAdded/1e3).toISOString(),updatedAt:new Date(a.lastModified/1e3).toISOString()};"image"==e.type&&(t.info=""+n+`
+`,t.type="Image"),d(t)},error:e=>{var t={...p(0),type:"Bookmark",name:a[1]||"Bookmark",info:a[0]+"\n\n"};d(t)}})}else"text/html"!=e.type||y?"text/markdown"!=e.type&&"text/plain"!=e.type||y||$.ajax({url:"/writermap/classification",type:"GET",processData:!1,success:()=>{(t=>{RED.notify("Preparing to classify text content, this might take a moment.",{type:"success"});$.ajax({url:"/writermap/classification",type:"POST",data:JSON.stringify({data:t.content}),contentType:"application/json",processData:!1,success:e=>{l(e,t)},error:e=>{m(t)}})})(e)},error:()=>{m(e)}}):d({...p(0),type:"Code-Base",name:"HTML Content",info:e.content})};window.stringKindsStoredForLater=c,y?"text/x-moz-place"in c?(a=>{let n=a.uri,r=a.title||"Bookmark";$.ajax({url:"/writermap/content",type:"POST",data:JSON.stringify({bookmark_url:n}),contentType:"application/json",processData:!1,success:e=>{var t={...p(0),type:"Bookmark",name:r,info:n+"\n\n",createdAt:new Date(a.dateAdded/1e3).toISOString(),updatedAt:new Date(a.lastModified/1e3).toISOString()};"image"==e.type&&(t.info=""+n+`
 
 ${s(e)}
 `,t.type="Image"),"audio"==e.type&&(t.info=""+n+`
@@ -1377,7 +1377,7 @@ ${o(e)}
 `,t.type="Inspiration"),"video"==e.type&&(t.info=""+n+`
 
 ${i(e)}
-`,t.type="Image"),l(t)},error:e=>{var t={...p(0),type:"Bookmark",name:r,info:n+"\n\n",createdAt:new Date(a.dateAdded/1e3).toISOString(),updatedAt:new Date(a.lastModified/1e3).toISOString()};l(t)}})})(JSON.parse(c["text/x-moz-place"][0].content)):"text/x-moz-url"in c?g(c["text/x-moz-url"][0]):"text/uri-list"in c&&g(c["text/uri-list"][0]):Object.keys(c).forEach(e=>{g(c[e][0])})},defineCustomDropHandler=()=>{0<$("#red-ui-drop-target").length?$("#red-ui-drop-target").on("drop",customDropHandler):setTimeout(defineCustomDropHandler,300)};setTimeout(defineCustomDropHandler,300);
+`,t.type="Image"),d(t)},error:e=>{var t={...p(0),type:"Bookmark",name:r,info:n+"\n\n",createdAt:new Date(a.dateAdded/1e3).toISOString(),updatedAt:new Date(a.lastModified/1e3).toISOString()};d(t)}})})(JSON.parse(c["text/x-moz-place"][0].content)):"text/x-moz-url"in c?g(c["text/x-moz-url"][0]):"text/uri-list"in c&&g(c["text/uri-list"][0]):Object.keys(c).forEach(e=>{g(c[e][0])})},defineCustomDropHandler=()=>{0<$("#red-ui-drop-target").length?$("#red-ui-drop-target").on("drop",customDropHandler):setTimeout(defineCustomDropHandler,300)};setTimeout(defineCustomDropHandler,300);
 
       $(window).on("paste",e=>{try{window.pasteEvent=e;var a=RED.settings.version.split(".")[0];if(e.target&&(("3"!=a||"red-ui-header"==e.target.id||"red-ui-workspace-chart"==e.target.id)&&("4"!=a||"span"==e.target.tagName.toLowerCase()||$(e.target).hasClass("red-ui-header-logo")))){var t=e.originalEvent.clipboardData.getData("text"),r=JSON.parse(t);if(Array.isArray(r))try{RED.view.importNodes(r,{generateIds:!1,addFlow:!1,touchImport:!1,generateDefaultNames:!1})}catch(e){RED.notify("Error: "+e.message,{type:"warning"})}}}catch(e){RED.notify("Error: "+e.message,{type:"warning"})}});
   };
@@ -2024,4 +2024,105 @@ RED.events.on('runtime-state', initialiseSidebarNodeOnce);
    </div>
 </div>
 </div>
+</script>
+
+<!-- --- [red-plugin:@gregoriusrippenstein/node-red-scratchpad/sidebar-plugin] --- -->
+<script src="ScratchPad/jslib/diff.min.js"></script>
+
+<script type="text/javascript">
+(function() {
+
+   var globalYourConfigNode=null;function generateDiff(e,t){e=Diff.diffLines(e,t);let a=document.createDocumentFragment();var t=document.createElement("button"),c=(t.setAttribute("onclick","window.scratchPadResetDiff.map( d => d() ); "),t.setAttribute("class","button"),t.setAttribute("title","Clear"),document.createElement("i"));c.setAttribute("class","fa fa-close"),t.appendChild(c),a.append(t),a.append(document.createElement("br")),e.forEach(e=>{var t=e.added?"green":e.removed?"red":"#040506",c=document.createElement("pre");c.setAttribute("class","dv-pre-elem"),c.style.color=t,c.appendChild(document.createTextNode(e.value)),c.appendChild(document.createElement("br")),a.appendChild(c)}),$("#node-input-scratchpad-diff-content").html(a)}function addEventHandlers(a){let t=void 0;window.scratchPadResetDiff.push(()=>{t=void 0}),$(".scratchpad-compare-btn").off("click"),$(".scratchpad-compare-btn").on("click",e=>{e&&e.preventDefault();e=$(e.target).closest("button");(t?(generateDiff($($(t).closest(".scratchpad-content")).find(".scratchpad-content-field").val(),$($(e).closest(".scratchpad-content")).find(".scratchpad-content-field").val()),$(e)):(t=e,$(t))).addClass("selected-for-compare")}),$(".scratchpad-save-btn").off("click"),$(".scratchpad-save-btn").on("click",e=>{e&&e.preventDefault(),a.scratches||=[],$(".scratchpad-content").map((e,t)=>{a.scratches[e]={txt:$(t).find(".scratchpad-content-field").val(),hgt:$(t).find(".scratchpad-content-field").css("height"),wdh:$(t).find(".scratchpad-content-field").css("width")}}),RED.nodes.dirty(!0)}),$(".scratchpad-close-btn").off("click"),$(".scratchpad-close-btn").on("click",c=>{c&&c.preventDefault(),$(".scratchpad-close-btn").map((e,t)=>{t==c.target&&(delete a.scratches[e],$($(c.target).closest(".scratchpad-content")).fadeOut(300,()=>{$($(c.target).closest(".scratchpad-content")).remove(),RED.nodes.dirty(!0)}))})}),$(".scratchpad-clear-btn").off("click"),$(".scratchpad-clear-btn").on("click",c=>{c&&c.preventDefault(),$(".scratchpad-clear-btn").map((e,t)=>{t==c.target&&($($($(c.target).closest(".scratchpad-content")).find(".scratchpad-content-field")).val(""),""!==a.scratches[e].txt)&&(a.scratches[e].txt="",RED.nodes.dirty(!0))})})}function addScratch(){$("#node-input-scratchpad-fields").append($($('[data-template-name="ScratchPad-empty-field"]').html()).data("shown",!0)[0].outerHTML)}function ensureYourConfigNodeExists(){if(null===(globalYourConfigNode=null!==globalYourConfigNode&&null===(e=RED.nodes.node(globalYourConfigNode.id))?null:globalYourConfigNode)){var t=[];for(RED.nodes.eachConfig(function(e){"ScratchPadCfg"===e.type&&t.push(e)});1<t.length;){var e=t.pop();RED.nodes.remove(e.id),RED.nodes.dirty(!0)}1===t.length&&(globalYourConfigNode=t[0])}null===globalYourConfigNode&&(globalYourConfigNode={id:RED.nodes.id(),_def:RED.nodes.getType("ScratchPadCfg"),type:"ScratchPadCfg",hasUsers:!1,users:[],name:"ScratchPad",label:function(){return this.name||"ScratchPad"},scratches:[]},RED.nodes.add(globalYourConfigNode),RED.nodes.dirty(!0))}window.scratchPadResetDiff=[()=>{$("#node-input-scratchpad-diff-content").html(""),$(".selected-for-compare").removeClass("selected-for-compare")}];
+
+   // Add your plugin as a new tabsheet in the right sidebar AFTER the flow editor is completely started
+   var initialiseConfigNodeOnce = () => {
+      RED.events.off('runtime-state', initialiseConfigNodeOnce);
+
+      // The html content of the sidebar has been specified below as a data-template, from where it can be loaded:
+      var content = $($('script[type="text/x-red"][data-template-name="ScratchPad"]').i18n().html());
+    
+      // Add a "Your sidebar" tabsheet to the right sidebar panel, in which this sidebar panel can be displayed
+      // --> more details: https://nodered.org/docs/api/ui/sidebar/
+      RED.sidebar.addTab({
+         id: "ScratchPad",
+         label: "*scratch*", // short name for the tab
+         name: "Scratch Pad", // long name for the menu
+         content: content,
+         closeable: true,
+         enableOnEdit: true,
+         iconClass: "fa fa-pencil-square-o" // your fontawesome icon
+      });
+
+      ensureYourConfigNodeExists();
+
+      globalYourConfigNode.scratches.forEach( sth => {
+         addScratch()
+      })
+
+      $(".scratchpad-content").map( (idx,obj) => {
+         if ( typeof globalYourConfigNode.scratches[idx] === "string") {
+            globalYourConfigNode.scratches[idx] = { "txt": globalYourConfigNode.scratches[idx] }
+            RED.nodes.dirty(true)
+         }
+         
+         $(obj).find(".scratchpad-content-field").val( 
+            globalYourConfigNode.scratches[idx].txt 
+         ).css( 
+            'width', globalYourConfigNode.scratches[idx].wdh || "360px"
+         ).css(
+            'height', globalYourConfigNode.scratches[idx].hgt || "150px"
+         )
+      })
+
+      addEventHandlers(globalYourConfigNode)
+
+      $('#node-input-scratchpad-add-btn').on('click', e => {
+         if ( e ) { e.preventDefault() }
+
+         addScratch()
+         addEventHandlers(globalYourConfigNode)
+      })
+   };
+
+   RED.events.on('runtime-state', initialiseConfigNodeOnce);
+})();
+</script>
+
+<style>
+.selected-for-compare {
+    background-color: rgba(235, 108, 108, 0.387) !important;
+    color: green !important;
+}
+
+.button-icon {
+    pointer-events: none;
+}
+
+</style>
+
+<!-- The html for the right sidebar plugin screen -->
+<script type="text/x-red" data-template-name="ScratchPad-empty-field">
+   <div class="scratchpad-content">
+      <div class="form-row" style="margin-left: 10px;">
+         <textarea class="scratchpad-content-field" placeholder="*scratch*" style="width: 360px; height: 150px;"></textarea>
+      </div>
+      <div class="form-row scratchpad-content-container" style="margin-left: 10px; margin-top: -15px; margin-bottom: 20px;">
+         <button title="Clear" class="scratchpad-clear-btn button"><i class="fa fa-shower button-icon"></i></button>
+         <button title="Save" class="scratchpad-save-btn button"><i class="fa fa-save button-icon"></i></button>
+         <button title="Compare" class="scratchpad-compare-btn button"><i class="fa fa-balance-scale button-icon"></i></button>
+         <button title="Delete" class="scratchpad-close-btn button"><i class="fa fa-close button-icon"></i></button>
+      </div>
+   </div>
+</script>
+
+<script type="text/x-red" data-template-name="ScratchPad">
+   <div class="form-row" style="margin-left: 10px; margin-top: 30px;">
+      <button title="Add Scratch" class="button" id="node-input-scratchpad-add-btn"><i class="fa fa-plus"></i></button>
+   </div>
+
+   <div style="margin: 10px;" id="node-input-scratchpad-diff-content">
+   </div>
+
+   <div id="node-input-scratchpad-fields">
+   </div>
 </script>

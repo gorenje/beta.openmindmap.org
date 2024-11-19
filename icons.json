@@ -22,6 +22,7 @@
         "swap-inject-to-change.svg",
         "switch-inject-to-change.svg"
     ],
+    "@gregoriusrippenstein/node-red-scratchpad": [],
     "node-red": [
         "alert.svg",
         "arduino.svg",

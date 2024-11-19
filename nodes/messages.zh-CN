@@ -17,6 +17,7 @@
     "@gorenje/node-red-mindmap/idea": {},
     "@gorenje/node-red-mindmap/image": {},
     "@gorenje/node-red-mindmap/inspiration": {},
+    "@gorenje/node-red-mindmap/keyword": {},
     "@gorenje/node-red-mindmap/learning": {},
     "@gorenje/node-red-mindmap/metaphor": {},
     "@gorenje/node-red-mindmap/observation": {},
@@ -31,5 +32,6 @@
     "@gregoriusrippenstein/node-red-contrib-flowhub/flowhubcfg": {},
     "@gregoriusrippenstein/node-red-contrib-introspection/clientcode": {},
     "@gregoriusrippenstein/node-red-contrib-introspection/seeker": {},
-    "@gregoriusrippenstein/node-red-contrib-introspection/sink": {}
+    "@gregoriusrippenstein/node-red-contrib-introspection/sink": {},
+    "@gregoriusrippenstein/node-red-scratchpad/scratchpad": {}
 }

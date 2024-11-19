@@ -33,7 +33,7 @@
         "plugins": [],
         "runtime": false,
         "user": false,
-        "version": "0.6.5-b1"
+        "version": "0.6.6-b1"
     },
     {
         "editor": true,
@@ -45,6 +45,18 @@
         "plugins": [],
         "runtime": false,
         "user": false,
-        "version": "0.6.5-b1"
+        "version": "0.6.6-b1"
+    },
+    {
+        "editor": true,
+        "enabled": true,
+        "id": "@gregoriusrippenstein/node-red-scratchpad/sidebar-plugin",
+        "local": true,
+        "module": "@gregoriusrippenstein/node-red-scratchpad",
+        "name": "sidebar-plugin",
+        "plugins": [],
+        "runtime": false,
+        "user": false,
+        "version": "0.0.7-b1"
     }
 ]
