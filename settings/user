@@ -23,6 +23,10 @@
             "introspection:show-link-call-links": {
                 "scope": "red-ui-workspace",
                 "key": "alt-ctrl-l"
+            },
+            "core:show-export-dialog": {
+                "scope": "red-ui-workspace",
+                "key": "ctrl-e"
             }
         }
     },
