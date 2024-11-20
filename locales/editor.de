@@ -1255,7 +1255,7 @@
         "delete": "Sind Sie sicher, dass '__label__' gel\u00f6scht werden soll?",
         "disableFlow": "Disable flow",
         "disabled": "Deaktiviert",
-        "dropFlowHere": "Hier kann der Flow eingef\u00fcgt werden",
+        "dropFlowHere": "Drop content here",
         "dropImageHere": "Drop the image here",
         "editFlow": "Flow bearbeiten: __name__",
         "enableFlow": "Enable flow",
