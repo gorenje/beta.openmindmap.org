@@ -1392,7 +1392,7 @@ ${i(e)}
 
   var fillNumOfUpdatesMindMapStats=()=>{var t=$("#node-input-mindmap-stats-numOfUpdates");t.html(""),t.append($("<option></option>").val(-1).html("-- All --")),[5,10,20,50,100,150,200].forEach(function(e){t.append($("<option></option>").val(e).html(e))}),t.val(20)},setupTreelistForMindMapStats=()=>$("#node-input-mindmap-stats-target-container-div").treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistselect",function(e,t){var o;t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),o=t.node.id,setTimeout(()=>{RED.view.reveal(o,!0),RED.view.redraw()},38))}).on("treelistconfirm",function(e,t){var o;t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),o=t.node.id,setTimeout(()=>{var e=RED.nodes.node(o);e&&(RED.view.reveal(e.id),RED.view.select(e.id),RED.editor.edit(e)),o==RED.workspaces.active()&&RED.workspaces.edit()},50))});
 
-var fillNumOfUpdates=()=>{var t=$("#node-input-mindmapchangessidebar-numOfUpdates");t.html(""),t.append($("<option></option>").val(-1).html("-- All --")),[5,10,20,50,100,150,200].forEach(function(e){t.append($("<option></option>").val(e).html(e))}),t.val(20)},setupTreelistForMindMapChanges=()=>$("#node-input-mindmapchangessidebar-target-container-div").css({width:"100%"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistselect",function(e,t){var o;t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),o=t.node.id,setTimeout(()=>{RED.view.reveal(o,!0),RED.view.redraw()},38))}).on("treelistconfirm",function(e,t){var o;t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),o=t.node.id,setTimeout(()=>{var e=RED.nodes.node(o);e&&(RED.view.reveal(e.id),RED.view.select(e.id),RED.editor.edit(e)),o==RED.workspaces.active()&&RED.workspaces.edit()},50))}),setupTabTrackerTreelist=()=>$("#node-input-mindmapchangessidebar-tab-tracker").css({width:"100%"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistselect",function(e,t){t.obj&&RED.workspaces.show(t.obj.id,!1,!1,!0)}).on("treelistconfirm",function(e,t){t.obj&&(RED.workspaces.show(t.obj.id,!1,!1,!0),setTimeout(()=>{RED.workspaces.edit(t.obj.id)},132))});
+var fillNumOfUpdates=()=>{var t=$("#node-input-mindmapchangessidebar-numOfUpdates");t.html(""),t.append($("<option></option>").val(-1).html("-- All --")),[5,10,20,50,100,150,200].forEach(function(e){t.append($("<option></option>").val(e).html(e))}),t.val(20)},setupTreelistForMindMapChanges=()=>$("#node-input-mindmapchangessidebar-target-container-div").css({width:"100%",height:"calc(100%)"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistselect",function(e,t){var i;t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),i=t.node.id,setTimeout(()=>{RED.view.reveal(i,!0),RED.view.redraw()},38))}).on("treelistconfirm",function(e,t){var i;t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),i=t.node.id,setTimeout(()=>{var e=RED.nodes.node(i);e&&(RED.view.reveal(e.id),RED.view.select(e.id),RED.editor.edit(e)),i==RED.workspaces.active()&&RED.workspaces.edit()},50))}),setupTabTrackerTreelist=()=>$("#node-input-mindmapchangessidebar-tab-tracker").css({width:"100%",height:"calc(100%)"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistselect",function(e,t){t.obj&&RED.workspaces.show(t.obj.id,!1,!1,!0)}).on("treelistconfirm",function(e,t){t.obj&&(RED.workspaces.show(t.obj.id,!1,!1,!0),setTimeout(()=>{RED.workspaces.edit(t.obj.id)},132))});
 
 let prepareSeekerSidebarTreeListWidget=()=>{let e="#func-mindmapsidebar-tab-seeker-sidebar",t="#func-sidebar-seeker-seeker-target-container-div",r=()=>{1==$(t).treeList("data").filter(e=>e.expanded).length?$(e).find(".pathway-handler-but").prop("disabled",!1):$(e).find(".pathway-handler-but").prop("disabled",!0)};try{$(t).treeList("empty"),$(t).treeList("data",[])}catch(e){$(t).css({width:"100%",height:"calc(100%)"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistconfirm",function(e,t){t.node&&!t.children&&(RED.view.reveal(t.node.id),RED.view.select(t.node.id),setTimeout(()=>{RED.editor.edit(t.node)},100)),r()}).on("treelistselect",function(e,t){var n;t.node&&!t.children&&(RED.workspaces.show(t.node.z,!1,!1,!0),RED.view.reveal(t.node.id,!0),RED.view.redraw(),0<$("#docnode-"+t.node.id).length)&&(n=$("#func-sidebar-seeker-seeker-generate-markdown-container").parent()).animate({scrollTop:$("#docnode-"+t.node.id).offset().top-n.offset().top+n.scrollTop()}),r()})}},siderbarPathToTreeListEntry=e=>{var t=RED.nodes.node(e[e.length-1]);let n=[];return e.forEach(function(e){var t,e=RED.nodes.node(e)||RED.nodes.junction(e);void 0!==e&&(t=RED.nodes.workspace(e.z)||RED.nodes.subflow(e.z),n.push({label:"",_label:RED.utils.getNodeLabel(e),node:e,sublabel:t&&RED.utils.getNodeLabel(t)||e.z,icon:RED.utils.createNodeIcon(e,!0),class:"intro-remove-top-left"}))}),{node:t,label:RED.utils.getNodeLabel(t)||t.type+": "+t.id,_label:RED.utils.getNodeLabel(t)||t.type+": "+t.id,_pathlen:e.length,sublabel:"Length: "+e.length,selected:!1,checkbox:!1,children:n}};function prepareAndFillDropDowns(n){$("#func-sidebar-seeker-seeker-show-percent").show(),$("#func-sidebar-seeker-seeker-show-ordering").show();var e,r=$("#func-sidebar-seeker-seeker-show-percent"),t=(r.html(""),r.append($("<option></option>").val("-").html("Show..")),[5,10,20,30,40,50,75].forEach(e=>{var t=parseInt(e*n/100);0!=t&&r.append($("<option></option>").val(e).html(t+" paths"))}),r.append($("<option></option>").val(100).html("All")),r.val("-"),(r=$("#func-sidebar-seeker-seeker-show-ordering")).html(""),{"Count Asc":1,"Count Desc":2,"Name Asc":3,"Name Desc":4,Random:5});for(e in t)r.append($("<option></option>").val(t[e]).html(e));r.val(1)}function obtainSortFunction(e){return{1:(e,t)=>e.length<t.length?-1:1,2:(e,t)=>e.length>t.length?-1:1,3:(e,t)=>RED.utils.getNodeLabel(RED.nodes.node(e[e.length-1]))<RED.utils.getNodeLabel(RED.nodes.node(t[t.length-1]))?-1:1,4:(e,t)=>{e=RED.utils.getNodeLabel(RED.nodes.node(e[e.length-1]));return RED.utils.getNodeLabel(RED.nodes.node(t[t.length-1]))<e?-1:1},5:(e,t)=>.5<Math.random()?-1:1}[parseInt(e)]||((e,t)=>e.length<t.length?-1:1)}function sidebarSeekerHandleExpandedNodes(e){1==e.length?(e=e[0].children.filter(e=>e.node.z==RED.workspaces.active()).map(e=>e.node.id),RED.tray.hide(),RED.view.selectNodes({selected:e,onselect:()=>{RED.tray.show()},oncancel:()=>{RED.tray.show()}})):RED.notify("Only one expanded pathway can be shown.",{type:"warning"})}let sidebarSeekerHandleDropDownChange=e=>{e&&e.preventDefault();let t=window._sidebarSeekerStack.length,n=25,r=("-"!=$("#func-sidebar-seeker-seeker-show-percent").val()&&(n=parseInt(t*(parseInt($("#func-sidebar-seeker-seeker-show-percent").val())/100))),obtainSortFunction($("#func-sidebar-seeker-seeker-show-ordering").val()));setTimeout(()=>{setTimeout(()=>{$("#func-sidebar-seeker-seeker-totalPaths").html(n>t?""+t:n+" / "+t)},10),setTimeout(()=>{$("#func-sidebar-seeker-seeker-target-container-div").treeList("data",window._sidebarSeekerStack.sort(r).slice(0,n).map(e=>siderbarPathToTreeListEntry(e)))},20)},100)},sidebarSeekerSetupTreelistOnCompletion=()=>{let e=window._sidebarSeekerStack.length;setTimeout(()=>{$("#func-sidebar-seeker-seeker-start-but").prop("disabled",!1),$("#func-sidebar-seeker-seeker-totalPaths").html(e),$("#func-sidebar-seeker-seeker-spinner").hide()},10),prepareAndFillDropDowns(e),$("#func-sidebar-seeker-seeker-show-ordering").on("change",sidebarSeekerHandleDropDownChange),$("#func-sidebar-seeker-seeker-show-percent").on("change",sidebarSeekerHandleDropDownChange),$("#func-sidebar-seeker-seeker-show-percent").trigger("change")},sidebarSeekerExtractFlowHandler=(t,n)=>{if(1==t.length){let e=t[0].children.map(e=>e.node).filter(e=>["link in","link out","Seeker","Sink","junction"].indexOf(e.type)<0);var r=RED.nodes.createExportableNodeSet(e).map((e,t)=>{let n=e.name||e.type+": "+e.id;try{e._def=e._def||RED.nodes.getType(e.type),e._def&&e._def._&&e._&&(n=RED.utils.getNodeLabel(e,e.info).replace("\\n"," "))}catch(e){}return`<div id='docnode-${e.id}'></div>
 
@@ -1877,6 +1877,14 @@ ${e.info||"*no content*"}
         }
     })
 
+    RED.panels.create({
+        id: 'func-mindmapsidebar-tab-mindmapchanges',
+        resize: (topSze, botSze) => {
+            $('#node-input-mindmapchangessidebar-tab-tracker').parent().css("height", `calc(${botSze}px - 13vh)`)
+            $('#node-input-mindmapchangessidebar-target-container-div').parent().css('height', `calc(${topSze}px - 15vh)`)
+        }
+    })
+
     // ensure all functions are defined that are used in the 'onchange' callback before
     // setting the default tab.
     tabs.activateTab("func-mindmapsidebar-tab-mindmapchanges");
@@ -1900,43 +1908,43 @@ RED.events.on('runtime-state', initialiseSidebarNodeOnce);
 </div>
 
 <div id="func-mindmapcntrlsidebar-tabs-content" style="min-height: calc(100% - 95px);">
-    <div id="func-mindmapsidebar-tab-mindmapchanges" class="red-ui-panel" style="display:none">
-
-    <div class="form-row" style="margin-left: 10px;">
-        <button id="node-input-mindmapchangessidebar-refresh-button"
+    <div id="func-mindmapsidebar-tab-mindmapchanges"
+    style="display:none; max-height: 95vh; min-height: 95vh; height: 95vh;">
+    <div>
+        <div class="form-row" style="margin-left: 10px;">
+            <button id="node-input-mindmapchangessidebar-refresh-button"
              class="red-ui-button"><i class="fa fa-refresh"></i> Update</button>
-        <select style="margin-top: 10px;" id="node-input-mindmapchangessidebar-numOfUpdates"></select>
-    </div>
-
-    <div class="form-row node-input-target-row node-input-target-list-row"
-        style="height: 35vh; margin-left: 10px; margin-right: 15px;">
-        <div>
-            <label for="node-input-mindmapchangessidebar-target-filter" style="width: 100%">
-                    <span>Search Changes: </span>
-                </label>
-            <input type="text" id="node-input-mindmapchangessidebar-target-filter">
+            <select style="margin-top: 10px;" id="node-input-mindmapchangessidebar-numOfUpdates"></select>
         </div>
 
-        <div id="node-input-mindmapchangessidebar-target-container-div" style="margin-top:10px; height: 35vh;"></div>
+        <div class="form-row"
+            style="margin-left: 10px; position: relative; height: 20vh; margin-right: 15px; min-height: 5vh;">
+            <div style="margin-bottom: 5px; width: 35%; padding-left: 60%;">
+                <input type="text" id="node-input-mindmapchangessidebar-target-filter">
+            </div>
+
+            <div id="node-input-mindmapchangessidebar-target-container-div"></div>
+        </div>
     </div>
 
-    <div class="form-row node-input-target-row node-input-target-list-row"
-        style="height: 35vh; margin-left: 10px; margin-right: 15px; margin-top: 5vh;">
-        <div>
-            <label for="node-input-mindmapchangessidebar-tab-tracker-filter" style="width: 100%">
-                        <span>Search Tab Stack: </span>
-                    </label>
-            <input type="text" id="node-input-mindmapchangessidebar-tab-tracker-filter">
+    <div>
+        <div class="form-row"
+            style="margin-top: 10px; margin-left: 10px; position: relative; height: 20vh; margin-right: 15px; min-height: 5vh;">
+            <div style="margin-bottom: 5px; margin-left: 10px; float: left;">
+                <button id="node-input-mindmapchangessidebar-clear-stack-button"
+                         class="red-ui-button"><i class="fa fa-times"></i> Clear Stack</button>
+            </div>
+
+            <div style="margin-bottom: 5px; width: 35%; padding-left: 60%;">
+                <input type="text" id="node-input-mindmapchangessidebar-tab-tracker-filter">
+            </div>
+
+            <div id="node-input-mindmapchangessidebar-tab-tracker"></div>
         </div>
 
-        <div id="node-input-mindmapchangessidebar-tab-tracker" style="height: 30vh; margin-top: 10px;"></div>
-    </div>
-    
-    <div class="form-row" style="margin-left: 10px;">
-        <button id="node-input-mindmapchangessidebar-clear-stack-button"
-             class="red-ui-button"><i class="fa fa-shower"></i> Clear Stack</button>
     </div>
 </div>
+
 
     <div id="func-mindmapsidebar-tab-mindmap-stats" class="red-ui-panel" style="display:none">
 
