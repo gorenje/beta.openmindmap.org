@@ -1344,40 +1344,40 @@
   var initialiseConfigNodeOnce = () => {
     RED.events.off('runtime-state', initialiseConfigNodeOnce);
     
-      let customDropHandler=async t=>{var a=(window.ddEvent=t).originalEvent.dataTransfer.items,n=a.length;let o=e=>`<div class="audio-container">
+      let customDropHandler=async t=>{var a=(window.ddEvent=t).originalEvent.dataTransfer.items,r=a.length;let o=e=>`<div class="audio-container">
                     <audio controls preload=none>
                         <source src="${e.relative_url}" type="${e.mimetype}" />
                     </audio>
                     <p>Download <a href="${e.relative_url}" download="${e.filename}">file</a></p>
                 </div>`.replace(/\n\s+/g,"\n"),i=e=>`<div class="video-container">
-                    <video width="640" height="360" controls="controls" preload="none" poster="${e.poster_url}">
+                    <video width="${e.width||640}" height="${e.height||360}" controls="controls" preload="none" poster="${e.poster_url}">
                         <source src="${e.relative_url}" type="${e.mimetype}">
                         Your browser doesn't support HTML5 video.
                     </video>
                     <p>Download <a href="${e.relative_url}" download="${e.filename}">file</a></p>
-                </div>`.replace(/\n\s+/g,"\n"),s=e=>`![img](${e.relative_url})`,r=(e,t)=>{var a=new FileReader;a.onload=function(e){t(e.target.result)},a.readAsDataURL(e)},p=e=>({id:RED.nodes.id(),sumPass:!1,sumPassPrio:0,sumPassNodeId:"",createdAt:(new Date).toISOString(),updatedAt:(new Date).toISOString(),x:0,y:e,wires:[[]]}),d=e=>RED.view.importNodes(Array.isArray(e)?e:[e]),l=(e,t)=>{0==e.keywords.length?RED.notify("Text classification no keywords found",{type:"warning"}):RED.notify("Text classification found: "+e.keywords.join(","),{type:"success"});let a=[],n=RED.workspaces.active(),r=(RED.nodes.eachNode(e=>{"Keyword"==e.type&&e.z==n&&a.push(e)}),{...p(0),type:"Text",name:t.lines[0].substr(0,30)+(30<t.lines[0].length?"...":""),info:t.content}),o=[],i=0;t=[...new Set(e.keywords)].map(e=>e.trim()).filter(e=>!!e).sort((e,t)=>e<t?-1:1).map(t=>{var e=a.filter(e=>e.name==t)[0];if(!e)return i+=1,{...p(0),type:"Keyword",name:t,info:"",y:40*(i-1),x:100};o.push(e)}).filter(e=>!!e);if(0<o.length){let e=t=>{t.id==r.id&&(RED.events.off("nodes:add",e),o.forEach(e=>{RED.nodes.addLink({source:RED.nodes.node(e.id),sourcePort:0,target:t})}),RED.view.redraw(!0))};RED.events.on("nodes:add",e)}r.wires=[[...t].map(e=>e.id)],d([r,...t])},m=e=>{let a=e.content.trim().split(/\s+/).map(e=>e.replace(/[.,+=@!]/g,"").replace(/['"]$/,"").replace(/^['"]/,"")).filter(e=>4<e.length).map(e=>e.toLowerCase()),t=[...new Set(a)].map(t=>[t,a.filter(e=>e==t).length]).sort((e,t)=>e[1]<t[1]?-1:1).filter(e=>1<e[1]);var n;3<t.length&&(n=[t.pop(),t.pop(),t.pop()],t.sort((e,t)=>.5<Math.random()?-1:1),t.length=parseInt((t.length-1)*Math.random())+1,t.length=Math.min(t.length,6),t=[...n,...t]),setTimeout(()=>{l({keywords:t.map(e=>e[0])},e)},parseInt(1759*Math.random()+542))};let c={},y=!1,u=["text/x-moz-place","text/x-moz-url","text/uri-list"];for(let e=0;e<n;e++){var f=a[e];"file"==f.kind?((t,a)=>{var e;t.type.startsWith("image/")?((e=new FormData).append("file",a,a.name),$.ajax({url:"/writermap/content",type:"POST",data:e,contentType:!1,processData:!1,enctype:"multipart/form-data",success:e=>{d({...p(0),type:"Image",name:a.name,info:s(e)+`
-`})},error:e=>{r(a,e=>{e={relative_url:e,mimetype:t.type,filename:a.name};d({...p(0),type:"Image",name:a.name,info:s(e)+`
-`})})}})):t.type.startsWith("audio/")?((e=new FormData).append("file",a,a.name),$.ajax({url:"/writermap/content",type:"POST",data:e,contentType:!1,processData:!1,enctype:"multipart/form-data",success:e=>{d({...p(0),type:"Inspiration",name:a.name,info:o(e)})},error:e=>{r(a,e=>{e={relative_url:e,mimetype:t.type,filename:a.name};d({...p(0),type:"Inspiration",name:a.name,info:o(e)+`
-`})})}})):t.type.startsWith("video/")?((e=new FormData).append("file",a,a.name),$.ajax({url:"/writermap/content",type:"POST",data:e,contentType:!1,processData:!1,enctype:"multipart/form-data",success:e=>{d({...p(0),type:"Image",name:a.name,info:i(e)})},error:e=>{r(a,e=>{e={relative_url:e,mimetype:t.type,filename:a.name,poster_url:""};d({...p(0),type:"Image",name:a.name,info:i(e)+`
-`})})}})):"text/markdown"!=t.type&&"text/plain"!=t.type||a.arrayBuffer().then(e=>{d({...p(0),type:"Text",name:a.name,info:(new TextDecoder).decode(e)})}).catch(e=>{console.log(e)})})(f,t.originalEvent.dataTransfer.files[e]):"string"==f.kind?await(async a=>new Promise((t,e)=>{a.getAsString(e=>{y=y||-1<u.indexOf(a.type);e={type:a.type,content:e,lines:(e||"").split("\n").filter(e=>!!e)};(c[e.type]||=[]).push(e),c[e.type].sort((e,t)=>e.lines.length>t.lines.length?-1:1),t()})}))(f):console.log(`Ignoring unsupported drag&drop kind: '${f.kind}'`)}let g=e=>{if(-1<u.indexOf(e.type)){let a=e.lines;$.ajax({url:"/writermap/content",type:"POST",data:JSON.stringify({bookmark_url:a[0]}),contentType:"application/json",processData:!1,success:e=>{var t={...p(0),type:"Bookmark",name:a[1]||"Bookmark",info:a[0]+"\n\n"};"image"==e.type&&(t.info=""+a[0]+`
+                </div>`.replace(/\n\s+/g,"\n"),s=e=>`![img](${e.relative_url})`,n=(e,t)=>{var a=new FileReader;a.onload=function(e){t(e.target.result)},a.readAsDataURL(e)},d=e=>({id:RED.nodes.id(),sumPass:!1,sumPassPrio:0,sumPassNodeId:"",createdAt:(new Date).toISOString(),updatedAt:(new Date).toISOString(),x:0,y:e,wires:[[]]}),l=e=>RED.view.importNodes(Array.isArray(e)?e:[e]),p=(e,t)=>{e.keywords&&(0==e.keywords.length?RED.notify("Text classification no keywords found",{type:"warning"}):RED.notify("Text classification found: "+e.keywords.join(","),{type:"success"}));let a=[],r=RED.workspaces.active(),n=(RED.nodes.eachNode(e=>{"Keyword"!=e.type&&"Quote"!=e.type||e.z!=r||a.push(e)}),{...d(0),type:"Text",name:t.lines[0].substr(0,30)+(30<t.lines[0].length?"...":""),info:t.content,x:-100,y:-40}),o=[],i=0,s=[],p=(e.keywords&&Array.isArray(e.keywords)&&(s=[...new Set(e.keywords.map(e=>"string"==typeof e?e:!(!Array.isArray(e)||"string"!=typeof e[0])&&e[0]).filter(e=>!!e).map(e=>e.trim()).filter(e=>!!e))].sort((e,t)=>e<t?-1:1).map(t=>{var e=a.filter(e=>e.name==t)[0];if(!e)return i+=1,{...d(0),type:"Keyword",name:t,info:"",y:40*(i-1),x:200};o.push(e)}).filter(e=>!!e)),i=0,[]);if(e.keyphrases&&Array.isArray(e.keyphrases)&&(p=[...new Set(e.keyphrases.map(e=>"string"==typeof e?e:!(!Array.isArray(e)||"string"!=typeof e[0])&&e[0]).filter(e=>!!e).map(e=>e.trim()).filter(e=>!!e))].sort((e,t)=>e<t?-1:1).map(t=>{var e=a.filter(e=>e.name==t)[0];if(!e)return i+=1,{...d(0),type:"Quote",name:t.substr(0,30)+(30<t.length?"...":""),info:t,y:40*(i-1),x:400};o.push(e)}).filter(e=>!!e)),0<o.length){let e=t=>{t.id==n.id&&(RED.events.off("nodes:add",e),o.forEach(e=>{RED.nodes.addLink({source:RED.nodes.node(e.id),sourcePort:0,target:t})}),RED.view.redraw(!0))};RED.events.on("nodes:add",e)}n.wires=[[...s,...p].map(e=>e.id)],e.summary&&(Array.isArray(e.summary)&&(e.summary=e.summary[0]),e.summary.trim())&&(t=e.summary.trim(),e={...d(40),type:"Synopsis",name:"AI Synopsis",info:t,y:0,x:-100},s.push(e),n.wires[0].push(e.id)),l([n,...s,...p])},m=e=>{let a=e.content.trim().split(/\s+/).map(e=>e.replace(/[.,+=@!]/g,"").replace(/['"]$/,"").replace(/^['"]/,"")).filter(e=>4<e.length).map(e=>e.toLowerCase()),t=[...new Set(a)].map(t=>[t,a.filter(e=>e==t).length]).sort((e,t)=>e[1]<t[1]?-1:1).filter(e=>1<e[1]);var r;3<t.length&&(r=[t.pop(),t.pop(),t.pop()],t.sort((e,t)=>.5<Math.random()?-1:1),t.length=parseInt((t.length-1)*Math.random())+1,t.length=Math.min(t.length,6),t=[...r,...t]),setTimeout(()=>{p({keywords:t.map(e=>e[0])},e)},parseInt(1759*Math.random()+542))},y=t=>{$("#mindmap-stats-drag-drop-do-classification").is(":checked")?(RED.notify("Preparing to classify text content, this might take a moment.",{type:"success"}),$.ajax({url:"/writermap/classification",type:"POST",data:JSON.stringify({data:t.content,task:"classification",model:$("#func-sidebar-seeker-seeker-ollama-model").val()}),contentType:"application/json",processData:!1,success:e=>{p(e,t)},error:e=>{m(t)}})):p({},t)};let c={},u=!1,f=["text/x-moz-place","text/x-moz-url","text/uri-list"];for(let e=0;e<r;e++){var g=a[e];"file"==g.kind?((t,a)=>{var e;t.type.startsWith("image/")?((e=new FormData).append("file",a,a.name),$.ajax({url:"/writermap/content",type:"POST",data:e,contentType:!1,processData:!1,enctype:"multipart/form-data",success:e=>{l({...d(0),type:"Image",name:a.name,info:s(e)+`
+`})},error:e=>{n(a,e=>{e={relative_url:e,mimetype:t.type,filename:a.name};l({...d(0),type:"Image",name:a.name,info:s(e)+`
+`})})}})):t.type.startsWith("audio/")?((e=new FormData).append("file",a,a.name),$.ajax({url:"/writermap/content",type:"POST",data:e,contentType:!1,processData:!1,enctype:"multipart/form-data",success:e=>{l({...d(0),type:"Audio",name:a.name,info:o(e)})},error:e=>{n(a,e=>{e={relative_url:e,mimetype:t.type,filename:a.name};l({...d(0),type:"Audio",name:a.name,info:o(e)+`
+`})})}})):t.type.startsWith("video/")?((e=new FormData).append("file",a,a.name),$.ajax({url:"/writermap/content",type:"POST",data:e,contentType:!1,processData:!1,enctype:"multipart/form-data",success:e=>{l({...d(0),type:"Video",name:a.name,info:i(e)})},error:e=>{n(a,e=>{e={relative_url:e,mimetype:t.type,filename:a.name,poster_url:""};l({...d(0),type:"Video",name:a.name,info:i(e)+`
+`})})}})):"text/markdown"==t.type||"text/plain"==t.type||""==t.type?a.arrayBuffer().then(e=>{l({...d(0),type:"Text",name:a.name,info:(new TextDecoder).decode(e)})}).catch(e=>{console.log(e)}):console.log("Unsupported file type: "+t.type)})(g,t.originalEvent.dataTransfer.files[e]):"string"==g.kind?await(async a=>new Promise((t,e)=>{a.getAsString(e=>{u=u||-1<f.indexOf(a.type);e={type:a.type,content:e,lines:(e||"").split("\n").filter(e=>!!e)};(c[e.type]||=[]).push(e),c[e.type].sort((e,t)=>e.lines.length>t.lines.length?-1:1),t()})}))(g):console.log(`Ignoring unsupported drag&drop kind: '${g.kind}'`)}let w=e=>{if(-1<f.indexOf(e.type)){let a=e.lines;$.ajax({url:"/writermap/content",type:"POST",data:JSON.stringify({bookmark_url:a[0]}),contentType:"application/json",processData:!1,success:e=>{var t={...d(0),type:"Bookmark",name:a[1]||"Bookmark",info:a[0]+"\n\n"};"image"==e.type&&(t.info=""+a[0]+`
 
 ${s(e)}
 `,t.type="Image"),"audio"==e.type&&(t.info=""+a[0]+`
 
 ${o(e)}
-`,t.type="Inspiration"),"video"==e.type&&(t.info=""+a[0]+`
+`,t.type="Audio"),"video"==e.type&&(t.info=""+a[0]+`
 
 ${i(e)}
-`,t.type="Image"),d(t)},error:e=>{var t={...p(0),type:"Bookmark",name:a[1]||"Bookmark",info:a[0]+"\n\n"};d(t)}})}else"text/html"!=e.type||y?"text/markdown"!=e.type&&"text/plain"!=e.type||y||$.ajax({url:"/writermap/classification",type:"GET",processData:!1,success:()=>{(t=>{RED.notify("Preparing to classify text content, this might take a moment.",{type:"success"});$.ajax({url:"/writermap/classification",type:"POST",data:JSON.stringify({data:t.content}),contentType:"application/json",processData:!1,success:e=>{l(e,t)},error:e=>{m(t)}})})(e)},error:()=>{m(e)}}):d({...p(0),type:"Code-Base",name:"HTML Content",info:e.content})};window.stringKindsStoredForLater=c,y?"text/x-moz-place"in c?(a=>{let n=a.uri,r=a.title||"Bookmark";$.ajax({url:"/writermap/content",type:"POST",data:JSON.stringify({bookmark_url:n}),contentType:"application/json",processData:!1,success:e=>{var t={...p(0),type:"Bookmark",name:r,info:n+"\n\n",createdAt:new Date(a.dateAdded/1e3).toISOString(),updatedAt:new Date(a.lastModified/1e3).toISOString()};"image"==e.type&&(t.info=""+n+`
+`,t.type="Video"),l(t)},error:e=>{var t={...d(0),type:"Bookmark",name:a[1]||"Bookmark",info:a[0]+"\n\n"};l(t)}})}else"text/html"!=e.type||u?"text/markdown"!=e.type&&"text/plain"!=e.type||u||$.ajax({url:"/writermap/classification",type:"GET",processData:!1,success:()=>{y(e)},error:()=>{m(e)}}):$("#mindmap-stats-drag-drop-generate-html-node").is(":checked")&&l({...d(0),type:"Code-Base",name:"HTML Content",info:e.content})};window.stringKindsStoredForLater=c,u?"text/x-moz-place"in c?(a=>{let r=a.uri,n=a.title||"Bookmark";$.ajax({url:"/writermap/content",type:"POST",data:JSON.stringify({bookmark_url:r}),contentType:"application/json",processData:!1,success:e=>{var t={...d(0),type:"Bookmark",name:n,info:r+"\n\n",createdAt:new Date(a.dateAdded/1e3).toISOString(),updatedAt:new Date(a.lastModified/1e3).toISOString()};"image"==e.type&&(t.info=""+r+`
 
 ${s(e)}
-`,t.type="Image"),"audio"==e.type&&(t.info=""+n+`
+`,t.type="Image"),"audio"==e.type&&(t.info=""+r+`
 
 ${o(e)}
-`,t.type="Inspiration"),"video"==e.type&&(t.info=""+n+`
+`,t.type="Audio"),"video"==e.type&&(t.info=""+r+`
 
 ${i(e)}
-`,t.type="Image"),d(t)},error:e=>{var t={...p(0),type:"Bookmark",name:r,info:n+"\n\n",createdAt:new Date(a.dateAdded/1e3).toISOString(),updatedAt:new Date(a.lastModified/1e3).toISOString()};d(t)}})})(JSON.parse(c["text/x-moz-place"][0].content)):"text/x-moz-url"in c?g(c["text/x-moz-url"][0]):"text/uri-list"in c&&g(c["text/uri-list"][0]):Object.keys(c).forEach(e=>{g(c[e][0])})},defineCustomDropHandler=()=>{0<$("#red-ui-drop-target").length?$("#red-ui-drop-target").on("drop",customDropHandler):setTimeout(defineCustomDropHandler,300)};setTimeout(defineCustomDropHandler,300);
+`,t.type="Video"),l(t)},error:e=>{var t={...d(0),type:"Bookmark",name:n,info:r+"\n\n",createdAt:new Date(a.dateAdded/1e3).toISOString(),updatedAt:new Date(a.lastModified/1e3).toISOString()};l(t)}})})(JSON.parse(c["text/x-moz-place"][0].content)):"text/x-moz-url"in c?w(c["text/x-moz-url"][0]):"text/uri-list"in c&&w(c["text/uri-list"][0]):Object.keys(c).forEach(e=>{w(c[e][0])})},defineCustomDropHandler=()=>{0<$("#red-ui-drop-target").length?$("#red-ui-drop-target").on("drop",customDropHandler):setTimeout(defineCustomDropHandler,300)};setTimeout(defineCustomDropHandler,300);
 
       $(window).on("paste",e=>{try{window.pasteEvent=e;var a=RED.settings.version.split(".")[0];if(e.target&&(("3"!=a||"red-ui-header"==e.target.id||"red-ui-workspace-chart"==e.target.id)&&("4"!=a||"span"==e.target.tagName.toLowerCase()||$(e.target).hasClass("red-ui-header-logo")))){var t=e.originalEvent.clipboardData.getData("text"),r=JSON.parse(t);if(Array.isArray(r))try{RED.view.importNodes(r,{generateIds:!1,addFlow:!1,touchImport:!1,generateDefaultNames:!1})}catch(e){RED.notify("Error: "+e.message,{type:"warning"})}}}catch(e){RED.notify("Error: "+e.message,{type:"warning"})}});
   };
@@ -1390,16 +1390,11 @@ ${i(e)}
 
 (function() {
 
-  var fillNumOfUpdatesMindMapStats=()=>{var t=$("#node-input-mindmap-stats-numOfUpdates");t.html(""),t.append($("<option></option>").val(-1).html("-- All --")),[5,10,20,50,100,150,200].forEach(function(e){t.append($("<option></option>").val(e).html(e))}),t.val(20)},setupTreelistForMindMapStats=()=>$("#node-input-mindmap-stats-target-container-div").treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistselect",function(e,t){var o;t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),o=t.node.id,setTimeout(()=>{RED.view.reveal(o,!0),RED.view.redraw()},38))}).on("treelistconfirm",function(e,t){var o;t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),o=t.node.id,setTimeout(()=>{var e=RED.nodes.node(o);e&&(RED.view.reveal(e.id),RED.view.select(e.id),RED.editor.edit(e)),o==RED.workspaces.active()&&RED.workspaces.edit()},50))});
+  var fillNumOfUpdatesMindMapStats=()=>{var t=$("#node-input-mindmap-stats-numOfUpdates");t.html(""),t.append($("<option></option>").val(-1).html("-- All --")),[5,10,20,50,100,150,200].forEach(function(e){t.append($("<option></option>").val(e).html(e))}),t.val(20)},setupTreelistForMindMapStats=()=>$("#node-input-mindmap-stats-target-container-div").css({width:"100%",height:"calc(100%)"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistselect",function(e,t){var s;t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),s=t.node.id,setTimeout(()=>{RED.view.reveal(s,!0),RED.view.redraw()},38))}).on("treelistconfirm",function(e,t){var s;t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),s=t.node.id,setTimeout(()=>{var e=RED.nodes.node(s);e&&(RED.view.reveal(e.id),RED.view.select(e.id),RED.editor.edit(e)),s==RED.workspaces.active()&&RED.workspaces.edit()},50))});function prepareAndFillAllStatsDropDowns(){var t=$("#func-sidebar-seeker-seeker-ollama-model"),e=t.val();t.html(""),["Llama","DeepSeek","Gemma","Phi"].forEach(e=>{t.append($("<option></option>").val(e.toLowerCase()).html(e))}),e&&t.val(e),(t=$("#func-sidebar-seeker-seeker-all-types")).html("");let s=new Set,o=RED.workspaces.active();RED.nodes.eachNode(e=>e.z==o?s.add(e.type):void 0),Array.from(s).sort((e,t)=>e<t?-1:1).forEach(e=>t.append($("<option></option>").val(e).html(e)))}function defineNodeDefaults(e){return{id:RED.nodes.id(),sumPass:!1,sumPassPrio:0,sumPassNodeId:"",createdAt:(new Date).toISOString(),updatedAt:(new Date).toISOString(),x:0,y:e,wires:[[]]}}function createSummaryNode(e){if(!RED.view.selection().nodes||RED.view.selection().nodes.length<1)RED.notify("No nodes selected, select at least one node.",{type:"warning"});else{let o=(e,t)=>{let s=e.pop();s?$.ajax({url:"/writermap/classification",type:"POST",data:JSON.stringify({data:s.info||s.name,task:t||"summary",model:$("#func-sidebar-seeker-seeker-ollama-model").val()}),contentType:"application/json",processData:!1,success:e=>{((e,t)=>{var s,a=[];if(e.summary&&(Array.isArray(e.summary)&&(e.summary=e.summary[0]),e.summary.trim())&&(s=e.summary.trim(),e={...defineNodeDefaults(0),type:"Synopsis",name:`AI Synopsis (${e.model})`,info:s},a.push(e)),0<a.length){let o=t.id;a.forEach(t=>{let s=e=>{e.id==t.id&&(RED.events.off("nodes:add",s),RED.nodes.addLink({source:RED.nodes.node(o),sourcePort:0,target:RED.nodes.node(e.id)}),RED.view.redraw(!0))};RED.events.on("nodes:add",s)}),RED.view.importNodes(a)}})(e,s)},error:e=>{},complete:()=>{o(e,t)}}):RED.notify(`Completed task ${t} for all selected nodes.`,{type:"success"})};RED.notify(`Preparing task "${e}" on text content.`,{type:"success"});var t=RED.view.selection().nodes.filter(e=>!!(e.info&&e.info.trim()||e.name&&e.name.trim()));o(t,e)}}function classifyNodeText(){if(!RED.view.selection().nodes||RED.view.selection().nodes.length<1)RED.notify("No nodes selected for classification",{type:"warning"});else{let s=e=>{let t=e.pop();t?$.ajax({url:"/writermap/classification",type:"POST",data:JSON.stringify({data:t.info||t.name,task:"classification",model:$("#func-sidebar-seeker-seeker-ollama-model").val()}),contentType:"application/json",processData:!1,success:e=>{((e,t)=>{let s=[],o=RED.workspaces.active(),a=(RED.nodes.eachNode(e=>{"Keyword"!=e.type&&"Quote"!=e.type||e.z!=o||s.push(e)}),[]);var i,n=[];let r=0,d=[],l=(e.keywords&&Array.isArray(e.keywords)&&(d=[...new Set(e.keywords.map(e=>"string"==typeof e?e:!(!Array.isArray(e)||"string"!=typeof e[0])&&e[0]).filter(e=>!!e).map(e=>e.trim()).filter(e=>!!e))].sort((e,t)=>e<t?-1:1).map(t=>{var e=s.filter(e=>e.name==t)[0];if(!e)return r+=1,{...defineNodeDefaults(0),type:"Keyword",name:t,info:"",y:40*(r-1),x:200};a.push(e)}).filter(e=>!!e)),r=0,[]);if(e.keyphrases&&Array.isArray(e.keyphrases)&&(l=[...new Set(e.keyphrases.map(e=>"string"==typeof e?e:!(!Array.isArray(e)||"string"!=typeof e[0])&&e[0]).filter(e=>!!e).map(e=>e.trim()).filter(e=>!!e))].sort((e,t)=>e<t?-1:1).map(t=>{var e=s.filter(e=>e.name==t)[0];if(!e)return r+=1,{...defineNodeDefaults(0),type:"Quote",name:t.substr(0,30)+(30<t.length?"...":""),info:t,y:40*(r-1),x:400};a.push(e)}).filter(e=>!!e)),a.forEach(e=>{RED.nodes.addLink({source:RED.nodes.node(e.id),sourcePort:0,target:RED.nodes.node(t.id)})}),RED.view.redraw(!0),n=[...d,...l],e.summary&&(Array.isArray(e.summary)&&(e.summary=e.summary[0]),e.summary.trim())&&(i=e.summary.trim(),e={...defineNodeDefaults(40),type:"Synopsis",name:`AI Synopsis (${e.model})`,info:i,y:-40,x:-100},n.push(e)),0<n.length){let o=t.id;n.forEach(t=>{let s=e=>{e.id==t.id&&(RED.events.off("nodes:add",s),RED.nodes.addLink({source:RED.nodes.node(o),sourcePort:0,target:RED.nodes.node(e.id)}),RED.view.redraw(!0))};RED.events.on("nodes:add",s)}),RED.view.importNodes(n)}})(e,t)},error:e=>{},complete:()=>{s(e)}}):RED.notify("Completed text classification for all selected nodes.",{type:"success"})};RED.notify("Preparing to classify text content, this might take a moment.",{type:"success"});var e=RED.view.selection().nodes.filter(e=>!!(e.info&&e.info.trim()||e.name&&e.name.trim()));s(e)}}
 
 var fillNumOfUpdates=()=>{var t=$("#node-input-mindmapchangessidebar-numOfUpdates");t.html(""),t.append($("<option></option>").val(-1).html("-- All --")),[5,10,20,50,100,150,200].forEach(function(e){t.append($("<option></option>").val(e).html(e))}),t.val(20)},setupTreelistForMindMapChanges=()=>$("#node-input-mindmapchangessidebar-target-container-div").css({width:"100%",height:"calc(100%)"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistselect",function(e,t){var i;t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),i=t.node.id,setTimeout(()=>{RED.view.reveal(i,!0),RED.view.redraw()},38))}).on("treelistconfirm",function(e,t){var i;t.node&&(RED.workspaces.show(t.node.z,!1,!1,!0),i=t.node.id,setTimeout(()=>{var e=RED.nodes.node(i);e&&(RED.view.reveal(e.id),RED.view.select(e.id),RED.editor.edit(e)),i==RED.workspaces.active()&&RED.workspaces.edit()},50))}),setupTabTrackerTreelist=()=>$("#node-input-mindmapchangessidebar-tab-tracker").css({width:"100%",height:"calc(100%)"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistselect",function(e,t){t.obj&&RED.workspaces.show(t.obj.id,!1,!1,!0)}).on("treelistconfirm",function(e,t){t.obj&&(RED.workspaces.show(t.obj.id,!1,!1,!0),setTimeout(()=>{RED.workspaces.edit(t.obj.id)},132))});
 
-let prepareSeekerSidebarTreeListWidget=()=>{let e="#func-mindmapsidebar-tab-seeker-sidebar",t="#func-sidebar-seeker-seeker-target-container-div",r=()=>{1==$(t).treeList("data").filter(e=>e.expanded).length?$(e).find(".pathway-handler-but").prop("disabled",!1):$(e).find(".pathway-handler-but").prop("disabled",!0)};try{$(t).treeList("empty"),$(t).treeList("data",[])}catch(e){$(t).css({width:"100%",height:"calc(100%)"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistconfirm",function(e,t){t.node&&!t.children&&(RED.view.reveal(t.node.id),RED.view.select(t.node.id),setTimeout(()=>{RED.editor.edit(t.node)},100)),r()}).on("treelistselect",function(e,t){var n;t.node&&!t.children&&(RED.workspaces.show(t.node.z,!1,!1,!0),RED.view.reveal(t.node.id,!0),RED.view.redraw(),0<$("#docnode-"+t.node.id).length)&&(n=$("#func-sidebar-seeker-seeker-generate-markdown-container").parent()).animate({scrollTop:$("#docnode-"+t.node.id).offset().top-n.offset().top+n.scrollTop()}),r()})}},siderbarPathToTreeListEntry=e=>{var t=RED.nodes.node(e[e.length-1]);let n=[];return e.forEach(function(e){var t,e=RED.nodes.node(e)||RED.nodes.junction(e);void 0!==e&&(t=RED.nodes.workspace(e.z)||RED.nodes.subflow(e.z),n.push({label:"",_label:RED.utils.getNodeLabel(e),node:e,sublabel:t&&RED.utils.getNodeLabel(t)||e.z,icon:RED.utils.createNodeIcon(e,!0),class:"intro-remove-top-left"}))}),{node:t,label:RED.utils.getNodeLabel(t)||t.type+": "+t.id,_label:RED.utils.getNodeLabel(t)||t.type+": "+t.id,_pathlen:e.length,sublabel:"Length: "+e.length,selected:!1,checkbox:!1,children:n}};function prepareAndFillDropDowns(n){$("#func-sidebar-seeker-seeker-show-percent").show(),$("#func-sidebar-seeker-seeker-show-ordering").show();var e,r=$("#func-sidebar-seeker-seeker-show-percent"),t=(r.html(""),r.append($("<option></option>").val("-").html("Show..")),[5,10,20,30,40,50,75].forEach(e=>{var t=parseInt(e*n/100);0!=t&&r.append($("<option></option>").val(e).html(t+" paths"))}),r.append($("<option></option>").val(100).html("All")),r.val("-"),(r=$("#func-sidebar-seeker-seeker-show-ordering")).html(""),{"Count Asc":1,"Count Desc":2,"Name Asc":3,"Name Desc":4,Random:5});for(e in t)r.append($("<option></option>").val(t[e]).html(e));r.val(1)}function obtainSortFunction(e){return{1:(e,t)=>e.length<t.length?-1:1,2:(e,t)=>e.length>t.length?-1:1,3:(e,t)=>RED.utils.getNodeLabel(RED.nodes.node(e[e.length-1]))<RED.utils.getNodeLabel(RED.nodes.node(t[t.length-1]))?-1:1,4:(e,t)=>{e=RED.utils.getNodeLabel(RED.nodes.node(e[e.length-1]));return RED.utils.getNodeLabel(RED.nodes.node(t[t.length-1]))<e?-1:1},5:(e,t)=>.5<Math.random()?-1:1}[parseInt(e)]||((e,t)=>e.length<t.length?-1:1)}function sidebarSeekerHandleExpandedNodes(e){1==e.length?(e=e[0].children.filter(e=>e.node.z==RED.workspaces.active()).map(e=>e.node.id),RED.tray.hide(),RED.view.selectNodes({selected:e,onselect:()=>{RED.tray.show()},oncancel:()=>{RED.tray.show()}})):RED.notify("Only one expanded pathway can be shown.",{type:"warning"})}let sidebarSeekerHandleDropDownChange=e=>{e&&e.preventDefault();let t=window._sidebarSeekerStack.length,n=25,r=("-"!=$("#func-sidebar-seeker-seeker-show-percent").val()&&(n=parseInt(t*(parseInt($("#func-sidebar-seeker-seeker-show-percent").val())/100))),obtainSortFunction($("#func-sidebar-seeker-seeker-show-ordering").val()));setTimeout(()=>{setTimeout(()=>{$("#func-sidebar-seeker-seeker-totalPaths").html(n>t?""+t:n+" / "+t)},10),setTimeout(()=>{$("#func-sidebar-seeker-seeker-target-container-div").treeList("data",window._sidebarSeekerStack.sort(r).slice(0,n).map(e=>siderbarPathToTreeListEntry(e)))},20)},100)},sidebarSeekerSetupTreelistOnCompletion=()=>{let e=window._sidebarSeekerStack.length;setTimeout(()=>{$("#func-sidebar-seeker-seeker-start-but").prop("disabled",!1),$("#func-sidebar-seeker-seeker-totalPaths").html(e),$("#func-sidebar-seeker-seeker-spinner").hide()},10),prepareAndFillDropDowns(e),$("#func-sidebar-seeker-seeker-show-ordering").on("change",sidebarSeekerHandleDropDownChange),$("#func-sidebar-seeker-seeker-show-percent").on("change",sidebarSeekerHandleDropDownChange),$("#func-sidebar-seeker-seeker-show-percent").trigger("change")},sidebarSeekerExtractFlowHandler=(t,n)=>{if(1==t.length){let e=t[0].children.map(e=>e.node).filter(e=>["link in","link out","Seeker","Sink","junction"].indexOf(e.type)<0);var r=RED.nodes.createExportableNodeSet(e).map((e,t)=>{let n=e.name||e.type+": "+e.id;try{e._def=e._def||RED.nodes.getType(e.type),e._def&&e._def._&&e._&&(n=RED.utils.getNodeLabel(e,e.info).replace("\\n"," "))}catch(e){}return`<div id='docnode-${e.id}'></div>
-
-# ${n}
-
-${e.info||"*no content*"}
-`}).join("\n");switch(n){case"json":RED.clipboard.copyText(JSON.stringify((r=>{let a=0;return(r=RED.nodes.createExportableNodeSet(e).map(e=>(e.id=RED.nodes.id(),e))).map((e,t)=>{try{var n;e._def=e._def||RED.nodes.getType(e.type),e._def&&e._def._&&e._?(n=RED.utils.getNodeLabel(e,e.info).split("\\n").length,a+=30*n+30):a+=50}catch(e){a+=50}return delete e.z,e.y=a,e.x=0,e.wires=[[]],t!=r.length-1&&(e.wires=[[r[t+1].id]]),e})})(RED.nodes.createExportableNodeSet(e))))&&RED.notify("Pathway copied as JSON to clipboard",{type:"success"});break;case"markdown":RED.clipboard.copyText(r)&&RED.notify("Pathway copied as Markdown to clipboard",{type:"success"});break;case"html":RED.clipboard.copyText(RED.utils.renderMarkdown(r))&&RED.notify("Pathway copied as HTML to clipboard",{type:"success"});break;default:RED.notify(`Export format <b>${n}</b> not supported.`,{type:"error"})}$("#func-sidebar-seeker-seeker-generate-markdown-container").parent().animate({"background-color":"#ccc"},300).animate({"background-color":"white"},300),$("#func-sidebar-seeker-seeker-generate-markdown-container").html(RED.utils.renderMarkdown(r)).find("a").attr("target","_blank")}else RED.notify("Only one expanded pathway can be extracted.",{type:"warning"})},sidebarSeekerFindPathWaysButtonPressHandler=e=>{e&&e.preventDefault();let n=RED.view.selection().nodes;if(n&&1==n.length){$("#func-sidebar-seeker-seeker-spinner").show();window._sidebarSeekerStack=[],window._sidebarSeekerWorker=void 0,prepareSeekerSidebarTreeListWidget();let t=new Worker("data:text/javascript;base64,bGV0IGludHJvU3BlY3Rpb25TdGFjaz1bXSxncmFwaD1bXSxncmFwaEluZGV4PXt9LFJFRD17bm9kZXM6e25vZGU6ZT0+Z3JhcGhbZ3JhcGhJbmRleFtlXV0sZ2V0Tm9kZUxpbmtzOnM9PnMuZmxhdHdpcmVzLm1hcChlPT4oe3RhcmdldDpSRUQubm9kZXMubm9kZShlKSxzb3VyY2U6c30pKX19LHRyYXZlcnNlPWZ1bmN0aW9uKHMsdCl7aWYodC5pbmRleE9mKHMuaWQpPDAmJiFzLmQpaWYoMD09cy5mbGF0d2lyZXMubGVuZ3RoJiYibGluayBvdXQiIT1zLnR5cGUmJiJsaW5rIGNhbGwiIT1zLnR5cGUpcG9zdE1lc3NhZ2UoWy4uLnQscy5pZF0pO2Vsc2Ugc3dpdGNoKHMudHlwZSl7Y2FzZSJsaW5rIGNhbGwiOjA9PXMubGlua3MubGVuZ3RoJiYwPT1zLmZsYXR3aXJlcy5sZW5ndGg/cG9zdE1lc3NhZ2UoWy4uLnQscy5pZF0pOihSRUQubm9kZXMuZ2V0Tm9kZUxpbmtzKHMpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUudGFyZ2V0LFsuLi50LHMuaWRdKX0pLHMubGlua3MuZm9yRWFjaChlPT57ZT1SRUQubm9kZXMubm9kZShlKTtlJiZ0cmF2ZXJzZShlLFsuLi50LHMuaWRdKX0pKTticmVhaztjYXNlImxpbmsgb3V0IjowPT1zLmxpbmtzLmxlbmd0aD9wb3N0TWVzc2FnZShbLi4udCxzLmlkXSk6cy5saW5rcy5mb3JFYWNoKGU9PntlPVJFRC5ub2Rlcy5ub2RlKGUpO2UmJnRyYXZlcnNlKGUsWy4uLnQscy5pZF0pfSk7YnJlYWs7ZGVmYXVsdDpSRUQubm9kZXMuZ2V0Tm9kZUxpbmtzKHMpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUudGFyZ2V0LFsuLi50LHMuaWRdKX0pfX07b25tZXNzYWdlPWZ1bmN0aW9uKGUpe2xldCBzPWUuZGF0YS5zZWVrZXJJZDsoZ3JhcGg9ZS5kYXRhLm5vZGVzLm1hcChlPT4oe3dpcmVzOmUud2lyZXMsbGlua3M6ZS5saW5rcyxkOmUuZGlzYWJsZWR8fGUuZCxpZDplLmlkLHR5cGU6ZS50eXBlfSkpLmZpbHRlcihlPT4hIWUud2lyZXMpLm1hcChlPT4oZS5mbGF0d2lyZXM9ZS53aXJlcy5mbGF0KCksZSkpKS5mb3JFYWNoKChlLHMpPT5ncmFwaEluZGV4W2UuaWRdPXMpLFJFRC5ub2Rlcy5nZXROb2RlTGlua3MoUkVELm5vZGVzLm5vZGUocykpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUudGFyZ2V0LFtzXSl9KSxwb3N0TWVzc2FnZSgiZG9uZSIpfTs=");(window._sidebarSeekerWorker=t).onmessage=function(e){"done"==e.data?(t.terminate(),delete window._introWorker,sidebarSeekerSetupTreelistOnCompletion()):(window._sidebarSeekerStack.push(e.data),$("#func-sidebar-seeker-seeker-totalPaths").html(window._sidebarSeekerStack.length),26==window._sidebarSeekerStack.length&&$("#func-sidebar-seeker-seeker-target-container-div").treeList("data",window._sidebarSeekerStack.sort((e,t)=>e.length<t.length?-1:1).slice(0,25).map(e=>siderbarPathToTreeListEntry(e))))},setTimeout(()=>{t.postMessage({seekerId:n[0].id,nodes:RED.nodes.createCompleteNodeSet({credentials:!1})})},10)}else RED.notify("Select exactly one node to find all pathways.",{type:"warning"})};
+let prepareSeekerSidebarTreeListWidget=()=>{let e="#func-mindmapsidebar-tab-seeker-sidebar",t="#func-sidebar-seeker-seeker-target-container-div",n=()=>{1==$(t).treeList("data").filter(e=>e.expanded).length?$(e).find(".pathway-handler-but").prop("disabled",!1):$(e).find(".pathway-handler-but").prop("disabled",!0)};try{$(t).treeList("empty"),$(t).treeList("data",[])}catch(e){$(t).css({width:"100%",height:"calc(100%)"}).treeList({multi:!1}).on("treelistitemmouseover",function(e,t){}).on("treelistitemmouseout",function(e,t){}).on("treelistconfirm",function(e,t){t.node&&!t.children&&(RED.view.reveal(t.node.id),RED.view.select(t.node.id),setTimeout(()=>{RED.editor.edit(t.node)},100)),n()}).on("treelistselect",function(e,t){var r;t.node&&!t.children&&(RED.workspaces.show(t.node.z,!1,!1,!0),RED.view.reveal(t.node.id,!0),RED.view.redraw(),0<$("#docnode-"+t.node.id).length)&&(r=$("#func-sidebar-seeker-seeker-generate-markdown-container").parent()).animate({scrollTop:$("#docnode-"+t.node.id).offset().top-r.offset().top+r.scrollTop()}),n()})}},siderbarPathToTreeListEntry=e=>{var t=RED.nodes.node(e[e.length-1]);let r=[];if(t)return e.forEach(function(e){var t,e=RED.nodes.node(e)||RED.nodes.junction(e);void 0!==e&&(t=RED.nodes.workspace(e.z)||RED.nodes.subflow(e.z),r.push({label:"",_label:RED.utils.getNodeLabel(e),node:e,sublabel:t&&RED.utils.getNodeLabel(t)||e.z,icon:RED.utils.createNodeIcon(e,!0),class:"intro-remove-top-left"}))}),{node:t,label:RED.utils.getNodeLabel(t)||t.type+": "+t.id,_label:RED.utils.getNodeLabel(t)||t.type+": "+t.id,_pathlen:e.length,sublabel:"Length: "+e.length,selected:!1,checkbox:!1,children:r}};function prepareAndFillDropDowns(r){$("#func-sidebar-seeker-seeker-show-percent").show(),$("#func-sidebar-seeker-seeker-show-ordering").show();var e,n=$("#func-sidebar-seeker-seeker-show-percent"),t=(n.html(""),n.append($("<option></option>").val("-").html("Show..")),[5,10,20,30,40,50,75].forEach(e=>{var t=parseInt(e*r/100);0!=t&&n.append($("<option></option>").val(e).html(t+" paths"))}),n.append($("<option></option>").val(100).html("All")),n.val("-"),(n=$("#func-sidebar-seeker-seeker-show-ordering")).html(""),{"Count Asc":1,"Count Desc":2,"Name Asc":3,"Name Desc":4,Random:5});for(e in t)n.append($("<option></option>").val(t[e]).html(e));n.val(1)}function obtainSortFunction(e){return{1:(e,t)=>e.length<t.length?-1:1,2:(e,t)=>e.length>t.length?-1:1,3:(e,t)=>{e=RED.nodes.node(e[e.length-1])||RED.nodes.junction(e[e.length-1])||RED.nodes.subflow(e[e.length-1]),t=RED.nodes.node(t[t.length-1])||RED.nodes.junction(t[t.length-1])||RED.nodes.subflow(t[t.length-1]);return e&&t?RED.utils.getNodeLabel(e)<RED.utils.getNodeLabel(t)?-1:1:0},4:(e,t)=>{var e=RED.nodes.node(e[e.length-1])||RED.nodes.junction(e[e.length-1])||RED.nodes.subflow(e[e.length-1]),t=RED.nodes.node(t[t.length-1])||RED.nodes.junction(t[t.length-1])||RED.nodes.subflow(t[t.length-1]);return e&&t?(e=RED.utils.getNodeLabel(e),RED.utils.getNodeLabel(t)<e?-1:1):0},5:(e,t)=>.5<Math.random()?-1:1}[parseInt(e)]||((e,t)=>e.length<t.length?-1:1)}function sidebarSeekerHandleExpandedNodes(e){1==e.length?(e=e[0].children.filter(e=>e.node.z==RED.workspaces.active()).map(e=>e.node.id),RED.tray.hide(),RED.view.selectNodes({selected:e,onselect:()=>{RED.tray.show()},oncancel:()=>{RED.tray.show()}})):RED.notify("Only one expanded pathway can be shown.",{type:"warning"})}let sidebarSeekerHandleDropDownChange=e=>{e&&e.preventDefault();let t=window._sidebarSeekerStack.length,r=25,n=("-"!=$("#func-sidebar-seeker-seeker-show-percent").val()&&(r=parseInt(t*(parseInt($("#func-sidebar-seeker-seeker-show-percent").val())/100))),obtainSortFunction($("#func-sidebar-seeker-seeker-show-ordering").val()));setTimeout(()=>{setTimeout(()=>{$("#func-sidebar-seeker-seeker-totalPaths").html(r>t?""+t:r+" / "+t)},10),setTimeout(()=>{$("#func-sidebar-seeker-seeker-target-container-div").treeList("data",window._sidebarSeekerStack.sort(n).slice(0,r).map(e=>siderbarPathToTreeListEntry(e)).filter(e=>!!e))},20)},100)},sidebarSeekerSetupTreelistOnCompletion=()=>{let e=window._sidebarSeekerStack.length;setTimeout(()=>{$("#func-sidebar-seeker-seeker-start-but").html('<span><i class="fa fa-refresh"></i> Find Pathways</span>'),$("#func-sidebar-seeker-seeker-totalPaths").html(e),$("#func-sidebar-seeker-seeker-spinner").hide()},10),prepareAndFillDropDowns(e),$("#func-sidebar-seeker-seeker-show-ordering").on("change",sidebarSeekerHandleDropDownChange),$("#func-sidebar-seeker-seeker-show-percent").on("change",sidebarSeekerHandleDropDownChange),$("#func-sidebar-seeker-seeker-show-percent").trigger("change")},sidebarSeekerExtractFlowHandler=(r,n)=>{if(1==r.length){let e=r[0].children.map(e=>e.node).filter(e=>["link in","link out","Seeker","Sink","junction"].indexOf(e.type)<0);let t=n=>{let a=0;return(n=RED.nodes.createExportableNodeSet(e).map(e=>(e.id=RED.nodes.id(),e))).map((e,t)=>{try{var r;e._def=e._def||RED.nodes.getType(e.type),e._def&&e._def._&&e._?(r=RED.utils.getNodeLabel(e,e.info).split("\\n").length,a+=30*r+30):a+=50}catch(e){a+=50}return delete e.z,e.y=a,e.x=0,e.wires=[[]],t!=n.length-1&&(e.wires=[[n[t+1].id]]),e})};var a=RED.nodes.createExportableNodeSet(e).map((e,t)=>{e=RED.nodes.node(e.id);return e._def&&e._def.generateMarkdown&&e._def.generateMarkdown.call(e)||window.mmDefaults.generateMarkdown.call(e)}).join("\n");switch(n){case"json":RED.clipboard.copyText(JSON.stringify(t(RED.nodes.createExportableNodeSet(e))))&&RED.notify("Pathway copied as JSON to clipboard",{type:"success"});break;case"markdown":RED.clipboard.copyText(a)&&RED.notify("Pathway copied as Markdown to clipboard",{type:"success"});break;case"html":RED.clipboard.copyText(RED.utils.renderMarkdown(a))&&RED.notify("Pathway copied as HTML to clipboard",{type:"success"});break;case"import":RED.clipboard.import(),setTimeout(()=>{$("#red-ui-clipboard-dialog-import-text").val(JSON.stringify(t(RED.nodes.createExportableNodeSet(e)))).trigger("paste")},300);break;default:RED.notify(`Export format <b>${n}</b> not supported.`,{type:"error"})}$("#func-sidebar-seeker-seeker-generate-markdown-container").parent().animate({"background-color":"#ccc"},300).animate({"background-color":"white"},300),$("#func-sidebar-seeker-seeker-generate-markdown-container").html(RED.utils.renderMarkdown(a)).find("a").attr("target","_blank")}else RED.notify("Only one expanded pathway can be extracted.",{type:"warning"})},handleEventFromWorker=e=>{"done"==e.data?(window._sidebarSeekerWorker&&(window._sidebarSeekerWorker.terminate(),delete window._sidebarSeekerWorker),sidebarSeekerSetupTreelistOnCompletion()):(window._sidebarSeekerStack.push(e.data),$("#func-sidebar-seeker-seeker-totalPaths").html(window._sidebarSeekerStack.length),26==window._sidebarSeekerStack.length&&$("#func-sidebar-seeker-seeker-target-container-div").treeList("data",window._sidebarSeekerStack.sort((e,t)=>e.length<t.length?-1:1).slice(0,25).map(e=>siderbarPathToTreeListEntry(e)).filter(e=>!!e)))},sidebarSeekerFindPathWaysButtonPressHandler=e=>{if(e&&e.preventDefault(),window._sidebarSeekerWorker)window._sidebarSeekerWorker.terminate(),delete window._sidebarSeekerWorker,sidebarSeekerSetupTreelistOnCompletion();else{let t=RED.view.selection().nodes;if(t&&0!=t.length)if(prepareSeekerSidebarTreeListWidget(),window._sidebarSeekerStack=[],window._sidebarSeekerWorker=void 0,1<t.length)handleEventFromWorker({data:t.sort((e,t)=>e.y<t.y?-1:1).map(e=>e.id)}),handleEventFromWorker({data:"done"});else{setTimeout(()=>{$("#func-sidebar-seeker-seeker-spinner").show()},10);let e=new Worker("data:text/javascript;base64,bGV0IGludHJvU3BlY3Rpb25TdGFjaz1bXSxncmFwaD1bXSxncmFwaEluZGV4PXt9LFJFRD17bm9kZXM6e25vZGU6ZT0+Z3JhcGhbZ3JhcGhJbmRleFtlXV0sZ2V0Tm9kZUxpbmtzOnM9PnMuZmxhdHdpcmVzLm1hcChlPT4oe3RhcmdldDpSRUQubm9kZXMubm9kZShlKSxzb3VyY2U6c30pKX19LHRyYXZlcnNlPWZ1bmN0aW9uKHMsdCl7aWYodC5pbmRleE9mKHMuaWQpPDAmJiFzLmQpaWYoMD09cy5mbGF0d2lyZXMubGVuZ3RoJiYibGluayBvdXQiIT1zLnR5cGUmJiJsaW5rIGNhbGwiIT1zLnR5cGUpcG9zdE1lc3NhZ2UoWy4uLnQscy5pZF0pO2Vsc2Ugc3dpdGNoKHMudHlwZSl7Y2FzZSJsaW5rIGNhbGwiOjA9PXMubGlua3MubGVuZ3RoJiYwPT1zLmZsYXR3aXJlcy5sZW5ndGg/cG9zdE1lc3NhZ2UoWy4uLnQscy5pZF0pOihSRUQubm9kZXMuZ2V0Tm9kZUxpbmtzKHMpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUudGFyZ2V0LFsuLi50LHMuaWRdKX0pLHMubGlua3MuZm9yRWFjaChlPT57ZT1SRUQubm9kZXMubm9kZShlKTtlJiZ0cmF2ZXJzZShlLFsuLi50LHMuaWRdKX0pKTticmVhaztjYXNlImxpbmsgb3V0IjowPT1zLmxpbmtzLmxlbmd0aD9wb3N0TWVzc2FnZShbLi4udCxzLmlkXSk6cy5saW5rcy5mb3JFYWNoKGU9PntlPVJFRC5ub2Rlcy5ub2RlKGUpO2UmJnRyYXZlcnNlKGUsWy4uLnQscy5pZF0pfSk7YnJlYWs7ZGVmYXVsdDpSRUQubm9kZXMuZ2V0Tm9kZUxpbmtzKHMpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUudGFyZ2V0LFsuLi50LHMuaWRdKX0pfX07b25tZXNzYWdlPWZ1bmN0aW9uKGUpe2xldCBzPWUuZGF0YS5zZWVrZXJJZDsoZ3JhcGg9ZS5kYXRhLm5vZGVzLm1hcChlPT4oe3dpcmVzOmUud2lyZXMsbGlua3M6ZS5saW5rcyxkOmUuZGlzYWJsZWR8fGUuZCxpZDplLmlkLHR5cGU6ZS50eXBlfSkpLmZpbHRlcihlPT4hIWUud2lyZXMpLm1hcChlPT4oZS5mbGF0d2lyZXM9ZS53aXJlcy5mbGF0KCksZSkpKS5mb3JFYWNoKChlLHMpPT5ncmFwaEluZGV4W2UuaWRdPXMpLFJFRC5ub2Rlcy5nZXROb2RlTGlua3MoUkVELm5vZGVzLm5vZGUocykpLmZvckVhY2goZT0+e3RyYXZlcnNlKGUudGFyZ2V0LFtzXSl9KSxwb3N0TWVzc2FnZSgiZG9uZSIpfTs=");(window._sidebarSeekerWorker=e).onmessage=handleEventFromWorker,setTimeout(()=>{e.postMessage({seekerId:t[0].id,nodes:RED.nodes.createCompleteNodeSet({credentials:!1})}),$("#func-sidebar-seeker-seeker-start-but").html('<span><i class="fa fa-stop"></i> Stop</span>')},10)}else RED.notify("Select exactly one node to find all pathways.",{type:"warning"})}};
 
   
   var initialiseSidebarNodeOnce = () => {
@@ -1434,14 +1429,13 @@ ${e.info||"*no content*"}
         }
     });
 
-    // Add second tab, changes
+    // Add mindmap tabs
     tabs.addTab({
         id: 'func-mindmapsidebar-tab-mindmapchanges',
         iconClass: 'fa fa-tty',
         label: 'Changes'
     });
 
-    // Add third tab, mindmap stats
     tabs.addTab({
         id: 'func-mindmapsidebar-tab-mindmap-stats',
         iconClass: 'fa fa-percent',
@@ -1489,6 +1483,8 @@ ${e.info||"*no content*"}
         if ( $('#mindmap-stats-reverse-sorting').is(":checked") ) { 
             sortFunction = (a, b) => a.wordCount > b.wordCount;
         }
+
+        setTimeout( prepareAndFillAllStatsDropDowns, 10)
 
         var addToBlogPageNodes = (n) => {
             if (n._def._collection == "writermap") {
@@ -1558,6 +1554,31 @@ ${e.info||"*no content*"}
     $('#mindmap-stats-reverse-sorting').on('change', updateMindMapStats)
     $('#mindmap-stats-only-selected-nodes').on('change', updateMindMapStats)
     $('#node-input-mindmap-stats-refresh-button').on('click', updateMindMapStats);
+
+    $('#node-input-mindmapchangessidebar-select-unlinked-quotes').on('click', () => {
+        RED.view.select({ 
+            nodes: RED.search.search("flow:current type:Quote").map(d => d.node).filter( n => {
+                let links = RED.nodes.getNodeLinks(n)
+                return links.length == 0 
+            })
+        })        
+    });
+
+    $('#node-input-mindmapchangessidebar-select-unlinked-keywords').on('click', () => {
+        RED.view.select({ 
+            nodes: RED.search.search("flow:current type:Keyword").map(d => d.node).filter( n => {
+                let links = RED.nodes.getNodeLinks(n)
+                return links.length == 0 
+            })
+        })        
+    });
+
+    $('#node-input-mindmapchangessidebar-select-all-node-types').on('click', () => {
+        let type = $('#func-sidebar-seeker-seeker-all-types').val()
+        RED.view.select({
+            nodes: RED.search.search(`flow:current type:"${ type }"`).map(d => d.node)
+        })
+    })
 
     /***
     * MindMap Changes
@@ -1638,10 +1659,14 @@ ${e.info||"*no content*"}
         });
 
         mindMapChangesListing.treeList('data', items);
-    }
+    };
 
     $("#node-input-mindmapchangessidebar-numOfUpdates").on("change", updateMindMapChanges)
     $('#node-input-mindmapchangessidebar-refresh-button').on('click', updateMindMapChanges);
+
+    $('#node-input-mindmapchangessidebar-classify-text').on('click', classifyNodeText);
+    $('#node-input-mindmapchangessidebar-summarise-text').on('click', () => { createSummaryNode("summary") });
+    $('#node-input-mindmapchangessidebar-analyse-text').on('click', () => { createSummaryNode("analyse") });
 
     /* 
      * Setup the code for the tab tracker.
@@ -1802,9 +1827,14 @@ ${e.info||"*no content*"}
         sidebarSeekerExtractFlowHandler(expandedNodes, "json")
     })
 
+    $('#func-sidebar-seeker-seeker-extract-import-but').on('click', e => {
+        if (e) e.preventDefault()
+        let expandedNodes = $("#func-sidebar-seeker-seeker-target-container-div").treeList("data").filter(d => d.expanded)
+        sidebarSeekerExtractFlowHandler(expandedNodes, "import")
+    })
+
     // initially disable buttons.
     $("#func-mindmapsidebar-tab-seeker-sidebar").find(".pathway-handler-but").prop("disabled", true);
-
 
     var search = $("#func-sidebar-seeker-seeker-target-filter").searchBox({
         style: "compact",
@@ -1824,7 +1854,6 @@ ${e.info||"*no content*"}
             }
         }
     });
-
 
     /**
      * Update the createdAt and UpdatedAt flags on all mindmap nodes. This tracks
@@ -1868,6 +1897,71 @@ ${e.info||"*no content*"}
         }
     });
 
+    // this is event handler ensures that content nodes are triggered so that
+    // content is played
+    RED.events.on("contentNode:start", (nodeId) => {
+        let nId = `#${nodeId}`
+        if ( $(nId) ) {
+            let tags = ["video", "audio"]
+            /* video and audio have the same API so use the same code */
+            tags.forEach( htmlTagName =>  {
+                $(nId).find(htmlTagName).length > 0 && $(nId).find(htmlTagName)[0].play()
+            })
+        }
+    })
+    RED.events.on("contentNode:play", (nodeId) => {
+        RED.view.select(nodeId)
+    })
+    RED.events.on("contentNode:ended", (nodeId) => {
+        RED.nodes.eachLink(lnk => {
+            lnk.source.id == nodeId && RED.events.emit("contentNode:start", lnk.target.id)
+        })
+    })
+
+    let renderAllPreviewNodesEventHandler = () => {
+        setTimeout(() => {
+            // only non-mobile devices get image previews.
+            if (!(RED.utils.getBrowserInfo().mobile > 0) && !window.matchMedia('only screen and (max-width: 890px)').matches) {
+                // render preview iff a) node is image & b) part of the mindmap collection & has an Markdown image url & is being rendered currently
+                RED.nodes.eachNode(nde => {
+                    if (nde._def._collection == "writermap" && document.getElementById(nde.id) && nde._def.rendercontent && typeof nde._def.rendercontent === "function") {
+                        nde._def.rendercontent.call(nde)
+                    }
+                })
+            }
+        }, 400)
+    };
+
+    // handle the rendering of all visible Preview nodes. These are nodes that 
+    // generate a container within the flow to display some sort of content, at time
+    // of writing that was Image, Audio and Video nodes.
+    RED.events.on("workspace:change", renderAllPreviewNodesEventHandler);
+    setTimeout(renderAllPreviewNodesEventHandler, 500) // the current workspace needs updating
+
+    // this updates the list of types that are available to be selected
+    RED.events.on("workspace:change", prepareAndFillAllStatsDropDowns);
+    
+    /*
+      Why do we trigger the onaddedtoflow function? So that these nodes can
+      generate containers for controlling either audio or video content within
+      the flow or display an image within the flow. Without this extra event
+      generation, the nodes don't show their content, only when switching betwee
+      flow tabs is the content rendered - initially. Remember this is triggered
+      when content is dropped onto the flow. The node is shown and for some mindmap
+      nodes we want to render a container to show their content.
+ 
+      Each node that desires to generate an extra container within the flow should
+      define its own onaddedtoflow method (see Image, Audio or Video nodes for example.)
+    */
+    RED.events.on("nodes:add", (node) => {
+        try {
+            node._def.onaddedtoflow && typeof node._def.onaddedtoflow === "function" && node._def.onaddedtoflow.call(node);
+        } catch (ex) {
+            /* silently ignore */
+        }
+    });
+
+
     // setup the panel separator for scrolling text.
     RED.panels.create({
         id: 'func-mindmapsidebar-tab-seeker-sidebar',
@@ -1881,7 +1975,14 @@ ${e.info||"*no content*"}
         id: 'func-mindmapsidebar-tab-mindmapchanges',
         resize: (topSze, botSze) => {
             $('#node-input-mindmapchangessidebar-tab-tracker').parent().css("height", `calc(${botSze}px - 13vh)`)
-            $('#node-input-mindmapchangessidebar-target-container-div').parent().css('height', `calc(${topSze}px - 15vh)`)
+            $('#node-input-mindmapchangessidebar-target-container-div').parent().css('height', `calc(${topSze}px - 11vh)`)
+        }
+    })
+
+    RED.panels.create({
+        id: 'func-mindmapsidebar-tab-mindmap-stats',
+        resize: (topSze, botSze) => {
+            $('#node-input-mindmap-stats-target-container-div').parent().css('height', `calc(${topSze}px - 20vh)`)
         }
     })
 
@@ -1908,17 +2009,16 @@ RED.events.on('runtime-state', initialiseSidebarNodeOnce);
 </div>
 
 <div id="func-mindmapcntrlsidebar-tabs-content" style="min-height: calc(100% - 95px);">
-    <div id="func-mindmapsidebar-tab-mindmapchanges"
-    style="display:none; max-height: 95vh; min-height: 95vh; height: 95vh;">
+    <div id="func-mindmapsidebar-tab-mindmapchanges" style="display:none; max-height: 95vh; min-height: 95vh; height: 95vh;">
+    <!-- top panel -->
     <div>
         <div class="form-row" style="margin-left: 10px;">
             <button id="node-input-mindmapchangessidebar-refresh-button"
-             class="red-ui-button"><i class="fa fa-refresh"></i> Update</button>
+                    class="red-ui-button"><i class="fa fa-refresh"></i> Update</button>
             <select style="margin-top: 10px;" id="node-input-mindmapchangessidebar-numOfUpdates"></select>
         </div>
 
-        <div class="form-row"
-            style="margin-left: 10px; position: relative; height: 20vh; margin-right: 15px; min-height: 5vh;">
+        <div class="form-row" style="margin-left: 10px; position: relative; height: 20vh; margin-right: 15px; min-height: 5vh;">
             <div style="margin-bottom: 5px; width: 35%; padding-left: 60%;">
                 <input type="text" id="node-input-mindmapchangessidebar-target-filter">
             </div>
@@ -1927,14 +2027,14 @@ RED.events.on('runtime-state', initialiseSidebarNodeOnce);
         </div>
     </div>
 
+    <!-- bottom panel -->
     <div>
-        <div class="form-row"
-            style="margin-top: 10px; margin-left: 10px; position: relative; height: 20vh; margin-right: 15px; min-height: 5vh;">
+        <div class="form-row" style="margin-top: 10px; margin-left: 10px; position: relative; height: 20vh; margin-right: 15px; min-height: 5vh;">
             <div style="margin-bottom: 5px; margin-left: 10px; float: left;">
                 <button id="node-input-mindmapchangessidebar-clear-stack-button"
                          class="red-ui-button"><i class="fa fa-times"></i> Clear Stack</button>
             </div>
-
+            
             <div style="margin-bottom: 5px; width: 35%; padding-left: 60%;">
                 <input type="text" id="node-input-mindmapchangessidebar-tab-tracker-filter">
             </div>
@@ -1945,43 +2045,88 @@ RED.events.on('runtime-state', initialiseSidebarNodeOnce);
     </div>
 </div>
 
+    <div id="func-mindmapsidebar-tab-mindmap-stats" style="display:none; max-height: 95vh; min-height: 95vh; height: 95vh;">
+    <!-- top panel -->
+    <div>
+        <div class="form-row" style="margin-left: 10px;">
+            <select id="node-input-mindmap-stats-numOfUpdates"></select>
 
-    <div id="func-mindmapsidebar-tab-mindmap-stats" class="red-ui-panel" style="display:none">
-
-    <div class="form-row" style="margin-left: 10px;">
-        <select id="node-input-mindmap-stats-numOfUpdates"></select>
-
-        <span style="margin-left: 10px;" id="mindmap-stats-nodeCount-selection">0</span> /
-        <span id="mindmap-stats-nodeCount">0</span> Texts |
-        <span id="mindmap-stats-byteLength-selection">0</span> /
-        <span id="mindmap-stats-byteLength">0</span> Words
-    </div>
-
-    <div class="form-row" style="margin-left: 10px;">
-        <label for="mindmap-stats-only-selected-nodes" style="width: 40%;"><i class="fa fa-search" ></i> Only selected nodes?</label>
-        <input style="width: 10%;" type="checkbox" id="mindmap-stats-only-selected-nodes"/>
-    </div>
-
-    <div class="form-row" style="margin-left: 10px;">
-        <label for="mindmap-stats-reverse-sorting" style="width: 40%;"><i class="fa fa-search" ></i> Reverse sorting?</label>
-        <input style="width: 10%;" type="checkbox" id="mindmap-stats-reverse-sorting"/>
-    </div>
-
-    <div class="form-row" style="margin-left: 10px;">
-        <button id="node-input-mindmap-stats-refresh-button"
-         class="red-ui-button"><i class="fa fa-refresh"></i> Update</button>
-    </div>
-
-    <div class="form-row node-input-target-row node-input-target-list-row"
-        style="height: 65vh; margin-left: 10px; margin-right: 15px;">
-        <div>
-            <label for="node-input-mindmap-stats-target-filter">
-                        <span>Search: </span>
-                    </label>
-            <input type="text" id="node-input-mindmap-stats-target-filter">
+            <span style="margin-left: 10px;" id="mindmap-stats-nodeCount-selection">0</span> /
+            <span id="mindmap-stats-nodeCount">0</span> Texts |
+            <span id="mindmap-stats-byteLength-selection">0</span> /
+            <span id="mindmap-stats-byteLength">0</span> Words
         </div>
 
-        <div id="node-input-mindmap-stats-target-container-div" style="height: 60vh; margin-top: 10px; width: 100%;"></div>
+        <div class="form-row" style="margin-left: 10px;">
+            <label for="mindmap-stats-only-selected-nodes" style="width: 40%;"><i class="fa fa-search" ></i> Only selected nodes?</label>
+            <input style="width: 10%;" type="checkbox" id="mindmap-stats-only-selected-nodes"/>
+        </div>
+
+        <div class="form-row" style="margin-left: 10px;">
+            <label for="mindmap-stats-reverse-sorting" style="width: 40%;"><i class="fa fa-search" ></i> Reverse sorting?</label>
+            <input style="width: 10%;" type="checkbox" id="mindmap-stats-reverse-sorting"/>
+        </div>
+
+        <div class="form-row" style="margin-left: 10px;">
+            <button id="node-input-mindmap-stats-refresh-button"
+                    class="red-ui-button"><i class="fa fa-refresh"></i> Update</button>
+        </div>
+
+        <div class="form-row" style="margin-left: 10px; position: relative; height: 20vh; margin-right: 15px; min-height: 5vh;">
+            <div style="margin-bottom: 5px; width: 35%; padding-left: 60%;">
+                <label for="node-input-mindmap-stats-target-filter">
+                        <span>Search: </span>
+                    </label>
+                <input type="text" id="node-input-mindmap-stats-target-filter">
+            </div>
+
+            <div id="node-input-mindmap-stats-target-container-div"></div>
+        </div>
+    </div>
+
+    <!-- bottom panel -->
+    <div>
+        <div class="form-row" style="margin-left: 10px; margin-top: 10px;">
+            Ollama Actions for nodes
+        </div>
+        
+        <div class="form-row" style="margin-left: 10px;">
+            <select style="margin-top: 10px; width:100px;" id="func-sidebar-seeker-seeker-ollama-model"></select>
+            <button id="node-input-mindmapchangessidebar-classify-text"
+                                    class="red-ui-button"><i class="fa fa-sitemap"></i> Classify</button>
+            <button id="node-input-mindmapchangessidebar-summarise-text"
+                                    class="red-ui-button"><i class="fa fa-compress"></i> Summarise</button>
+            <button id="node-input-mindmapchangessidebar-analyse-text"
+                                    class="red-ui-button"><i class="fa fa-question"></i> Analyse</button>
+        </div>
+
+        <div class="form-row" style="margin-left: 10px;">
+            Node Selection
+        </div>
+
+        <div class="form-row" style="margin-left: 10px;">
+            <button id="node-input-mindmapchangessidebar-select-unlinked-keywords"
+                                            class="red-ui-button">Unlinked Keywords</button>
+            <button id="node-input-mindmapchangessidebar-select-unlinked-quotes"
+                                            class="red-ui-button">Unlinked Quotes</button>
+
+            <select style="margin-top: 10px; width:100px;" id="func-sidebar-seeker-seeker-all-types"></select>
+            <button id="node-input-mindmapchangessidebar-select-all-node-types" class="red-ui-button">All By Type</button>
+        </div>
+
+        <div class="form-row" style="margin-left: 10px;">
+            Drag & Drop
+        </div>
+
+        <div class="form-row" style="margin-left: 10px;">
+            <input style="width: 10%;" type="checkbox" id="mindmap-stats-drag-drop-generate-html-node"/>
+            <label for="mindmap-stats-drag-drop-generate-html-node" style="width: 40%;"><i class="fa fa-code" ></i> Create HTML nodes?</label>
+        </div>
+
+        <div class="form-row" style="margin-left: 10px;">
+            <input style="width: 10%;" type="checkbox" id="mindmap-stats-drag-drop-do-classification"/>
+            <label for="mindmap-stats-drag-drop-do-classification" style="width: 40%;"><i class="fa fa-sitemap" ></i> Do AI Classification?</label>
+        </div>
     </div>
 </div>
 
@@ -2016,7 +2161,9 @@ RED.events.on('runtime-state', initialiseSidebarNodeOnce);
             <button id="func-sidebar-seeker-seeker-extract-html-but"
                   style="margin-right: 5px;" class="red-ui-button pathway-handler-but"><i class="fa fa-copy"></i> HTML</button>
             <button id="func-sidebar-seeker-seeker-extract-json-but"
-                  style="margin-right: 15px;" class="red-ui-button pathway-handler-but"><i class="fa fa-copy"></i> JSON</button>
+                  style="margin-right: 5px;" class="red-ui-button pathway-handler-but"><i class="fa fa-copy"></i> JSON</button>
+            <button id="func-sidebar-seeker-seeker-extract-import-but"
+                  style="margin-right: 15px;" class="red-ui-button pathway-handler-but"><i class="fa fa-copy"></i> Import</button>
          </div>
       </div>
    </div>

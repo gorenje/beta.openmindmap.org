@@ -4139,11 +4139,12 @@ If you want every 20 minutes from now - use the <i>"interval"</i> option.</p>
     "35-thought":       '#cb9cf3',
     
     "25-idea":          '#88baff',
-    "26-dream":         '#86BDFF',
-    "41-metaphor":      '#85C0FF',
-    "45-aphorism":      '#84C3FF',
-    "20-poesie":        '#82C6FF',
-    "22-humour":        '#81C9FF',
+    "26-dream":         '#86BCFF',
+    "41-metaphor":      '#85BFFF',
+    "45-aphorism":      '#84C1FF',
+    "20-poesie":        '#83C4FF',
+    "22-humour":        '#82C6FF',
+    "48-synopsis":      '#81C9FF',
     "23-treasure":      '#80CCFF',
 
     "37-consequence":   '#f6c1cc',
@@ -4151,11 +4152,13 @@ If you want every 20 minutes from now - use the <i>"interval"</i> option.</p>
     "39-disadvantage":  '#e796b1',
     
     "05-text":          '#c8ffb5',
-    "10-blog-post":     '#CDFEBC',
-    "12-image":         '#CDFEBC',
-    "15-comment":       '#D2FDC3',
-    "55-code-base":     '#D7FCCB',
-    "57-art":           '#DCFBD2',
+    "10-blog-post":     '#CBFEB9',
+    "12-image":         '#CEFEBE',
+    "27-video":         '#D1FDC2',
+    "28-audio":         '#D4FDC7',
+    "15-comment":       '#D7FCCC',
+    "55-code-base":     '#DAFCD0',
+    "57-art":           '#DDFBD5',
     "47-learning":      '#e1fbda',
 
     "60-inspiration":   '#dfdfb6',
@@ -4219,6 +4222,52 @@ If you want every 20 minutes from now - use the <i>"interval"</i> option.</p>
                this._def.paletteLabel || this.type) +
         (this.sumPassPrio && parseInt(this.sumPassPrio) != 0 ? " (" + this.sumPassPrio + ")" : "") +
         (this.sumPass ? " ⭄" : "");
+    },
+
+    generateMarkdown: function() {
+       let d = this
+       let lbl = d.name || `${d.type}: ${d.id}`
+            
+        try {
+            d._def = d._def || RED.nodes.getType(d.type)
+            
+            if ( d._def && d._def._ && d._ ) {
+                lbl = RED.utils.getNodeLabel(d, d.info).replace("\\n", " ")
+            }
+        } catch (ex) {}
+
+        let content = d.info || '*no content*'
+
+        if (d.sumPass) {
+          if (d.sumPassNodeId) {
+            let nd = RED.nodes.node(d.sumPassNodeId)
+            if (nd) {
+              content = `${content}\n${ nd._def.generateMarkdown.call(nd) }\n`
+            }
+          } else {
+            // these are keyword links coming into this node
+            RED.nodes.eachLink( lnk => {
+              if ( lnk.source.type == "Keyword" && lnk.target.id == d.id ) {
+                let nd = lnk.source
+                content = `${content}\n${nd._def.generateMarkdown.call(nd)}\n`
+              }
+            })
+            
+            // this is special because the only summary nodes that are considered are:
+            //   - Synposis
+            //   - Keyword
+            // and these are ordered as listed above.
+            RED.nodes.getNodeLinks(d).map( lnk => lnk.target ).filter( nd => {
+                return nd.type == "Keyword" || nd.type == "Synopsis" 
+            }).sort( nd => {
+                return nd.type == "Keyword" ? -1 : 1
+            }).forEach( nd => {
+                content = `${content}\n${nd._def.generateMarkdown.call(nd)}\n`
+            })
+           }
+        }
+        
+        return `<div id='docnode-${ d.id }'></div>\n\n# ${ lbl }\n\n${ content }\n`      
     },
 
     oneditprepare: function() {
@@ -4302,7 +4351,7 @@ If you want every 20 minutes from now - use the <i>"interval"</i> option.</p>
     }
   };
 
-  let writerMapUtils={one:void 0,createPreviewAllImageNodesEventHandler:()=>{setTimeout(()=>{writerMapUtils.createPreviewAllImageNodes()},400)},createPreviewAllImageNodes:()=>{function a(e){var t=document.getElementById("image-output-img-"+e),i=document.getElementById("image-output-bubble-"+e);t&&t.remove(),i&&i.remove(),delete n[e]}let l=160,n=window.latestImages;let t=function(e,t){let i=e.id,n=$("#"+i)[0].getBBox().width,r=new Image,o=document.getElementById("image-output-img-"+i);if(!o){e=document.getElementById(i);if(!e)return;var s=document.createElementNS("http://www.w3.org/2000/svg","polyline"),s=(s.setAttribute("id","image-output-bubble-"+i),s.setAttribute("class","mindmap-image-preview-element"),s.setAttribute("style","fill: #999999; stroke: #999999; stroke-width: 5px;"),e.insertBefore(s,e.lastChild.nextSibling),document.createElementNS("http://www.w3.org/2000/svg","image"));s.setAttribute("id","image-output-img-"+i),s.setAttribute("class","mindmap-image-preview-element"),s.setAttribute("x","0"),s.setAttribute("y","45"),s.setAttribute("width",n||l),s.addEventListener("click",function(){a(i)},{once:!0}),e.insertBefore(s,e.lastChild.nextSibling),o=s}r.onload=function(){o.setAttribute("height",n*r.height/r.width);var e=o.getAttribute("id").replace("img","bubble"),e=document.getElementById(e),t=-2+(n||l)+2,i=45+parseInt(n*r.height/r.width);e.setAttribute("points","-2,45 "+t+",45 "+t+","+i+" "+-2+","+i+" ")},t.startsWith("http")||-1<t.indexOf("/writermap/")?(o.setAttribute("href",t),r.src=t):(o.setAttribute("href","data:image/png;base64,"+t),r.src="data:image/png;base64,"+t)};0<RED.utils.getBrowserInfo().mobile||window.matchMedia("only screen and (max-width: 890px)").matches||RED.nodes.eachNode(e=>{"Image"==e.type&&"writermap"==e._def._collection&&(e.info||"").match(/\!\[.+\]\(([^\s\t\n ]+)\)/)&&0<$("#"+e.id).length&&t(e,(e.info||"").match(/\!\[.+\]\(([^\s\t\n ]+)\)/)[1])})},fillSumPassPrioSelection:e=>{var t=$("#node-input-sumPassPrio");t.html("");for(var i=20;-21<i;i--)t.append($("<option></option>").val(i).html(i));t.val(e.sumPassPrio||0)},fillSumPassNodeSelection:t=>{var i=$("#node-input-sumPassNodeId");i.html(""),i.append($("<option></option>").val("").html(" -- All -- ")),RED.nodes.eachLink(function(e){e.source.id==t.id&&1!=e.target.d&&i.append($("<option></option>").val(e.target.id).html("function"==typeof e.target._def.label?e.target._def.label.call(e.target):"NO LABEL FOR "+e.target.id))})},addTargetToExternalLinks:function(e){return $(e).find("a").each(function(e){var t=$(this).attr("href");/^https?:/.test(t)&&$(this).attr("target","_blank")}),e},setInfoText:function(e,t){e=writerMapUtils.addTargetToExternalLinks($('<div class="red-ui-help"><span class="red-ui-text-bidi-aware" dir="'+RED.text.bidi.resolveBaseTextDir(e)+'">'+e+"</span></div>")).appendTo(t);e.find(".red-ui-text-bidi-aware").contents().filter(function(){return 3===this.nodeType&&""!==this.textContent.trim()}).wrap("<span></span>");e.find("H3").wrapInner('<a class="red-ui-help-info-header expanded" href="#"></a>').find("a").prepend('<i class="fa fa-angle-right">').on("click",function(e){e.preventDefault();for(var t=$(this).hasClass("expanded"),i=$(this).parent().next();1===i.length&&"H3"!==i[0].nodeName;)i.toggle(!t),i=i.next();$(this).toggleClass("expanded",!t)})},allWriterMapTypes:function(){var t=[];return RED.nodes.registry.getNodeList().forEach(e=>{e.types.forEach(e=>{"writermap"==(RED.nodes.registry.getNodeType(e)||{})._collection&&t.push(e)})}),t},fillTypeDropDown:function(e){var t=$("#node-input-typeDropdown");t.html(""),writerMapUtils.allWriterMapTypes().sort((e,t)=>t<e).forEach(e=>{t.append($("<option></option>").val(e).html(e))}),t.val(e.type)}};setTimeout(function(){$(".red-ui-sidebar-info").hasClass("show-tips")&&RED.actions.invoke("core:toggle-show-tips")},1250),RED.events.on("workspace:change",writerMapUtils.createPreviewAllImageNodesEventHandler),RED.events.on("view:selection-changed",function(e){var t,i,n,r,o;writerMapUtils.one&&(document.getElementById(writerMapUtils.one).remove(),delete writerMapUtils.one),e.nodes&&1==e.nodes.length&&e.nodes[0]._def&&"writermap"==e.nodes[0]._def._collection&&(0<RED.utils.getBrowserInfo().mobile||window.matchMedia("only screen and (max-width: 890px)").matches?(e=e.nodes[0],(t=document.getElementById(e.id))&&(r=t.getBoundingClientRect(),i=document.createElement("div"),writerMapUtils.one="writermap-info-box-"+e.id,i.setAttribute("class","red-ui-editor red-ui-panel"),i.setAttribute("style","flex: 1 1 auto; overflow-y: scroll;"),i.setAttribute("xmlns","http://www.w3.org/1999/xhtml"),i.setAttribute("pointer-events","all"),$(i).css("display","flex"),$(i).css("height","290"),$(i).css("color","rgb(85,85,85)"),$(i).css("border","1px solid rgb(85,85,85)"),$(i).css("background-color","white"),$(i).css("border-radius","6px"),$(i).css("padding-bottom","3px"),$(i).css("padding-left","6px"),$(i).css("padding-right","3px"),$(i).css("padding-top","3px"),(n=document.createElementNS("http://www.w3.org/2000/svg","foreignObject")).setAttribute("id",writerMapUtils.one),n.setAttribute("x","0"),n.setAttribute("y",r.height+2),n.setAttribute("width",r.width),n.setAttribute("height","300"),n.setAttribute("pointer-events","all"),r="",e._def&&e._def.info&&(o="function"==typeof(o=e._def.info)?o.call(e):o,r+=RED.utils.renderMarkdown(o)),e.info&&(r+=RED.utils.renderMarkdown(e.info||"")),writerMapUtils.setInfoText(r,i),n.appendChild(i),t.insertBefore(n,t.lastChild.nextSibling),RED.actions.invoke("core:move-selection-to-front"))):$($(".red-ui-sidebar-info-stack > .red-ui-panel")[0]).css("height","150px"))});
+  let writerMapUtils={one:void 0,fillSumPassPrioSelection:e=>{var t=$("#node-input-sumPassPrio");t.html("");for(var i=20;-21<i;i--)t.append($("<option></option>").val(i).html(i));t.val(e.sumPassPrio||0)},fillSumPassNodeSelection:t=>{var i=$("#node-input-sumPassNodeId");i.html(""),i.append($("<option></option>").val("").html(" -- All -- ")),RED.nodes.eachLink(function(e){e.source.id==t.id&&1!=e.target.d&&i.append($("<option></option>").val(e.target.id).html("function"==typeof e.target._def.label?e.target._def.label.call(e.target):"NO LABEL FOR "+e.target.id))})},addTargetToExternalLinks:function(e){return $(e).find("a").each(function(){var e=$(this).attr("href");/^https?:/.test(e)&&$(this).attr("target","_blank")}),e},setInfoText:function(e,t){e=writerMapUtils.addTargetToExternalLinks($('<div class="red-ui-help"><span class="red-ui-text-bidi-aware" dir="'+RED.text.bidi.resolveBaseTextDir(e)+'">'+e+"</span></div>")).appendTo(t);e.find(".red-ui-text-bidi-aware").contents().filter(function(){return 3===this.nodeType&&""!==this.textContent.trim()}).wrap("<span></span>");e.find("H3").wrapInner('<a class="red-ui-help-info-header expanded" href="#"></a>').find("a").prepend('<i class="fa fa-angle-right">').on("click",function(e){e.preventDefault();for(var t=$(this).hasClass("expanded"),i=$(this).parent().next();1===i.length&&"H3"!==i[0].nodeName;)i.toggle(!t),i=i.next();$(this).toggleClass("expanded",!t)})},allWriterMapTypes:function(){var t=[];return RED.nodes.registry.getNodeList().forEach(e=>{e.types.forEach(e=>{"writermap"==(RED.nodes.registry.getNodeType(e)||{})._collection&&t.push(e)})}),t},fillTypeDropDown:function(e){var t=$("#node-input-typeDropdown");t.html(""),writerMapUtils.allWriterMapTypes().sort((e,t)=>t<e).forEach(e=>{t.append($("<option></option>").val(e).html(e))}),t.val(e.type)}};setTimeout(function(){$(".red-ui-sidebar-info").hasClass("show-tips")&&RED.actions.invoke("core:toggle-show-tips")},1250),RED.events.on("view:selection-changed",function(e){var t,i,n,o,r;writerMapUtils.one&&(document.getElementById(writerMapUtils.one).remove(),delete writerMapUtils.one),e.nodes&&1==e.nodes.length&&e.nodes[0]._def&&"writermap"==e.nodes[0]._def._collection&&(0<RED.utils.getBrowserInfo().mobile||window.matchMedia("only screen and (max-width: 890px)").matches?(e=e.nodes[0],(t=document.getElementById(e.id))&&(o=t.getBoundingClientRect(),i=document.createElement("div"),writerMapUtils.one="writermap-info-box-"+e.id,i.setAttribute("class","red-ui-editor red-ui-panel"),i.setAttribute("style","flex: 1 1 auto; overflow-y: scroll;"),i.setAttribute("xmlns","http://www.w3.org/1999/xhtml"),i.setAttribute("pointer-events","all"),$(i).css("display","flex"),$(i).css("height","290"),$(i).css("color","rgb(85,85,85)"),$(i).css("border","1px solid rgb(85,85,85)"),$(i).css("background-color","white"),$(i).css("border-radius","6px"),$(i).css("padding-bottom","3px"),$(i).css("padding-left","6px"),$(i).css("padding-right","3px"),$(i).css("padding-top","3px"),(n=document.createElementNS("http://www.w3.org/2000/svg","foreignObject")).setAttribute("id",writerMapUtils.one),n.setAttribute("x","0"),n.setAttribute("y",o.height+2),n.setAttribute("width",o.width),n.setAttribute("height","300"),n.setAttribute("pointer-events","all"),o="",e._def&&e._def.info&&(r="function"==typeof(r=e._def.info)?r.call(e):r,o+=RED.utils.renderMarkdown(r)),e.info&&(o+=RED.utils.renderMarkdown(e.info||"")),writerMapUtils.setInfoText(o,i),n.appendChild(i),t.insertBefore(n,t.lastChild.nextSibling),RED.actions.invoke("core:move-selection-to-front"))):$($(".red-ui-sidebar-info-stack > .red-ui-panel")[0]).css("height","150px"))});
 </script>
 
 <!-- --- [red-module:@gorenje/node-red-mindmap/topic] --- -->
@@ -4865,6 +4914,62 @@ If you want every 20 minutes from now - use the <i>"interval"</i> option.</p>
 <script type="text/html" data-help-name="Humour">
   <p>A writermap node.</p>
 </script>
+<!-- --- [red-module:@gorenje/node-red-mindmap/synopsis] --- -->
+<script type="text/javascript">
+  RED.nodes.registerType('Synopsis',{ ...window.mmDefaults, ...{
+    color: window.wmPaletteColours["48-synopsis"],
+    icon: "font-awesome/fa-eyedropper",
+  }});
+</script>
+
+<script type="text/html" data-template-name="Synopsis">
+<div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+</div>
+
+<div class="form-row">
+    <label style="display: inline-block; width: 40%;"
+           for="node-input-sumPass">
+      <i class="fa fa-filter"></i>
+      <span>Summaries subnodes?</span>
+    </label>
+    <input type="checkbox" id="node-input-sumPass"
+           style="display:inline-block; width:35px; vertical-align:baseline;">
+
+    <label style="display: inline-block; width: 10%; padding-left: 100px;"
+           for="node-input-sumPassPrio">
+      <span>Priority: </span>
+    </label>
+    <select id="node-input-sumPassPrio" style="width: 50px;"></select>
+</div>
+
+<div id="sumpass-node-selection" class="hide">
+    <div class="form-row">
+        <select id="node-input-sumPassNodeId" style="width: 100%">
+      </select>
+    </div>
+</div>
+
+<div class="form-row node-text-editor-row">
+    <input type="hidden" id="node-input-info" autofocus="autofocus">
+    <div style="height: 250px; min-height:150px;" class="node-text-editor" id="node-input-info-editor"></div>
+</div>
+
+<div class="form-row">
+    <label for="node-input-typeDropdown">Change Type</label>
+    <select id="node-input-typeDropdown"></select>
+    
+    <label for="node-input-wordCount" style="float: right;">Words:
+        <span id="node-input-wordCount"></span>
+    </label>
+</div>
+</script>
+
+
+<script type="text/html" data-help-name="Synopsis">
+  <p>A writermap Synopsis node.</p>
+</script>
 <!-- --- [red-module:@gorenje/node-red-mindmap/treasure] --- -->
 <script type="text/javascript">
   RED.nodes.registerType('Treasure',{ ...window.mmDefaults, ...{
@@ -5204,10 +5309,110 @@ If you want every 20 minutes from now - use the <i>"interval"</i> option.</p>
 </script>
 <!-- --- [red-module:@gorenje/node-red-mindmap/image] --- -->
 <script type="text/javascript">
-  RED.nodes.registerType('Image',{ ...window.mmDefaults, ...{
-    color: window.wmPaletteColours["12-image"],
-    icon: "font-awesome/fa-file-image-o",
-  }});
+  RED.nodes.registerType('Image',{ 
+    ...window.mmDefaults, 
+    ...{
+      color: window.wmPaletteColours["12-image"],
+      icon: "font-awesome/fa-file-image-o",
+      
+      rendercontent: function() {
+        let render = function (node, urlOrBase64) {
+            
+            // if there is no SVG container, then bail out. This is called
+            // for nodes at the initialisation of NodeRED in the browser, not
+            // nodes have been placed in an visible workspace
+            if ( !document.getElementById(node.id) ) { return }
+
+            const DEFAULT_IMAGE_WIDTH = 160
+
+            let id = node.id;
+            let node_width = $(`#${id}`)[0].getBBox().width
+            let i = new Image();
+            let $img = document.getElementById("image-output-img-" + id)
+            
+            if (!$img) {
+                const $container = document.getElementById(id)
+                if (!$container) { return }
+
+                const bubble = document.createElementNS("http://www.w3.org/2000/svg", 'polyline')
+                bubble.setAttribute('id', "image-output-bubble-" + id)
+                bubble.setAttribute('class', "mindmap-image-preview-element")
+                bubble.setAttribute('style', 'fill: #999999; stroke: #999999; stroke-width: 5px;')
+
+                $container.insertBefore(bubble, $container.lastChild.nextSibling)
+
+                const img = document.createElementNS("http://www.w3.org/2000/svg", 'image')
+                img.setAttribute('id', "image-output-img-" + id)
+                img.setAttribute('class', "mindmap-image-preview-element")
+                img.setAttribute('x', '0')
+                img.setAttribute('y', '45')
+                img.setAttribute('width', node_width || DEFAULT_IMAGE_WIDTH)
+                img.addEventListener("click", function () { RED.view.select(id) } )
+                img.addEventListener("dblclick", function () { 
+                    RED.view.select(id);
+                    RED.editor.edit(RED.nodes.node(id));
+                })
+
+                $container.insertBefore(img, $container.lastChild.nextSibling)
+
+                $img = img
+            }
+
+            i.onload = function () {
+                let $img = document.getElementById("image-output-img-" + id)
+
+                // this happens if it takes too long to load an image and 
+                // someone has changed the tab in the meantime
+                if ( !$img ) { return }
+
+                $img.setAttribute('height', node_width * i.height / i.width)
+                const bubbleId = $img.getAttribute('id').replace("img", "bubble");
+                const $bubble = document.getElementById(bubbleId)
+                if ( !$bubble ) { return }
+
+                const left = -2
+                const top = 45
+                const right = left + (node_width || DEFAULT_IMAGE_WIDTH) + 2
+                const bottom = top + parseInt(node_width * i.height / i.width)
+
+                const points =
+                    left + "," + top + " " +
+                    right + "," + top + " " +
+                    right + "," + bottom + " " +
+                    left + "," + bottom + " ";
+
+                $bubble.setAttribute('points', points)
+            }
+
+            if (urlOrBase64.startsWith("http") || urlOrBase64.startsWith("data:image") || urlOrBase64.indexOf("/writermap/") > -1 ) {
+                $img.setAttribute('href', urlOrBase64);
+                i.src = urlOrBase64;
+            }
+            else {
+                $img.setAttribute('href', "data:image/png;base64," + urlOrBase64);
+                i.src = "data:image/png;base64," + urlOrBase64;
+            }
+        }
+
+        let nde = this
+        let mth = (nde.info || "").match(/\!\[.+\]\(([^\s\t\n ]+)\)/)
+        // the timeout allows NodeRED to render the SVG element - if this i a visible node.
+        mth && setTimeout( () => { render( nde, mth[1] ) }, 500)
+      },
+
+      onaddedtoflow: function() {
+        /* BEWARE: onaddedtoflow is only triggered by the drag&drop handler, 
+           this is non-standard functionality and specific to the mindmap
+           nodes.
+         */
+        try {
+          this._def.rendercontent.call(this)
+        } catch (ex) {
+          /* silence is golden */
+        }
+      },      
+    }
+  });
 </script>
 
 <script type="text/html" data-template-name="Image">
@@ -5257,6 +5462,286 @@ If you want every 20 minutes from now - use the <i>"interval"</i> option.</p>
 
 <script type="text/html" data-help-name="Image">
   <p>A writermap Image node.</p>
+</script>
+<!-- --- [red-module:@gorenje/node-red-mindmap/video] --- -->
+<script type="text/javascript">
+  RED.nodes.registerType('Video',{ 
+    ...window.mmDefaults, 
+    ...{
+      color: window.wmPaletteColours["27-video"],
+      icon: "font-awesome/fa-film",
+      rendercontent: function() {
+        let render = function (nde, lnkStr, posterMth, widthMth, heightMth) {
+          let container = document.getElementById(nde.id);
+          if (!container) {
+            return
+          }
+
+          let vWidth = (widthMth && parseInt(widthMth[1])) || 640
+          let vHeight = (heightMth && parseInt(heightMth[1])) || 360
+          let newDiv = document.createElement("div")
+
+          newDiv.setAttribute('class', 'red-ui-editor red-ui-panel video-controller')
+          newDiv.setAttribute('style', "overflow-y: hidden;");
+          newDiv.setAttribute('xmlns', "http://www.w3.org/1999/xhtml");
+          newDiv.setAttribute('pointer-events', "all");
+
+          $(newDiv).css('height', `${vHeight}`)
+          $(newDiv).css('width', `${vWidth}`)
+          $(newDiv).css('color', 'rgb(85,85,85)')
+          $(newDiv).css('border', '1px solid rgb(85,85,85)')
+          $(newDiv).css('background-color', 'white')
+
+          $(newDiv).css('border-radius', '6px');
+          $(newDiv).css('padding-bottom', '3px');
+          $(newDiv).css('padding-left', '6px');
+          $(newDiv).css('padding-right', '3px');
+          $(newDiv).css('padding-top', '3px');
+
+          let videoElement = document.createElement("video")
+          videoElement.setAttribute('controls', 'controls')
+          videoElement.setAttribute('preload', "none");
+          videoElement.setAttribute('width', `${vWidth}`);
+          videoElement.setAttribute('height', `${vHeight}`);
+          videoElement.setAttribute('onended', `javascript:RED.events.emit("contentNode:ended","${nde.id}")`);
+          videoElement.setAttribute('onplay', `javascript:RED.events.emit("contentNode:play","${nde.id}")`);
+          videoElement.setAttribute('xmlns', "http://www.w3.org/1999/xhtml");
+
+          posterMth && videoElement.setAttribute('poster', posterMth[1])
+
+          let sourceElement = document.createElement("source")
+          sourceElement.setAttribute('src', lnkStr)
+          sourceElement.setAttribute('type', 'video/mp4')
+          sourceElement.setAttribute('xmlns', "http://www.w3.org/1999/xhtml");
+          sourceElement.appendChild(document.createTextNode("")) // generate a </source> tag
+
+          videoElement.appendChild(sourceElement)
+          videoElement.appendChild(document.createTextNode("Your browser doesn't support HTML5 video."))
+
+          newDiv.appendChild(videoElement)
+
+          var forObj = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject')
+          forObj.setAttribute('x', '0')
+          forObj.setAttribute('y', '40')
+          forObj.setAttribute('width', `${vWidth+20}`);
+          forObj.setAttribute('height', `${vHeight+20}`);
+          forObj.setAttribute('pointer-events', "all");
+
+          forObj.appendChild(newDiv);
+
+          container.insertBefore(forObj, container.lastChild.nextSibling)
+        }
+          
+        let nde = this
+        let mth = (nde.info || "").match(/source src=['"](.+)['"] type=/)
+
+        /* the delay allows the container to be created */
+        mth && setTimeout( () => { 
+          render(nde, 
+                mth[1], 
+                (nde.info || "").match(/video .+ poster=['"](.+)['"]/),
+                (nde.info || "").match(/video width=['"](.+)['"]/),
+                (nde.info || "").match(/video .+ height=['"](.+)['"]/)) 
+        }, 500)
+      },
+
+      onaddedtoflow: function() {
+        /* BEWARE: onaddedtoflow is only triggered by the drag&drop handler, 
+           this is non-standard functionality and specific to the mindmap
+           nodes.
+         */
+        try {
+          this._def.rendercontent.call(this)
+        } catch (ex) {
+          /* silence is golden */
+        }
+      },      
+    }
+  });
+</script>
+
+<script type="text/html" data-template-name="Video">
+<div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+</div>
+
+<div class="form-row">
+    <label style="display: inline-block; width: 40%;"
+           for="node-input-sumPass">
+      <i class="fa fa-filter"></i>
+      <span>Summaries subnodes?</span>
+    </label>
+    <input type="checkbox" id="node-input-sumPass"
+           style="display:inline-block; width:35px; vertical-align:baseline;">
+
+    <label style="display: inline-block; width: 10%; padding-left: 100px;"
+           for="node-input-sumPassPrio">
+      <span>Priority: </span>
+    </label>
+    <select id="node-input-sumPassPrio" style="width: 50px;"></select>
+</div>
+
+<div id="sumpass-node-selection" class="hide">
+    <div class="form-row">
+        <select id="node-input-sumPassNodeId" style="width: 100%">
+      </select>
+    </div>
+</div>
+
+<div class="form-row node-text-editor-row">
+    <input type="hidden" id="node-input-info" autofocus="autofocus">
+    <div style="height: 250px; min-height:150px;" class="node-text-editor" id="node-input-info-editor"></div>
+</div>
+
+<div class="form-row">
+    <label for="node-input-typeDropdown">Change Type</label>
+    <select id="node-input-typeDropdown"></select>
+    
+    <label for="node-input-wordCount" style="float: right;">Words:
+        <span id="node-input-wordCount"></span>
+    </label>
+</div>
+</script>
+
+
+<script type="text/html" data-help-name="Video">
+  <p>A writermap Video node.</p>
+</script>
+<!-- --- [red-module:@gorenje/node-red-mindmap/audio] --- -->
+<script type="text/javascript">
+  RED.nodes.registerType('Audio', { 
+    ...window.mmDefaults, 
+    ...{
+      color: window.wmPaletteColours["28-audio"],
+      icon: "font-awesome/fa-podcast",
+      
+      rendercontent: function() {
+        
+        let render = function (nde,lnkStr) {
+
+          let container = document.getElementById(nde.id);
+          if ( !container ) {
+            return
+          }
+
+          let newDiv = document.createElement("div")
+
+          newDiv.setAttribute('class', 'red-ui-editor red-ui-panel audio-controller')
+          newDiv.setAttribute('style', "overflow-y: hidden;");
+          newDiv.setAttribute('xmlns', "http://www.w3.org/1999/xhtml" );
+          newDiv.setAttribute('pointer-events',"all");
+
+          $(newDiv).css('height', '45')
+          $(newDiv).css('width', '305')
+          $(newDiv).css('color',  'rgb(85,85,85)')
+          $(newDiv).css('border', '1px solid rgb(85,85,85)')
+          $(newDiv).css('background-color', 'white')
+
+          $(newDiv).css('border-radius',  '6px');
+          $(newDiv).css('padding-bottom', '3px');
+          $(newDiv).css('padding-left',   '6px');
+          $(newDiv).css('padding-right',  '3px');
+          $(newDiv).css('padding-top',    '3px');
+
+          let audioElement = document.createElement("audio")
+          audioElement.setAttribute('controls', 'controls')
+          audioElement.setAttribute('preload', "none");
+          audioElement.setAttribute('onended', `javascript:RED.events.emit("contentNode:ended","${nde.id}")`);
+          audioElement.setAttribute('onplay', `javascript:RED.events.emit("contentNode:play","${nde.id}")`);
+          audioElement.setAttribute('xmlns', "http://www.w3.org/1999/xhtml" );
+
+          let sourceElement = document.createElement("source")
+          sourceElement.setAttribute('src', lnkStr)
+          sourceElement.setAttribute('type', 'audio/mpeg')
+          sourceElement.setAttribute('xmlns', "http://www.w3.org/1999/xhtml" );
+          sourceElement.appendChild(document.createTextNode("")) // generate a </source> tag
+
+          audioElement.appendChild(sourceElement)
+
+          newDiv.appendChild(audioElement)
+
+          var forObj = document.createElementNS("http://www.w3.org/2000/svg",'foreignObject')
+          forObj.setAttribute('x',      '0')
+          forObj.setAttribute('y',      '40')
+          forObj.setAttribute('width',  '320' );
+          forObj.setAttribute('height', '60' );
+          forObj.setAttribute('pointer-events',"all");
+
+          forObj.appendChild( newDiv );
+
+          container.insertBefore(forObj, container.lastChild.nextSibling)
+        }
+
+        let mth = (this.info || "").match(/source src=['"](.+)['"] type=/)
+        let nde = this
+        
+        /* the delay allows the container to be created */
+        mth && setTimeout( () => { render( nde, mth[1] ) }, 500)
+      },
+
+      onaddedtoflow: function() {
+        /* BEWARE: onaddedtoflow is only triggered by the drag&drop handler, 
+           this is non-standard functionality and specific to the mindmap
+           nodes.
+         */
+        try {
+          this._def.rendercontent.call(this)
+        } catch (ex) {
+          /* silence is golden */
+        }
+      },      
+    }
+  });
+</script>
+
+<script type="text/html" data-template-name="Audio">
+<div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+</div>
+
+<div class="form-row">
+    <label style="display: inline-block; width: 40%;"
+           for="node-input-sumPass">
+      <i class="fa fa-filter"></i>
+      <span>Summaries subnodes?</span>
+    </label>
+    <input type="checkbox" id="node-input-sumPass"
+           style="display:inline-block; width:35px; vertical-align:baseline;">
+
+    <label style="display: inline-block; width: 10%; padding-left: 100px;"
+           for="node-input-sumPassPrio">
+      <span>Priority: </span>
+    </label>
+    <select id="node-input-sumPassPrio" style="width: 50px;"></select>
+</div>
+
+<div id="sumpass-node-selection" class="hide">
+    <div class="form-row">
+        <select id="node-input-sumPassNodeId" style="width: 100%">
+      </select>
+    </div>
+</div>
+
+<div class="form-row node-text-editor-row">
+    <input type="hidden" id="node-input-info" autofocus="autofocus">
+    <div style="height: 250px; min-height:150px;" class="node-text-editor" id="node-input-info-editor"></div>
+</div>
+
+<div class="form-row">
+    <label for="node-input-typeDropdown">Change Type</label>
+    <select id="node-input-typeDropdown"></select>
+    
+    <label for="node-input-wordCount" style="float: right;">Words:
+        <span id="node-input-wordCount"></span>
+    </label>
+</div>
+</script>
+
+
+<script type="text/html" data-help-name="Audio">
+  <p>A writermap Audio node.</p>
 </script>
 <!-- --- [red-module:@gorenje/node-red-mindmap/comment] --- -->
 <script type="text/javascript">
@@ -5541,10 +6026,17 @@ If you want every 20 minutes from now - use the <i>"interval"</i> option.</p>
 </script>
 <!-- --- [red-module:@gorenje/node-red-mindmap/keyword] --- -->
 <script type="text/javascript">
-  RED.nodes.registerType('Keyword',{ ...window.mmDefaults, ...{
-    color: window.wmPaletteColours["62-keyword"],
-    icon: "font-awesome/fa-key",
-  }});
+  RED.nodes.registerType('Keyword',{ 
+    ...window.mmDefaults, 
+    ...{
+      color: window.wmPaletteColours["62-keyword"],
+      icon: "font-awesome/fa-key",
+      // generate a Keyword hash - only for keyword nodes.
+      generateMarkdown: function() {
+        return `#${ (this.name || "").replace(/\s+(.)/g, (d,e) => e.toUpperCase() ).trim() }`
+      }
+    }
+  });
 </script>
 
 <script type="text/html" data-template-name="Keyword">
